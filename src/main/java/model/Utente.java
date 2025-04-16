@@ -4,19 +4,24 @@ public class Utente {
     private String username;
     private String password;
 
-    private signUpHackathon() {
+    private void signUpHackathon() {
 
     }
 
-    private createTeam(String nomeTeam) {
+    private Team createTeam(String nomeTeam) {
         Team t = new Team (nomeTeam, this);
+        return t;
     }
 
-    private joinTeam(Team team) {
+    private void joinTeam(Team team) {
         team.listaPartecipanti.add(this);
     }
 
-    private Utente(String username, String password) {
+    public Utente() {
+
+    }
+
+    public Utente(String username, String password) {
         this.username = username;
         this.password = password;
     }

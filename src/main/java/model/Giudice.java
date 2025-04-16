@@ -3,11 +3,11 @@ package model;
 public class Giudice extends Utente{
     public Giudice() {}
 
-    private publishProblem () {
+    private void publishProblem () {
 
     }
 
-    private commentProgress (Progresso p) {
+    private void commentProgress (Progresso p) {
 
     }
 }

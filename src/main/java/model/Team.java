@@ -5,7 +5,7 @@ public class Team {
     private String nome;
     public ArrayList<Utente> listaPartecipanti;
 
-    private publishProgress (String contenuto) {
+    private void publishProgress (String contenuto) {
         Progresso p = new Progresso(contenuto);
     }
 
