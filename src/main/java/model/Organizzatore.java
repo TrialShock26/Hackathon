@@ -4,7 +4,7 @@ public class Organizzatore extends Utente {
     public Organizzatore() {}
 
     private inviteJudge (Giudice g) {
-
+    
     }
 
     private openRegistrations () {
