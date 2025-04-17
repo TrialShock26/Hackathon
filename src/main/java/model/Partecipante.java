@@ -1,11 +1,11 @@
 package model;
 
-public class Utente {
-    private String username;
-    private String password;
+public class Partecipante extends Utente{
+    public Partecipante(String nome, String cognome) {
+        super(nome, cognome);
+    }
 
     private void signUpHackathon() {
-
     }
 
     private Team createTeam(String nomeTeam) {
@@ -15,14 +15,5 @@ public class Utente {
 
     private void joinTeam(Team team) {
         team.listaPartecipanti.add(this);
-    }
-
-    public Utente() {
-
-    }
-
-    public Utente(String username, String password) {
-        this.username = username;
-        this.password = password;
     }
 }

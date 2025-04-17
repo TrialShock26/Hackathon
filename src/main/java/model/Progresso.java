@@ -1,5 +1,11 @@
 package model;
+import java.util.ArrayList;
 
 public class Progresso {
-    public Progresso(String contenuto) {}
+    String contenuto;
+    ArrayList<String> commenti = new ArrayList<String>();
+
+    public Progresso(String contenuto) {
+        this.contenuto = contenuto;
+    }
 }
