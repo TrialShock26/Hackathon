@@ -1,10 +1,10 @@
 package model;
 
 public class User {
-    private String username;
-    private String password;
-    private String name;
-    private String surname;
+    protected String username;
+    protected String password;
+    protected String name;
+    protected String surname;
 
     public User(String username, String password, String name, String surname) {
         this.username = username;

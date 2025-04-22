@@ -1,7 +1,10 @@
 package model;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Planner extends User {
+    private ArrayList<Hackathon> myHackathons = new ArrayList<Hackathon>();
+
     public Planner(String username, String password, String nome, String cognome) {
         super(username, password, nome, cognome);
     }
@@ -11,8 +14,12 @@ public class Planner extends User {
         h.setJudge(g);
     }
 
-    public Hackathon openHackathon (String title, String location, LocalDate startDate, LocalDate endDate, int maxPlayers, int maxTeamDim) {
-        Hackathon h = new Hackathon(title, location, startDate, endDate, maxPlayers, maxTeamDim);
-        return h;
+    public void openHackathon (String title, String location, LocalDate startDate, LocalDate endDate,
+                                    LocalDate startSubscriptionDate, LocalDate endSubscriptionDate,
+                                    int maxPlayers, int maxTeamDim) {
+        Hackathon h = new Hackathon(title, location, startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
+        myHackathons.add(h);
     }
+
+    public ArrayList<Hackathon> getHackathons() {return myHackathons;}
 }

@@ -1,18 +1,29 @@
 package model;
 import java.util.ArrayList;
+import static java.time.LocalDate.now;
 
 public class Player extends User {
     private ArrayList<Team> myTeams = new ArrayList<Team>();
-    private ArrayList<Hackathon> mySubscriptions = new ArrayList<Hackathon>();//MAYBE
+    private ArrayList<Registration> mySubscriptions = new ArrayList<Registration>();
 
     public Player(String username, String password, String name, String surname) {
         super(username, password, name, surname);
     }
 
     public void signUpHackathon(Hackathon h) {
-        //check availability of registrations
-        mySubscriptions.add(h);
-        h.setPlayer(this);
+        if (h.getEndSubscriptionDate().isBefore(now())) {
+            System.out.println("Tempo scaduto!");
+            return;
+        }
+        for (Registration r : h.getRegisteredPlayers()) {
+            if (r.getPlayer() == this) {
+                System.out.println("Sei già registrato");
+                return;
+            }
+        }
+        Registration r = new Registration(this, h);
+        mySubscriptions.add(r);
+        h.setRegisteredPlayers(r);
     }
 
     public void createTeam(String nomeTeam, Hackathon h) { //setter for myTeams field
@@ -21,10 +32,11 @@ public class Player extends User {
             t = new Team (nomeTeam, this);
             myTeams.add(t);
         }
-        h.setTeam(t);
-        ArrayList<Judge> now = h.getJudges();
-        for (Judge j : now) {
-            j.setTeam(t);
+        if (h.getTeams().contains(t)) {
+            System.out.println("Team già formato");
+        } else {
+            h.setTeam(t);
+            t.setHackathonsDone(h);
         }
     }
 
@@ -54,4 +66,5 @@ public class Player extends User {
     }
 
     public ArrayList<Team> getTeams() {return myTeams;}
+    public ArrayList<Registration> getSubscriptions() {return mySubscriptions;}
 }

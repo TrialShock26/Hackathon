@@ -3,25 +3,28 @@ import java.util.ArrayList;
 
 public class Judge extends User {
     private Hackathon myHackathon;
-    private ArrayList<Team> judgingTeams= new ArrayList<Team>();
+    private ArrayList<Grade> myGradings = new ArrayList<Grade>();
+    private ArrayList<Document> myComments = new ArrayList<Document>();
 
     public Judge(String username, String password, String name, String surname, Hackathon h) {
         super(username, password, name, surname);
         myHackathon = h;
     }
 
-    public void publishProblem (Hackathon h, String problem) {
-        h.setProblemDescription(problem);
-    }
+    public void publishProblem (Hackathon h, String problem) {h.setProblemDescription(problem);}
 
     public void commentDocument (Document d, String comment) {
         d.setComment(comment);
+        myComments.add(d);
+        d.setCommentators(this);
     }
 
-    public ArrayList<Team> getTeams() {return judgingTeams;}
-    public void setTeam(Team t) {
-        judgingTeams.add(t);
+    public void gradeTeam(Team t, int value) {
+        Grade g = new Grade(this, t, value);
+        myGradings.add(g);
+        t.setGrades(g);
     }
 
     public Hackathon getHackathon() {return myHackathon;}
+    public ArrayList<Grade> getMyGradings() {return myGradings;}
 }
