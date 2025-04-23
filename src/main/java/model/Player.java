@@ -5,6 +5,7 @@ import static java.time.LocalDate.now;
 public class Player extends User {
     private ArrayList<Team> myTeams = new ArrayList<Team>();
     private ArrayList<Registration> mySubscriptions = new ArrayList<Registration>();
+    //another arraylist for the hackathons; redundant
 
     public Player(String username, String password, String name, String surname) {
         super(username, password, name, surname);
@@ -27,7 +28,7 @@ public class Player extends User {
     }
 
     public void createTeam(String nomeTeam, Hackathon h) { //setter for myTeams field
-        Team t = getThis(nomeTeam);
+        Team t = getThis(nomeTeam);//strenghten the constraint to players&names
         if (t == null) {
             t = new Team (nomeTeam, this);
             myTeams.add(t);

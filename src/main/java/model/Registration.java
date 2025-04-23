@@ -3,6 +3,7 @@ package model;
 public class Registration {
     private Player player;
     private Hackathon hackathon;
+    //date might be added
 
     public Registration (Player player, Hackathon hackathon) {
         this.player = player;
