@@ -50,7 +50,7 @@ public class Player extends User {
         }
     }
 
-    public boolean exists(String name) {
+    private boolean exists(String name) {
         for (Team t : myTeams) {
             if (t.getName().equals(name)) {return true;}
         }
