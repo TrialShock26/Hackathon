@@ -4,15 +4,17 @@ import java.util.ArrayList;
 public class Document {
     private String title;
     private String content;
-    private ArrayList<String> comments = new ArrayList<String>();
+    private ArrayList<String> comments;
     private Team team;
-    private ArrayList<Judge> commentators = new ArrayList<Judge>();
+    private ArrayList<Judge> commentators;
 
 
     public Document(String title, String content, Team team) {
         this.title = title;
         this.content = content;
+        comments = new ArrayList<String>();
         this.team = team;
+        commentators = new ArrayList<Judge>();
     }
 
     public String getTitle() {return title;}

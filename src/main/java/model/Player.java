@@ -3,12 +3,14 @@ import java.util.ArrayList;
 import static java.time.LocalDate.now;
 
 public class Player extends User {
-    private ArrayList<Team> myTeams = new ArrayList<Team>();
-    private ArrayList<Registration> mySubscriptions = new ArrayList<Registration>();
+    private ArrayList<Team> myTeams;
+    private ArrayList<Registration> mySubscriptions;
     //another arraylist for the hackathons; redundant
 
     public Player(String username, String password, String name, String surname) {
         super(username, password, name, surname);
+        myTeams = new ArrayList<Team>();
+        mySubscriptions = new ArrayList<Registration>();
     }
 
     public void signUpHackathon(Hackathon h) {

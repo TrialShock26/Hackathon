@@ -15,9 +15,9 @@ public class Hackathon {
     private int maxPlayers;
     private int maxTeamDim;
     private String problemDescription;
-    private ArrayList<Registration> registeredPlayers = new ArrayList<Registration>();
-    private ArrayList<Team> teams = new ArrayList<Team>();
-    private ArrayList<Judge> judges = new ArrayList<Judge>();
+    private ArrayList<Registration> registeredPlayers;
+    private ArrayList<Team> teams;
+    private ArrayList<Judge> judges;
     private Planner planner;
 
     public Hackathon(String title, String location, LocalDate startDate, LocalDate endDate,
@@ -32,8 +32,11 @@ public class Hackathon {
         registrationWindow = ChronoUnit.DAYS.between(startSubscriptionDate, endSubscriptionDate);
         this.maxPlayers = maxPlayers;
         this.maxTeamDim = maxTeamDim;
-        this.planner = planner;
         problemDescription = null;
+        registeredPlayers = new ArrayList<Registration>();
+        teams = new ArrayList<Team>();
+        judges = new ArrayList<Judge>();
+        this.planner = planner;
     }
 
     public String getTitle () {return title;}

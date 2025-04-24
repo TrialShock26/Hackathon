@@ -3,10 +3,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Planner extends User {
-    private ArrayList<Hackathon> myHackathons = new ArrayList<Hackathon>();
+    private ArrayList<Hackathon> myHackathons;
 
     public Planner(String username, String password, String nome, String cognome) {
         super(username, password, nome, cognome);
+        myHackathons = new ArrayList<Hackathon>();
     }
 
     public void inviteJudge (Hackathon h, String username, String password, String name, String surname) {
