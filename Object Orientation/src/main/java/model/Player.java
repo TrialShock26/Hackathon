@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import static java.time.LocalDate.now;
 
 public class Player extends User {
-    private ArrayList<Team> myTeams;
+    private ArrayList<Team> myTeams;//maybe a Set class
     private ArrayList<Registration> mySubscriptions;
     //another arraylist for the hackathons; redundant
 
@@ -30,7 +30,7 @@ public class Player extends User {
     }
 
     public void createTeam(String nomeTeam, Hackathon h) { //setter for myTeams field
-        Team t = getThis(nomeTeam);//strenghten the constraint to players&names
+        Team t = getThis(nomeTeam);//strenghten the constraint to players&names***
         if (t == null) {
             t = new Team (nomeTeam, this);
             myTeams.add(t);

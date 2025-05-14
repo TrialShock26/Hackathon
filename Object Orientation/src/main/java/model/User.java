@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Classe rappresentante l'utente generico registrato alla piattaforma.
+*/
 public class User {
     protected String username;
     protected String password;
