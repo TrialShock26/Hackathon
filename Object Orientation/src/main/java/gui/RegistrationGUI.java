@@ -1,15 +1,15 @@
 package gui;
-
-import javax.swing.*;
 import controller.*;
 import model.Hackathon;
+
+import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Home {
+public class RegistrationGUI {
     private static JFrame frame;
     private JPanel homePanel;
     private JTable hackathonsTable;
@@ -19,21 +19,18 @@ public class Home {
     private JPanel topPanel;
     private JButton registrateButton;
     private JLabel topLabel;
-    private Controller controller;
     private int rowSelected;
 
-    public static void main(String[] args) {
+    public RegistrationGUI() {
         frame = new JFrame("Registrazione");
-        frame.setContentPane(new Home().homePanel);
+        frame.setContentPane(homePanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setSize(800, 500);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
 
-    public Home() {
-        controller = new Controller();
+        Controller controller = new Controller();
         controller.fetchData();
         rowSelected = -1;
 
@@ -64,7 +61,6 @@ public class Home {
                                 "Data inizio iscrizioni: " + h.getStartSubscriptionDate() + "\n" +
                                 "Data fine iscrizioni: " + h.getEndSubscriptionDate() + "\n" +
                                 "Data inizio iscrizioni: " + h.getStartSubscriptionDate() + "\n" +
-                                "Finestra di tempo: " + h.getRegistrationWindow() + " giorni\n" +
                                 "Massimo numero di giocatori: " + h.getMaxPlayers() + "\n" +
                                 "Massima dimensione dei team: " + h.getMaxTeamDim() + "\n",
                         "Riepilogo", JOptionPane.PLAIN_MESSAGE);

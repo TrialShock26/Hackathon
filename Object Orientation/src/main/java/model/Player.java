@@ -1,6 +1,6 @@
 package model;
 import java.util.ArrayList;
-import static java.time.LocalDate.now;
+import java.util.Date;
 
 public class Player extends User {
     private ArrayList<Team> myTeams;//maybe a Set class
@@ -14,7 +14,7 @@ public class Player extends User {
     }
 
     public void signUpHackathon(Hackathon h) {
-        if (h.getEndSubscriptionDate().isBefore(now())) {
+        if (h.getEndSubscriptionDate().before(new Date())) {
             System.out.println("Tempo scaduto!");
             return;
         }

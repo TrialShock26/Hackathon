@@ -1,5 +1,5 @@
 package model;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class Planner extends User {
@@ -15,12 +15,12 @@ public class Planner extends User {
         h.setJudge(g);
     }
 
-    public void openHackathon (String title, String location, LocalDate startDate, LocalDate endDate,
-                                    LocalDate startSubscriptionDate, LocalDate endSubscriptionDate,
-                                    int maxPlayers, int maxTeamDim) {
-        Hackathon h = new Hackathon(title, location, startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
+    public void openHackathon (String title, String location, Date startDate, Date endDate,
+                               Date startSubscriptionDate, Date endSubscriptionDate,
+                               int maxPlayers, int maxTeamDim) {
+        Hackathon h = new Hackathon(title, location, startDate, endDate, 0, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
         myHackathons.add(h);
-    }
+    } //TODO lo 0 sulla sottrazione
 
     public ArrayList<Hackathon> getHackathons() {return myHackathons;}
 }
