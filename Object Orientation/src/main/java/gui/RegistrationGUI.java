@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 
 public class RegistrationGUI {
     private static JFrame frame;
-    private JPanel homePanel;
+    private JPanel registrationPanel;
     private JTable hackathonsTable;
     private JPanel hackathonsPanel;
     private JScrollPane hackathonsScrollPanel;
@@ -23,7 +23,7 @@ public class RegistrationGUI {
 
     public RegistrationGUI() {
         frame = new JFrame("Registrazione");
-        frame.setContentPane(homePanel);
+        frame.setContentPane(registrationPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setSize(800, 500);
