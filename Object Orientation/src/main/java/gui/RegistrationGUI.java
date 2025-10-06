@@ -22,7 +22,7 @@ public class RegistrationGUI {
     private JLabel topLabel;
     private int rowSelected;
 
-    public RegistrationGUI() {
+    public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione");
         frame.setContentPane(registrationPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,7 +31,6 @@ public class RegistrationGUI {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        Controller controller = new Controller();
         controller.fetchData();
         rowSelected = -1;
 

@@ -1,7 +1,6 @@
-import gui.*; //TODO
+import gui.HomeGUI;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.FlatClientProperties;  //TODO
 import javax.swing.*;
 
 public class Main {
