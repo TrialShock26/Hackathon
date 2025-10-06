@@ -2,8 +2,6 @@ import gui.*; //TODO
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.FlatClientProperties;  //TODO
-
-
 import javax.swing.*;
 
 public class Main {
@@ -13,6 +11,6 @@ public class Main {
         } catch (UnsupportedLookAndFeelException e) {
             JOptionPane.showMessageDialog(null, "C'è stato un errore nella visualizzazione estetica", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        new RegistrationGUI();
+        new HomeGUI();
     }
 }
