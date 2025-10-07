@@ -61,10 +61,7 @@ public class LoginGUI {
         gbc.anchor = GridBagConstraints.WEST;
         centerPanel.add(passField, gbc);
 
-        // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
-        buttonPanel.setBackground(new Color(240, 240, 245));
-
+        // Bottone Conferma (centrato)
         JButton loginBtn = new JButton("Conferma");
         loginBtn.setPreferredSize(new Dimension(120, 35));
         loginBtn.setBackground(new Color(70, 130, 180));
@@ -82,17 +79,29 @@ public class LoginGUI {
                     return;
                 }
 
+                frame.dispose();
                 //  controller per verificare login
                 // boolean success = controller.login(username, password);
                 // if (success) {
-                frame.dispose();
                 //new RegistrationGUI(controller, callerFrame);
                 // } else {
                 //     JOptionPane.showMessageDialog(frame, "Credenziali errate!", "Errore", JOptionPane.ERROR_MESSAGE);
                 // }
+                new HubGUI(controller,frame);
             }
         });
-        buttonPanel.add(loginBtn);
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        centerPanel.add(loginBtn, gbc);
+
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        // Pannello per il bottone Indietro in basso a sinistra
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 15));
+        bottomPanel.setBackground(new Color(240, 240, 245));
 
         JButton backBtn = new JButton("Indietro");
         backBtn.setPreferredSize(new Dimension(120, 35));
@@ -104,18 +113,13 @@ public class LoginGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                callerFrame.setVisible(true);
+                new HomeGUI();
             }
         });
-        buttonPanel.add(backBtn);
+        bottomPanel.add(backBtn);
 
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        centerPanel.add(buttonPanel, gbc);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
     }
