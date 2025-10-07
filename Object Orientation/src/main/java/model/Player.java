@@ -1,11 +1,11 @@
 package model;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public class Player extends User {
-    private ArrayList<Team> myTeams;//maybe a Set class
+    private ArrayList<Team> myTeams;
     private ArrayList<Registration> mySubscriptions;
-    //another arraylist for the hackathons; redundant
 
     public Player(String username, String password, String name, String surname) {
         super(username, password, name, surname);
@@ -13,60 +13,55 @@ public class Player extends User {
         mySubscriptions = new ArrayList<Registration>();
     }
 
-    public void signUpHackathon(Hackathon h) {
-        if (h.getEndSubscriptionDate().before(new Date())) {
-            System.out.println("Tempo scaduto!");
-            return;
+    public int signUpHackathon(Hackathon h) {
+        if (h.getStartSubscriptionDate().after(new Date(System.currentTimeMillis()))) {
+            return 1;
+        }
+        if (h.getEndSubscriptionDate().before(new Date(System.currentTimeMillis()))) {
+            return 1;
         }
         for (Registration r : h.getRegisteredPlayers()) {
             if (r.getPlayer() == this) {
-                System.out.println("Sei già registrato");
-                return;
+                return 2;
             }
+        }
+        if (h.getRegisteredPlayers().size()+1 > h.getMaxPlayers()) {
+            return 3;
         }
         Registration r = new Registration(this, h);
         mySubscriptions.add(r);
         h.setRegisteredPlayers(r);
+
+        Team newTeam = new Team("Team di " + this.getUsername(), this, h);
+        myTeams.add(newTeam);
+        h.setTeam(newTeam);
+        return 0;
     }
 
-    public void createTeam(String nomeTeam, Hackathon h) { //setter for myTeams field
-        Team t = getThis(nomeTeam);//strenghten the constraint to players&names***
-        if (t == null) {
-            t = new Team (nomeTeam, this);
-            myTeams.add(t);
+    public int joinTeam(Team t, Hackathon h) {
+        if (h.getStartDate().before(new Date(System.currentTimeMillis()))) {
+            return 1;
         }
-        if (h.getTeams().contains(t)) {
-            System.out.println("Team già formato");
-        } else {
-            h.setTeam(t);
-            t.setHackathonsDone(h);
+        if (myTeams.contains(t)) {
+            return 2;
         }
-    }
-
-    public void joinTeam(Team t, Hackathon h) {//setter for myTeams field
-        if (t.getPlayers().size() >= h.getMaxPlayers()) {
-            System.out.println("Il team è pieno!");
-        } else {
-            t.setPlayer(this);
-            myTeams.add(t);
+        if (t.getPlayers().size()+1 > h.getMaxTeamDim()) {
+            return 3;
         }
-    }
-
-    private boolean exists(String name) {
-        for (Team t : myTeams) {
-            if (t.getName().equals(name)) {return true;}
-        }
-        return false;
-    }
-
-    private Team getThis(String name) {
-        if (exists(name)) {
-            for (Team t : myTeams) {
-                if (t.getName().equals(name)) {return t;}
+        Team old = null;
+        for (Team temp : h.getTeams()) {
+            if (temp.getPlayers().contains(this)) {
+                old = temp;
             }
         }
-        return null;
+        old.playerLeaving(this);
+        if (old.getMembersNumber() == 0) {h.teamLeaving(old);}
+        t.setPlayer(this);
+        myTeams.add(t);
+        return 0;
     }
+
+    public void changeTeamName() {} //TODO correctly
 
     public ArrayList<Team> getTeams() {return myTeams;}
     public ArrayList<Registration> getSubscriptions() {return mySubscriptions;}
