@@ -6,7 +6,7 @@ import controller.*;
 
 public class HubGUI {
     private JFrame frame;
-    private JPanel homePanel;
+    private JPanel hubPanel;
     private JButton gioButton;
     private JButton creaButton;
     private JButton nuovaPartitaButton;
@@ -24,8 +24,8 @@ public class HubGUI {
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
-        homePanel = new JPanel(new BorderLayout());
-        homePanel.setBackground(new Color(240, 240, 245));
+        hubPanel = new JPanel(new BorderLayout());
+        hubPanel.setBackground(new Color(240, 240, 245));
 
         // --- CENTRO ---
         JPanel centerPanel = new JPanel();
@@ -60,7 +60,7 @@ public class HubGUI {
         gioButton = createStyledButton("Gioca", new Color(70, 130, 180));
         creaButton = createStyledButton("Crea", new Color(34, 139, 34));
         nuovaPartitaButton = createStyledButton("Nuova Partita", new Color(255, 140, 0));
-        giudicaButton = createStyledButton("Giudica", new Color(138, 43, 226));
+        giudicaButton = createStyledButton("Valuta", new Color(138, 43, 226));
         gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
         resocontoButton = createStyledButton("Resoconto", new Color(100, 149, 237));
 
@@ -78,7 +78,7 @@ public class HubGUI {
         gridButtonsPanel.add(resocontoButton);
 
         centerPanel.add(gridButtonsPanel);
-        homePanel.add(centerPanel, BorderLayout.CENTER);
+        hubPanel.add(centerPanel, BorderLayout.CENTER);
 
         // --- BASSO (solo Indietro) ---
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -107,9 +107,9 @@ public class HubGUI {
         });
         bottomPanel.add(indietroButton);
 
-        homePanel.add(bottomPanel, BorderLayout.SOUTH);
+        hubPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        frame.setContentPane(homePanel);
+        frame.setContentPane(hubPanel);
         frame.setVisible(true);
     }
 
