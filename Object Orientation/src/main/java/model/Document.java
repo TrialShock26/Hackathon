@@ -1,10 +1,11 @@
 package model;
+
 import java.util.ArrayList;
 
 public class Document {
     private String title;
     private String content;
-    private ArrayList<String> comments;
+    private String comment;
     private Team team;
     private ArrayList<Judge> commentators;
 
@@ -12,19 +13,19 @@ public class Document {
     public Document(String title, String content, Team team) {
         this.title = title;
         this.content = content;
-        comments = new ArrayList<String>();
+        comment = "Commento assente.";
         this.team = team;
         commentators = new ArrayList<Judge>();
     }
 
     public String getTitle() {return title;}
-    public void setTitle(String title) {this.title = title;}
-
     public String getContent() {return content;}
-    public void setContent(String content) {this.content = content;}
 
-    public ArrayList<String> getComments() {return comments;}
-    public void setComment(String comment) {comments.add(comment);}
+    public String getComments() {return comment;}
+    public void setComment(String inComm) {
+        if (comment == "Commento assente.") {comment = inComm;}
+        else {comment = comment + "\n" + inComm;}
+    }
 
     public Team getTeam() {return team;}
 

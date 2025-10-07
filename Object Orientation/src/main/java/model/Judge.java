@@ -1,23 +1,25 @@
 package model;
+
 import java.util.ArrayList;
 
 public class Judge extends User {
-    private Hackathon myHackathon;
+    private ArrayList<Selection> mySelections;
     private ArrayList<Grade> myGradings;
-    private ArrayList<Document> myComments;
+    private ArrayList<Document> commentDone;
 
-    public Judge(String username, String password, String name, String surname, Hackathon h) {
+    public Judge(String username, String password, String name, String surname) {
         super(username, password, name, surname);
-        myHackathon = h;
         myGradings = new ArrayList<Grade>();
-        myComments = new ArrayList<Document>();
+        commentDone = new ArrayList<Document>();
     }
 
-    public void publishProblem (Hackathon h, String problem) {h.setProblemDescription(problem);}
+    public void publishProblem (Hackathon h, String problem) throws IllegalAccessException {
+        h.setProblemDescription(problem);
+    }
 
     public void commentDocument (Document d, String comment) {
         d.setComment(comment);
-        myComments.add(d);
+        commentDone.add(d);
         d.setCommentators(this);
     }
 
@@ -27,6 +29,8 @@ public class Judge extends User {
         t.setGrades(g);
     }
 
-    public Hackathon getHackathon() {return myHackathon;}
-    public ArrayList<Grade> getMyGradings() {return myGradings;}
+    public ArrayList<Selection> geSelections() {return mySelections;}
+    public void setSelections(Selection inSel) {mySelections.add(inSel);}
+
+    public ArrayList<Grade> getGradings() {return myGradings;}
 }
