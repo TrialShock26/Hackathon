@@ -1,0 +1,131 @@
+package gui;
+
+import javax.swing.*;
+import java.awt.*;
+import controller.*;
+
+public class HubGUI {
+    private JFrame frame;
+    private JPanel homePanel;
+    private JButton gioButton;
+    private JButton creaButton;
+    private JButton nuovaPartitaButton;
+    private JButton giudicaButton;
+    private JButton gestisciButton;
+    private JButton resocontoButton;
+    private JButton indietroButton;
+    private JLabel title;
+    private JLabel subtitle;
+
+    public HubGUI(Controller controller, JFrame callerFrame) {
+
+        frame = new JFrame("HackathON - HUB");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+
+        homePanel = new JPanel(new BorderLayout());
+        homePanel.setBackground(new Color(240, 240, 245));
+
+        // --- CENTRO ---
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(new Color(240, 240, 245));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
+
+        // Titolo principale
+        title = new JLabel("Benvenuto in HackathON!");
+        title.setFont(new Font("Arial", Font.BOLD, 32));
+        title.setForeground(new Color(50, 50, 50));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(title);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // Sottotitolo
+        subtitle = new JLabel("Che cosa vuoi fare?");
+        subtitle.setFont(new Font("Arial", Font.PLAIN, 18));
+        subtitle.setForeground(new Color(100, 100, 100));
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(subtitle);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+
+        // Pannello dei bottoni (3 righe x 2 colonne)
+        JPanel gridButtonsPanel = new JPanel(new GridLayout(3, 2, 20, 20));
+        gridButtonsPanel.setBackground(new Color(240, 240, 245));
+        gridButtonsPanel.setMaximumSize(new Dimension(400, 220));
+
+        // Crea bottoni più piccoli
+        gioButton = createStyledButton("Gioca", new Color(70, 130, 180));
+        creaButton = createStyledButton("Crea", new Color(34, 139, 34));
+        nuovaPartitaButton = createStyledButton("Nuova Partita", new Color(255, 140, 0));
+        giudicaButton = createStyledButton("Giudica", new Color(138, 43, 226));
+        gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
+        resocontoButton = createStyledButton("Resoconto", new Color(100, 149, 237));
+
+        // --- ✅ Azione per il bottone CREA ---
+        creaButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new CreateGUI(controller, frame);
+        });
+
+        gridButtonsPanel.add(gioButton);
+        gridButtonsPanel.add(creaButton);
+        gridButtonsPanel.add(nuovaPartitaButton);
+        gridButtonsPanel.add(giudicaButton);
+        gridButtonsPanel.add(gestisciButton);
+        gridButtonsPanel.add(resocontoButton);
+
+        centerPanel.add(gridButtonsPanel);
+        homePanel.add(centerPanel, BorderLayout.CENTER);
+
+        // --- BASSO (solo Indietro) ---
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.setBackground(new Color(240, 240, 245));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+
+        indietroButton = new JButton("Indietro");
+        indietroButton.setFont(new Font("Arial", Font.BOLD, 13));
+        indietroButton.setPreferredSize(new Dimension(100, 30));
+        indietroButton.setFocusPainted(false);
+        indietroButton.setBackground(new Color(150, 150, 150));
+        indietroButton.setForeground(Color.WHITE);
+        indietroButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        indietroButton.addActionListener(e -> {
+            int response = JOptionPane.showConfirmDialog(
+                    frame,
+                    "Vuoi tornare alla schermata precedente?",
+                    "Conferma",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+            if (response == JOptionPane.YES_OPTION) {
+                frame.dispose();
+                new LoginGUI(controller, frame);
+            }
+        });
+        bottomPanel.add(indietroButton);
+
+        homePanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        frame.setContentPane(homePanel);
+        frame.setVisible(true);
+    }
+
+    // --- Metodo per creare bottoni uniformi ma più piccoli ---
+    private JButton createStyledButton(String text, Color bgColor) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.BOLD, 14)); // più piccolo
+        button.setFocusPainted(false);
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setPreferredSize(new Dimension(140, 45)); // ridotto
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(bgColor.darker(), 2),
+                BorderFactory.createEmptyBorder(4, 8, 4, 8)
+        ));
+        return button;
+    }
+}
