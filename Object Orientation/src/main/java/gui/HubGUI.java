@@ -64,10 +64,22 @@ public class HubGUI {
         gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
         resocontoButton = createStyledButton("Resoconto", new Color(100, 149, 237));
 
-        // --- ✅ Azione per il bottone CREA ---
+        // --- Azione per il bottone CREA ---
         creaButton.addActionListener(e -> {
             frame.setVisible(false);
             new CreateGUI(controller, frame);
+        });
+
+        // --- Azione per il bottone GESTISCI ---
+        gestisciButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new PlannerGUI(controller, frame);
+        });
+
+        // --- Azione per il bottone Giudica ---
+        giudicaButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new JudgeGUI(controller, frame);
         });
 
         gridButtonsPanel.add(gioButton);

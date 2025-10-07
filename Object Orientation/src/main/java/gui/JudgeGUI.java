@@ -5,45 +5,44 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
-public class PlannerGUI {
+public class JudgeGUI {
     private JFrame frame;
     private JPanel mainPanel;
-    private ButtonGroup hackathonGroup;
+    private ButtonGroup teamGroup;
 
-    public PlannerGUI(Controller controller, JFrame callerFrame) {
-        frame = new JFrame("Gestisci");
+    public JudgeGUI(Controller controller, JFrame callerFrame) {
+        frame = new JFrame("Seleziona Team");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Gestisci Hackathon", SwingConstants.CENTER);
+        JLabel titleLabel = new JLabel("Seleziona Team", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
+        // ====== LISTA TEAM CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        String[] hackathonList = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
+        // Lista di team (esempio, in futuro dal controller)
+        String[] teamList = {
+                "Team Alpha",
+                "Team Beta",
+                "Team Gamma",
+                "Team Delta",
+                "Team Epsilon"
         };
 
-        hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonList) {
-            JPanel card = createHackathonCard(hackathon);
+        teamGroup = new ButtonGroup();
+        for (String team : teamList) {
+            JPanel card = createTeamCard(team);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -73,7 +72,7 @@ public class PlannerGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true);
+            callerFrame.setVisible(true); // torna alla GUI chiamante
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
@@ -89,15 +88,15 @@ public class PlannerGUI {
         openBtn.setFocusPainted(false);
         openBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         openBtn.addActionListener(e -> {
-            String selectedHackathon = getSelectedHackathon();
-            if (selectedHackathon == null) {
-                JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
+            String selectedTeam = getSelectedTeam();
+            if (selectedTeam == null) {
+                JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                frame.setVisible(false); // nascondi PlannerGUI
-                new ResumeGUI(controller, frame, selectedHackathon); // passi PlannerGUI come callerFrame
+                frame.setVisible(false);
+                // Apri la GUI successiva con il team selezionato
+                new TeamGUI(controller, frame, selectedTeam);
             }
         });
-
 
         centerPanel.add(openBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
@@ -108,29 +107,29 @@ public class PlannerGUI {
         frame.setVisible(true);
     }
 
-    private JPanel createHackathonCard(String hackathonName) {
+    // ====== CREAZIONE CARD TEAM ======
+    private JPanel createTeamCard(String teamName) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setPreferredSize(new Dimension(650, 60));
+        card.setPreferredSize(new Dimension(600, 50));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Radio button + testo
-        JRadioButton radio = new JRadioButton(hackathonName);
+        JRadioButton radio = new JRadioButton(teamName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
-        hackathonGroup.add(radio);
+        teamGroup.add(radio);
 
         card.add(radio, BorderLayout.CENTER);
 
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
-    private String getSelectedHackathon() {
-        for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
+    // ====== OTTIENI TEAM SELEZIONATO ======
+    private String getSelectedTeam() {
+        for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
             if (button.isSelected()) return button.getText();
         }
