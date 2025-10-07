@@ -21,7 +21,7 @@ public class Controller {
 
     public void fetchData() {
         allHackathons.add(new Hackathon("CodeBlast", "San Francisco", Date.valueOf("2023-5-1"),
-                Date.valueOf("2023-5-3"), 0, Date.valueOf("2023-4-25"), Date.valueOf("2023-4-30"), 100, 10,
+                Date.valueOf("2023-5-3"), Date.valueOf("2023-4-25"), Date.valueOf("2023-4-30"), 100, 10,
                 new Planner("johnDoe1", "pass123", "John", "Doe")));
 
         /*allHackathons.add(new Hackathon("HackTheFuture", "Berlin", Date.valueOf(2024, 7, 10),

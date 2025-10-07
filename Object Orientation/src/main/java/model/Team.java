@@ -1,35 +1,46 @@
 package model;
+
 import java.util.ArrayList;
 
 public class Team {
     private String name;
+    private int membersNumber;
     private ArrayList<Player> playerList;
-    private ArrayList<Hackathon> hackathonsDone;
+    private Hackathon hackathonMember;
     private ArrayList<Document> progressList;
     private ArrayList<Grade> grades;
 
-    public Team(String teamName, Player p) {
+    public Team(String teamName, Player p, Hackathon hack) {
         name = teamName;
+        membersNumber = 1;
+        hackathonMember = hack;
         playerList = new ArrayList<Player>();
         playerList.add(p);
-        hackathonsDone = new ArrayList<Hackathon>();
         progressList = new ArrayList<Document>();
         grades = new ArrayList<Grade>();
     }
 
-    public void publishProgress (String title, String content) { //setter for progressList field
+    public void publishProgress (String title, String content) {
         Document d = new Document(title, content, this);
         progressList.add(d);
     }
 
     public String getName () {return name;}
-    public void setName (String name) {this.name = name;}
+    public void setName (String name) {this.name = name;} //TODO correctly
+
+    public Hackathon getHackathon() {return hackathonMember;}
+    public int getMembersNumber() {return membersNumber;}
 
     public ArrayList<Player> getPlayers() {return playerList;}
-    public void setPlayer (Player p) {playerList.add(p);}
+    public void setPlayer (Player p) {
+        playerList.add(p);
+        membersNumber++;
+    }
 
-    public ArrayList<Hackathon> getHackathonsDone() {return hackathonsDone;}
-    public void setHackathonsDone(Hackathon h) {hackathonsDone.add(h);}
+    public void playerLeaving(Player p) {
+        playerList.remove(p);
+        membersNumber--;
+    }
 
     public ArrayList<Document> getProgress () {return progressList;}
 
