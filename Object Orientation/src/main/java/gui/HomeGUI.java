@@ -15,9 +15,10 @@ public class HomeGUI {
     private JLabel image;
 
     public HomeGUI() {
+
         Controller controller = new Controller();
 
-        frame = new JFrame("Benvenuto");
+        frame = new JFrame("Benvenut3");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 500);
         frame.setLocationRelativeTo(null);
@@ -89,13 +90,43 @@ public class HomeGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
-                //new SubscribeGUI(controller, frame);
+                new SubscribeGUI(controller, frame);
             }
         });
         buttonPanel.add(subscribeButton);
 
         centerPanel.add(buttonPanel);
         homePanel.add(centerPanel, BorderLayout.CENTER);
+
+        // Panel per il bottone Indietro in basso a sinistra
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.setBackground(new Color(240, 240, 245));
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
+
+        JButton backBtn = new JButton("Chiudi");
+        backBtn.setPreferredSize(new Dimension(120, 35));
+        backBtn.setBackground(new Color(220, 20, 60));
+        backBtn.setForeground(Color.WHITE);
+        backBtn.setFocusPainted(false);
+        backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(
+                        frame,
+                        "Sei sicuro di voler chiudere l'applicazione?",
+                        "Conferma chiusura",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+                if (response == JOptionPane.YES_OPTION) {
+                    System.exit(0);
+                }
+            }
+        });
+        bottomPanel.add(backBtn, BorderLayout.WEST);
+
+        homePanel.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setContentPane(homePanel);
         frame.setVisible(true);
