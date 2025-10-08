@@ -76,10 +76,22 @@ public class HubGUI {
             new PlannerGUI(controller, frame);
         });
 
-        // --- Azione per il bottone Giudica ---
+        // --- Azione per il bottone Valuta ---
         giudicaButton.addActionListener(e -> {
             frame.setVisible(false);
             new JudgeGUI(controller, frame);
+        });
+
+        // --- Azione per il bottone Gioca ---
+        gioButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new PlayerGUI(controller, frame);
+        });
+
+        // --- Azione per il bottone Nuova Partita ---
+        nuovaPartitaButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new RegistrationGUI(controller, frame);
         });
 
         gridButtonsPanel.add(gioButton);

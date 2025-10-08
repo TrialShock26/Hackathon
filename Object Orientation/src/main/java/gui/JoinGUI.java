@@ -5,48 +5,58 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
-public class RegistrationGUI {
+public class JoinGUI {
     private JFrame frame;
     private JPanel mainPanel;
-    private ButtonGroup hackathonGroup;
+    private ButtonGroup teamGroup;
 
-    public RegistrationGUI(Controller controller, JFrame callerFrame) {
-        frame = new JFrame("Registrazione Hackathon");
+    public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam) {
+        frame = new JFrame("Cambia Team");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Registrati ad un Hackathon", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        JLabel titleLabel = new JLabel("Cambia Team - Attualmente in: " + currentTeam, SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
+        // ====== LISTA TEAM CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        String[] hackathonList = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
+        // Lista di team disponibili
+        String[] teamList = {
+                "Team Alpha",
+                "Team Beta",
+                "Team Gamma",
+                "Team Delta",
+                "Team Epsilon",
+                "Team Omega",
+                "Team Innovatori"
         };
 
-        hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonList) {
-            JPanel card = createHackathonCard(hackathon);
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        teamGroup = new ButtonGroup();
+        for (String team : teamList) {
+            // Evita di mostrare il team corrente nella lista
+            if (!team.equals(currentTeam)) {
+                JPanel card = createTeamCard(team);
+                listPanel.add(card);
+                listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
         }
+
+        // Forza il preferred size del listPanel in base al numero di elementi
+        int cardHeight = 50;
+        int gap = 10;
+        int totalHeight = (teamList.length - 1) * (cardHeight + gap) + 20; // -1 perché escludiamo il team corrente
+        listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -73,40 +83,40 @@ public class RegistrationGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true);
+            callerFrame.setVisible(true); // torna alla GUI chiamante
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Registrati" al centro
+        // Bottone "Cambia Team" al centro
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
-        JButton registerBtn = new JButton("Registrati");
-        registerBtn.setPreferredSize(new Dimension(120, 35));
-        registerBtn.setBackground(new Color(60, 179, 113)); // Verde
-        registerBtn.setForeground(Color.WHITE);
-        registerBtn.setFocusPainted(false);
-        registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        registerBtn.addActionListener(e -> {
-            String selectedHackathon = getSelectedHackathon();
-            if (selectedHackathon == null) {
-                JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
+        JButton changeBtn = new JButton("Cambia Team");
+        changeBtn.setPreferredSize(new Dimension(140, 35));
+        changeBtn.setBackground(new Color(220, 120, 60)); // Colore arancione
+        changeBtn.setForeground(Color.WHITE);
+        changeBtn.setFocusPainted(false);
+        changeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        changeBtn.addActionListener(e -> {
+            String selectedTeam = getSelectedTeam();
+            if (selectedTeam == null) {
+                JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                // Popup di conferma registrazione
+                // Popup di conferma
                 int response = JOptionPane.showConfirmDialog(
                         frame,
-                        "Sei sicuro di volerti registrare all'hackathon:\n" + selectedHackathon + "?",
-                        "Conferma Registrazione",
+                        "Sei sicuro di voler cambiare team?\nDa: " + currentTeam + "\nA: " + selectedTeam,
+                        "Conferma Cambio Team",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 );
 
                 if (response == JOptionPane.YES_OPTION) {
-                    // Qui puoi aggiungere la logica per effettuare la registrazione nel controller
+                    // Qui puoi aggiungere la logica per effettuare il cambio team nel controller
                     JOptionPane.showMessageDialog(frame,
-                            "Registrazione completata con successo!\nHackathon: " + selectedHackathon,
-                            "Registrazione Effettuata",
+                            "Team cambiato con successo!\nNuovo team: " + selectedTeam,
+                            "Successo",
                             JOptionPane.INFORMATION_MESSAGE);
 
                     // Torna alla schermata precedente
@@ -116,7 +126,7 @@ public class RegistrationGUI {
             }
         });
 
-        centerPanel.add(registerBtn);
+        centerPanel.add(changeBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -125,29 +135,29 @@ public class RegistrationGUI {
         frame.setVisible(true);
     }
 
-    private JPanel createHackathonCard(String hackathonName) {
+    // ====== CREAZIONE CARD TEAM ======
+    private JPanel createTeamCard(String teamName) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setPreferredSize(new Dimension(650, 60));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Radio button + testo
-        JRadioButton radio = new JRadioButton(hackathonName);
+        JRadioButton radio = new JRadioButton(teamName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
-        hackathonGroup.add(radio);
+        teamGroup.add(radio);
 
         card.add(radio, BorderLayout.CENTER);
 
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
-    private String getSelectedHackathon() {
-        for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
+    // ====== OTTIENI TEAM SELEZIONATO ======
+    private String getSelectedTeam() {
+        for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
             if (button.isSelected()) return button.getText();
         }
