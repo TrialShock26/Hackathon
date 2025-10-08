@@ -52,7 +52,7 @@ public class HomeGUI {
 //        Image img = new ImageIcon(System.getProperty("user.dir"+"\\src\\main\\java\\gui\\homeTick.png")).getImage();
 //        image.setIcon(new ImageIcon(img));
 //        image.setBounds(100, 100, 100, 100);
-//        frame.add(image);TODO
+//        frame.add(image); //TODO
         image.setFont(new Font("Arial", Font.PLAIN, 80));
         image.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(image);
