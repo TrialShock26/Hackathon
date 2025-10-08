@@ -1,47 +1,67 @@
 package gui;
 
 import java.awt.*;
+import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
 public class TeamGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private ButtonGroup teamGroup;
 
-    public TeamGUI(Controller controller, JFrame callerFrame, String teamName) {
-        frame = new JFrame("Riepilogo Team");
+    public TeamGUI(Controller controller, JFrame callerFrame, String selected_Hackathon) {
+
+        frame = new JFrame("Seleziona Team");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(500, 300);
+        frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Riepilogo Team", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(15, 10, 10, 10));
+        JLabel titleLabel = new JLabel("Seleziona Team", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== PANEL CENTRALE ======
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBackground(new Color(240, 240, 245));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        // ====== LISTA TEAM CON RADIOBUTTON ======
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBackground(new Color(240, 240, 245));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Nome team
-        contentPanel.add(createInfoRow("Nome Team:", teamName));
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        // Lista di team (esempio, in futuro prendi la lista dal controller)
+        String[] teamList = {
+                "Team Alpha",
+                "Team Beta",
+                "Team Gamma",
+                "Team Delta",
+                "Team Epsilon",
+                "Team Diocane",
+                "Team LucaisCoglione"
+        };
 
-        // Numero membri (esempio)
-        contentPanel.add(createInfoRow("Numero Membri:", "5"));
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        teamGroup = new ButtonGroup();
+        for (String team : teamList) {
+            JPanel card = createTeamCard(team);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
 
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        // --- Forzo il preferred size del listPanel in base al numero di elementi così la scrollbar compare ---
+        int cardHeight = 50; // altezza di ciascuna "card" (coerente con createTeamCard)
+        int gap = 10;
+        int totalHeight = teamList.length * (cardHeight + gap) + 20;
+        listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
+
+        JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(12);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ====== PANEL INFERIORE ======
@@ -61,28 +81,33 @@ public class TeamGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true); // torna alla TeamGUI originale
+            callerFrame.setVisible(true); // torna alla GUI chiamante
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Documenti" al centro
+        // Bottone "Apri" al centro
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
-        JButton docBtn = new JButton("Documenti");
-        docBtn.setPreferredSize(new Dimension(140, 35));
-        docBtn.setBackground(new Color(70, 130, 180));
-        docBtn.setForeground(Color.WHITE);
-        docBtn.setFocusPainted(false);
-        docBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        docBtn.addActionListener(e -> {
-            // Apri la GUI dei documenti del team
-            new ExnVoteGUI(controller, frame, teamName);
-            frame.setVisible(false); // nasconde TeamResumeGUI
+        JButton openBtn = new JButton("Apri");
+        openBtn.setPreferredSize(new Dimension(120, 35));
+        openBtn.setBackground(new Color(70, 130, 180));
+        openBtn.setForeground(Color.WHITE);
+        openBtn.setFocusPainted(false);
+        openBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        openBtn.addActionListener(e -> {
+            String selectedTeam = getSelectedTeam();
+            if (selectedTeam == null) {
+                JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
+            } else {
+                frame.setVisible(false);
+                // uso il campo this.controller (non più la variabile locale) -> niente errori di scope
+                new ExnVoteGUI(controller, frame, selectedTeam);
+            }
         });
 
-        centerPanel.add(docBtn);
+        centerPanel.add(openBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
@@ -91,22 +116,33 @@ public class TeamGUI {
         frame.setVisible(true);
     }
 
-    // ====== METODO PER CREARE RIGA INFORMATIVA ======
-    private JPanel createInfoRow(String label, String value) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
-        panel.setBackground(new Color(240, 240, 245));
-        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
+    // ====== CREAZIONE CARD TEAM ======
+    private JPanel createTeamCard(String teamName) {
+        JPanel card = new JPanel(new BorderLayout());
+        // non forzare un preferred size troppo rigido: usa maximum size per farle adattare al viewport
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
+                BorderFactory.createEmptyBorder(10, 20, 10, 20)
+        ));
 
-        JLabel nameLabel = new JLabel(label);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        nameLabel.setPreferredSize(new Dimension(150, 25));
+        JRadioButton radio = new JRadioButton(teamName);
+        radio.setBackground(Color.WHITE);
+        radio.setFont(new Font("Arial", Font.PLAIN, 16));
+        teamGroup.add(radio);
 
-        JLabel valueLabel = new JLabel(value);
-        valueLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        card.add(radio, BorderLayout.CENTER);
 
-        panel.add(nameLabel);
-        panel.add(valueLabel);
+        return card;
+    }
 
-        return panel;
+    // ====== OTTIENI TEAM SELEZIONATO ======
+    private String getSelectedTeam() {
+        for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) return button.getText();
+        }
+        return null;
     }
 }

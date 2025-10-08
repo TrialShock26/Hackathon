@@ -39,10 +39,9 @@ public class ResumeGUI {
 
         // Campi informativi
         contentPanel.add(createInfoRow("Sede:", "Roma Innovation Hub"));
-        contentPanel.add(createInfoRow("Durata:", "48 ore"));
+        contentPanel.add(createInfoRow("Durata:", "2 giorni"));
         contentPanel.add(createInfoRow("Data Inizio:", "12 Maggio 2025"));
         contentPanel.add(createInfoRow("Data Fine:", "14 Maggio 2025"));
-        contentPanel.add(createInfoRow("Periodo Iscrizioni:", "Marzo - Aprile 2025"));
         contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", "1 Marzo 2025"));
         contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", "30 Aprile 2025"));
         contentPanel.add(createInfoRow("Max Iscritti:", "150"));
