@@ -13,7 +13,7 @@ public class RankingGUI {
     public RankingGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Ranking Hackathon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 500);
+        frame.setSize(800, 600); // stessa dimensione di PlannerGUI
         frame.setLocationRelativeTo(null);
 
         mainPanel = new JPanel(new BorderLayout());
@@ -25,7 +25,7 @@ public class RankingGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
+        // ====== LISTA HACKATHON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
@@ -48,18 +48,11 @@ public class RankingGUI {
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // Forza il preferred size del listPanel
-        int cardHeight = 60;
-        int gap = 10;
-        int totalHeight = hackathons.length * (cardHeight + gap) + 20;
-        listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
-
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ====== PANEL INFERIORE ======
@@ -67,7 +60,7 @@ public class RankingGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
+        // Pulsante Indietro a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
         JButton backBtn = new JButton("Indietro");
@@ -83,8 +76,8 @@ public class RankingGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone centrale "Visualizza"
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        // Pulsante centrale "Visualizza"
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
         JButton viewBtn = new JButton("Visualizza");
         viewBtn.setPreferredSize(new Dimension(150, 40));
@@ -110,10 +103,9 @@ public class RankingGUI {
         frame.setVisible(true);
     }
 
-    // ====== CREAZIONE CARD HACKATHON ======
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        card.setPreferredSize(new Dimension(650, 60));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
@@ -121,20 +113,17 @@ public class RankingGUI {
         ));
 
         // RadioButton a sinistra
-        // All'interno di createHackathonCard:
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
-        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        radio.setActionCommand(hackathonName); // <-- associamo il nome
+        radio.setActionCommand(hackathonName); // associa il nome dell'hackathon
         hackathonGroup.add(radio);
 
-// Non serve più cercare il JLabel
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
         leftPanel.setBackground(Color.WHITE);
         leftPanel.add(radio);
         card.add(leftPanel, BorderLayout.WEST);
 
-// Nome hackathon a destra
+        // Nome hackathon a destra
         JLabel nameLabel = new JLabel(hackathonName);
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -142,16 +131,13 @@ public class RankingGUI {
         rightPanel.add(nameLabel);
         card.add(rightPanel, BorderLayout.CENTER);
 
-
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
     private String getSelectedHackathon() {
         if (hackathonGroup.getSelection() != null) {
             return hackathonGroup.getSelection().getActionCommand();
         }
         return null;
     }
-
 }
