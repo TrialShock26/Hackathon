@@ -25,25 +25,25 @@ public class RegistrationGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
+        // ====== DESCRIZIONI DEI PROBLEMI ======
+        java.util.Map<String, String> hackathonDescriptions = new java.util.HashMap<>();
+        hackathonDescriptions.put("Hack4Future 2025", "Sviluppa soluzioni digitali sostenibili per il futuro delle città.");
+        hackathonDescriptions.put("TechSprint 2025", "Crea prototipi innovativi in ambito intelligenza artificiale e machine learning.");
+        hackathonDescriptions.put("Innovathon Roma", "Idee creative per migliorare la vita urbana attraverso la tecnologia.");
+        hackathonDescriptions.put("AI Challenge", "Sfida di programmazione e data science per costruire modelli di AI intelligenti.");
+        hackathonDescriptions.put("Green Hack 2025", "Progetta strumenti per favorire la transizione ecologica e ridurre l’impatto ambientale.");
+        hackathonDescriptions.put("Design Jam 2025", "Metti alla prova la tua creatività nel design di interfacce e user experience.");
+        hackathonDescriptions.put("HealthTech Hack", "Sviluppa soluzioni tecnologiche per la salute e il benessere.");
+
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        String[] hackathonList = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
-        };
-
         hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonList) {
-            JPanel card = createHackathonCard(hackathon);
+        for (String hackathon : hackathonDescriptions.keySet()) {
+            JPanel card = createHackathonCard(hackathon, hackathonDescriptions.get(hackathon));
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -93,7 +93,6 @@ public class RegistrationGUI {
             if (selectedHackathon == null) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                // Popup di conferma registrazione
                 int response = JOptionPane.showConfirmDialog(
                         frame,
                         "Sei sicuro di volerti registrare all'hackathon:\n" + selectedHackathon + "?",
@@ -103,13 +102,11 @@ public class RegistrationGUI {
                 );
 
                 if (response == JOptionPane.YES_OPTION) {
-                    // Qui puoi aggiungere la logica per effettuare la registrazione nel controller
                     JOptionPane.showMessageDialog(frame,
                             "Registrazione completata con successo!\nHackathon: " + selectedHackathon,
                             "Registrazione Effettuata",
                             JOptionPane.INFORMATION_MESSAGE);
 
-                    // Torna alla schermata precedente
                     frame.dispose();
                     callerFrame.setVisible(true);
                 }
@@ -125,7 +122,8 @@ public class RegistrationGUI {
         frame.setVisible(true);
     }
 
-    private JPanel createHackathonCard(String hackathonName) {
+    // ====== CREA CARD HACKATHON ======
+    private JPanel createHackathonCard(String hackathonName, String description) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(650, 60));
         card.setBackground(Color.WHITE);
@@ -134,15 +132,56 @@ public class RegistrationGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Radio button + testo
         JRadioButton radio = new JRadioButton(hackathonName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
-        hackathonGroup.add(radio);
 
+        // Quando si seleziona, apre un popup con la descrizione
+        radio.addActionListener(e -> showDescriptionPopup(hackathonName, description));
+
+        hackathonGroup.add(radio);
         card.add(radio, BorderLayout.CENTER);
 
         return card;
+    }
+
+    // ====== MOSTRA POPUP DESCRIZIONE ======
+    private void showDescriptionPopup(String hackathonName, String description) {
+        JDialog dialog = new JDialog(frame, "Descrizione: " + hackathonName, true);
+        dialog.setSize(500, 300);
+        dialog.setLocationRelativeTo(frame);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new Color(245, 245, 250));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        JTextArea textArea = new JTextArea(description);
+        textArea.setFont(new Font("Arial", Font.PLAIN, 15));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setCaretPosition(0);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Descrizione del Problema"));
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        JButton closeBtn = new JButton("Chiudi");
+        closeBtn.setBackground(new Color(150, 150, 150));
+        closeBtn.setForeground(Color.WHITE);
+        closeBtn.setPreferredSize(new Dimension(100, 30));
+        closeBtn.setFocusPainted(false);
+        closeBtn.addActionListener(e -> dialog.dispose());
+
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnPanel.setBackground(new Color(245, 245, 250));
+        btnPanel.add(closeBtn);
+
+        panel.add(btnPanel, BorderLayout.SOUTH);
+
+        dialog.setContentPane(panel);
+        dialog.setVisible(true);
     }
 
     // ====== OTTIENI HACKATHON SELEZIONATO ======
