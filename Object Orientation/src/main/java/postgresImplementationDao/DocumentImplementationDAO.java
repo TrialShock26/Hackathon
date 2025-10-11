@@ -1,4 +1,6 @@
 package postgresImplementationDao;
 
-public class DocumentImplementationDAO {
+import dao.DocumentDAO;
+
+public class DocumentImplementationDAO implements DocumentDAO {
 }

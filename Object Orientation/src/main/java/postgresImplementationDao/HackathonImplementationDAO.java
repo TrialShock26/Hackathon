@@ -1,4 +1,6 @@
 package postgresImplementationDao;
 
-public class HackathonImplementationDAO {
+import dao.HackathonDAO;
+
+public class HackathonImplementationDAO implements HackathonDAO {
 }

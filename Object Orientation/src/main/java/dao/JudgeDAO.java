@@ -1,13 +1,14 @@
 package dao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface JudgeDAO {
-    void publishProblem(String text, String title, String location);
-    void examineDocument(String username, String docTitle, String content, String teamName, String hackTitle, String location);
-    void gradeTeam(String username, String teamName, String title, String location, int value);
-    void getHackathons(String username, ArrayList<String> title, ArrayList<String> location);
-    void getTeams(String title, String location, ArrayList<String> teamNames);
+    void publishProblem(String text, String title, String location) throws SQLException;
+    void examineDocument(String username, String docTitle, String content, String teamName, String hackTitle, String location) throws SQLException;
+    void gradeTeam(String username, String teamName, String title, String location, int value) throws SQLException;
+    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) throws SQLException;
+    void getTeams(String title, String location, ArrayList<String> teamNames) throws SQLException;
     void getDocuments(String teamName, String hackTitle, String location,
-                      ArrayList<String> docTitles, ArrayList<String> contents, ArrayList<String> comments);
+                      ArrayList<String> docTitles, ArrayList<String> contents, ArrayList<String> comments) throws SQLException;
 }
