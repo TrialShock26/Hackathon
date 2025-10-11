@@ -55,7 +55,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
     }
 
     @Override
-    public void endHackathon(String title, String location, ArrayList<String> teamNames, ArrayList<Integer> finalScores) throws SQLException {
+    public void endHackathon(String title, String location, ArrayList<String> teamNames, ArrayList<Double> finalScores) throws SQLException {
         CallableStatement cs;
         ResultSet rs;
         String query = "DO $$ " +
@@ -77,7 +77,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
 
         while (rs.next()) {
             teamNames.add(rs.getString("nome_team"));
-            finalScores.add(rs.getInt("voto_finale"));
+            finalScores.add(rs.getDouble("voto_finale"));
         }
     }
 

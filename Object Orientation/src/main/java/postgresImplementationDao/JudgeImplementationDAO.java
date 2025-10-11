@@ -2,7 +2,6 @@ package postgresImplementationDao;
 
 import dao.JudgeDAO;
 import database.DatabaseConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 

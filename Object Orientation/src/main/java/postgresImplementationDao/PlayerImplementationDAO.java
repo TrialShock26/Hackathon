@@ -2,7 +2,6 @@ package postgresImplementationDao;
 
 import dao.PlayerDAO;
 import database.DatabaseConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -72,6 +71,26 @@ public class PlayerImplementationDAO implements PlayerDAO {
         while (rs.next()) {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
+            teamNames.add(rs.getString("nome"));
+        }
+    }
+
+    @Override
+    public void getOtherTeams(String username, String title, String location, ArrayList<String> teamNames) throws SQLException {
+        PreparedStatement ps;
+        String query = "SELECT nome " +
+                "FROM Team NATURAL JOIN Hackathon " +
+                "WHERE titolo = ? AND sede = ? " +
+                "  AND nome NOT IN (SELECT t.nome " +
+                "                   FROM Team t NATURAL JOIN Partecipazione NATURAL JOIN Partecipante p JOIN Utente u ON u.username = p.username " +
+                "                   WHERE u.username = ?)";
+        ps = connection.prepareStatement(query);
+        ps.setString(1, title);
+        ps.setString(2, location);
+        ps.setString(3, username);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
             teamNames.add(rs.getString("nome"));
         }
     }

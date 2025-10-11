@@ -2,7 +2,6 @@ package postgresImplementationDao;
 
 import dao.TeamDAO;
 import database.DatabaseConnection;
-
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
