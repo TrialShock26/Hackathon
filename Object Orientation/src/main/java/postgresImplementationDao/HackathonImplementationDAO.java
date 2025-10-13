@@ -57,4 +57,19 @@ public class HackathonImplementationDAO implements HackathonDAO {
             scores.add(rs.getDouble("voto_finale"));
         }
     }
+
+    @Override
+    public void getClosedHackathons(ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
+        PreparedStatement ps;
+        String query = "SELECT titolo, sede " +
+                        "FROM Hackathon " +
+                        "WHERE data_fine <= CURRENT_DATE;";
+        ps = connection.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            titles.add(rs.getString("titolo"));
+            locations.add(rs.getString("sede"));
+        }
+    }
 }
