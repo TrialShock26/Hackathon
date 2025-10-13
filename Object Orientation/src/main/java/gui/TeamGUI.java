@@ -13,7 +13,7 @@ public class TeamGUI {
     public TeamGUI(Controller controller, JFrame callerFrame, String selected_Hackathon) {
 
         frame = new JFrame("Seleziona Team");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -102,7 +102,6 @@ public class TeamGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                // uso il campo this.controller (non più la variabile locale) -> niente errori di scope
                 new ExnVoteGUI(controller, frame, selectedTeam);
             }
         });

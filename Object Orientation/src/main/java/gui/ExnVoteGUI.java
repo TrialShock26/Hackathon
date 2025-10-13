@@ -1,18 +1,33 @@
 package gui;
 
 import java.awt.*;
+import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
 public class ExnVoteGUI {
     private JFrame frame;
     private String teamName;
+    private ButtonGroup documentGroup;
+    private JRadioButton[] documentButtons;
+    private String[] documentNames = {
+            "Progetto_Sostenibilità.pdf",
+            "Analisi_Tecnica.docx",
+            "Presentazione.pptx",
+            "Business_Plan.pdf"
+    };
+    private String[] documentPreviews = {
+            "Soluzione IoT per monitorare consumi energetici urbani...",
+            "Analisi architetturale del sistema con tecnologie open source...",
+            "Slide riepilogative del progetto e risultati attesi...",
+            "Business model e piano economico per la realizzazione..."
+    };
 
     public ExnVoteGUI(Controller controller, JFrame callerFrame, String teamName) {
         this.teamName = teamName;
 
         frame = new JFrame("Esamina Team - " + teamName);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -25,26 +40,24 @@ public class ExnVoteGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ===== AREA DOCUMENTO CON SCROLLBAR =====
-        JTextArea documentArea = new JTextArea();
-        documentArea.setText("""
-                Descrizione del progetto del team...
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Nulla nec commodo nisi. Suspendisse potenti.
-                In hac habitasse platea dictumst. 
-                Curabitur tincidunt purus ac diam euismod, in placerat velit mattis.
-                """);
-        documentArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        documentArea.setLineWrap(true);
-        documentArea.setWrapStyleWord(true);
-        documentArea.setEditable(false);
-        documentArea.setCaretPosition(0);
+        // ===== LISTA DOCUMENTI =====
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBackground(new Color(240, 240, 245));
 
-        JScrollPane scrollPane = new JScrollPane(documentArea);
+        documentGroup = new ButtonGroup();
+        documentButtons = new JRadioButton[documentNames.length];
+
+        for (int i = 0; i < documentNames.length; i++) {
+            JPanel card = createDocumentCard(documentNames[i], documentPreviews[i], i);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== PANEL INFERIORE =====
@@ -52,7 +65,7 @@ public class ExnVoteGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // --- Bottone "Indietro" a sinistra ---
+        // --- Bottone "Indietro" ---
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -61,7 +74,6 @@ public class ExnVoteGUI {
         backBtn.setBackground(new Color(150, 150, 150));
         backBtn.setForeground(Color.WHITE);
         backBtn.setFocusPainted(false);
-        backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
             callerFrame.setVisible(true);
@@ -69,7 +81,7 @@ public class ExnVoteGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // --- Pannello centrale con Esamina e Valuta ---
+        // --- Pulsanti centrali ---
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 5));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -78,20 +90,13 @@ public class ExnVoteGUI {
         examineBtn.setBackground(new Color(70, 130, 180));
         examineBtn.setForeground(Color.WHITE);
         examineBtn.setFocusPainted(false);
-        examineBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        examineBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame,
-                    "Qui potresti aprire il documento completo del team \"" + teamName + "\".",
-                    "Esamina Team",
-                    JOptionPane.INFORMATION_MESSAGE);
-        });
+        examineBtn.addActionListener(e -> openSelectedDocument());
 
         JButton rateBtn = new JButton("Valuta");
         rateBtn.setPreferredSize(new Dimension(120, 35));
         rateBtn.setBackground(new Color(34, 139, 34));
         rateBtn.setForeground(Color.WHITE);
         rateBtn.setFocusPainted(false);
-        rateBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         rateBtn.addActionListener(e -> openVoteDialog());
 
         centerPanel.add(examineBtn);
@@ -104,7 +109,149 @@ public class ExnVoteGUI {
         frame.setVisible(true);
     }
 
-    // ===== POPUP DI VALUTAZIONE =====
+    // ===== CREA CARD DOCUMENTO =====
+    private JPanel createDocumentCard(String docName, String preview, int index) {
+        JPanel card = new JPanel(new BorderLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+
+        // --- RadioButton a sinistra ---
+        JRadioButton radio = new JRadioButton();
+        radio.setBackground(Color.WHITE);
+        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        documentButtons[index] = radio;
+        documentGroup.add(radio);
+
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        leftPanel.setBackground(Color.WHITE);
+        leftPanel.add(radio);
+        card.add(leftPanel, BorderLayout.WEST);
+
+        // --- Pannello centrale con nome e anteprima ---
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(Color.WHITE);
+
+        JLabel nameLabel = new JLabel(docName);
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        infoPanel.add(nameLabel);
+
+        JLabel previewLabel = new JLabel("<html><i>" + preview + "</i></html>");
+        previewLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+        infoPanel.add(previewLabel);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        // --- Rendi cliccabile tutta la card ---
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+            }
+        });
+
+        return card;
+    }
+
+
+
+
+    // ===== APRE DOCUMENTO SELEZIONATO =====
+    private void openSelectedDocument() {
+        for (int i = 0; i < documentButtons.length; i++) {
+            if (documentButtons[i].isSelected()) {
+                openDocumentPopup(documentNames[i], documentPreviews[i]);
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(frame,
+                "Seleziona un documento prima di procedere.",
+                "Nessun documento selezionato",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    // ===== POPUP DOCUMENTO =====
+    private void openDocumentPopup(String docName, String contentPreview) {
+        JDialog dialog = new JDialog(frame, "Documento - " + docName, true);
+        dialog.setSize(800, 500);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setLayout(new BorderLayout());
+        dialog.getContentPane().setBackground(new Color(245, 245, 250));
+
+        // --- Pannello principale con due colonne ---
+        JPanel mainContent = new JPanel(new GridLayout(1, 2, 10, 0)); // due colonne
+        mainContent.setBackground(new Color(245, 245, 250));
+        mainContent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Sezione documento ---
+        JTextArea contentArea = new JTextArea();
+        contentArea.setText(
+                "Contenuto completo del documento \"" + docName + "\".\n\n"
+                        + contentPreview + "\n\n"
+                        + "[Questo è un esempio: qui verrebbe mostrato il testo vero e proprio "
+                        + "del file selezionato o una sua anteprima dettagliata.]"
+        );
+        contentArea.setFont(new Font("Arial", Font.PLAIN, 15));
+        contentArea.setLineWrap(true);
+        contentArea.setWrapStyleWord(true);
+        contentArea.setEditable(false);
+        contentArea.setCaretPosition(0);
+
+        JScrollPane contentScroll = new JScrollPane(contentArea);
+        contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto Documento"));
+        contentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // --- Sezione commenti ---
+        JTextArea commentArea = new JTextArea();
+        commentArea.setFont(new Font("Arial", Font.PLAIN, 15));
+        commentArea.setLineWrap(true);
+        commentArea.setWrapStyleWord(true);
+
+        JScrollPane commentScroll = new JScrollPane(commentArea);
+        commentScroll.setBorder(BorderFactory.createTitledBorder("Il tuo commento"));
+        commentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        mainContent.add(contentScroll);
+        mainContent.add(commentScroll);
+
+        dialog.add(mainContent, BorderLayout.CENTER);
+
+        // --- Pannello bottoni ---
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(new Color(245, 245, 250));
+
+        JButton commentBtn = new JButton("Commenta");
+        commentBtn.setBackground(new Color(70, 130, 180));
+        commentBtn.setForeground(Color.WHITE);
+        commentBtn.setPreferredSize(new Dimension(120, 35));
+        commentBtn.setFocusPainted(false);
+        commentBtn.addActionListener(e -> {
+            String comment = commentArea.getText();
+            // Logica di invio commento non implementata
+            dialog.dispose();
+        });
+
+        JButton closeBtn = new JButton("Chiudi");
+        closeBtn.setBackground(new Color(150, 150, 150));
+        closeBtn.setForeground(Color.WHITE);
+        closeBtn.setPreferredSize(new Dimension(120, 35));
+        closeBtn.setFocusPainted(false);
+        closeBtn.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(commentBtn);
+        buttonPanel.add(closeBtn);
+
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+
+
+
+    // ===== POPUP VALUTAZIONE =====
     private void openVoteDialog() {
         JDialog dialog = new JDialog(frame, "Assegna Voto", true);
         dialog.setSize(350, 200);
@@ -143,8 +290,6 @@ public class ExnVoteGUI {
                     "Hai assegnato il voto " + selectedVote + " al team \"" + teamName + "\".",
                     "Voto assegnato",
                     JOptionPane.INFORMATION_MESSAGE);
-
-            // Esempio: controller.saveVote(teamName, selectedVote);
         });
 
         JButton cancelBtn = new JButton("Annulla");

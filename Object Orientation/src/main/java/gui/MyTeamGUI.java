@@ -7,9 +7,11 @@ import controller.*;
 public class MyTeamGUI {
     private JFrame frame;
     private JTextArea textArea;
+    private JTextField titleField;
 
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName) {
-        frame = new JFrame("Il Mio Team");
+        // Il titolo della finestra ora è il nome del team
+        frame = new JFrame(teamName);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
@@ -22,41 +24,57 @@ public class MyTeamGUI {
         headerPanel.setBackground(new Color(240, 240, 245));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel titleLabel = new JLabel("Il Mio Team", SwingConstants.CENTER);
+        // Titolo: mostra il nome reale del team
+        JLabel titleLabel = new JLabel(teamName, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setForeground(new Color(70, 130, 180));
         headerPanel.add(titleLabel, BorderLayout.NORTH);
 
         // Pannello informazioni utente e team
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
-        // Username (potresti prenderlo dal controller)
-        String username = "MarioRossi"; // Esempio, sostituisci con dati reali
+        // Username
+        String username = "MarioRossi"; // Esempio
         JLabel userLabel = new JLabel("Utente: " + username);
         userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        JLabel teamLabel = new JLabel("Team: " + teamName);
-        teamLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        teamLabel.setForeground(new Color(70, 130, 180));
-
         infoPanel.add(userLabel);
-        infoPanel.add(teamLabel);
         headerPanel.add(infoPanel, BorderLayout.CENTER);
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // ====== PANEL CENTRALE CON AREA DI TESTO ======
-        JPanel centerPanel = new JPanel(new BorderLayout());
+        // ====== PANEL CENTRALE CON CAMPO TITOLO E AREA TESTO ======
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(Color.WHITE);
         centerPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
 
+        // Campo titolo
+        JLabel titleFieldLabel = new JLabel("Titolo del Documento:");
+        titleFieldLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        titleFieldLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        titleField = new JTextField();
+        titleField.setFont(new Font("Arial", Font.PLAIN, 14));
+        titleField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        titleField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        titleField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+
+        centerPanel.add(titleFieldLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(titleField);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Area testo
         JLabel textLabel = new JLabel("Scrivi il contenuto del Documento da Pubblicare:");
         textLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        textLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        centerPanel.add(textLabel, BorderLayout.NORTH);
+        textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        centerPanel.add(textLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         textArea = new JTextArea();
         textArea.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -65,8 +83,9 @@ public class MyTeamGUI {
         textArea.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
 
         JScrollPane textScrollPane = new JScrollPane(textArea);
-        textScrollPane.setPreferredSize(new Dimension(700, 200));
-        centerPanel.add(textScrollPane, BorderLayout.CENTER);
+        textScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        textScrollPane.setPreferredSize(new Dimension(700, 250));
+        centerPanel.add(textScrollPane);
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
@@ -75,7 +94,7 @@ public class MyTeamGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
+        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -92,11 +111,10 @@ public class MyTeamGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pannello destro con i due bottoni
+        // Bottoni a destra
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         rightPanel.setBackground(new Color(240, 240, 245));
 
-        // Bottone "Vedi Partecipanti"
         JButton teammatesBtn = new JButton("Vedi Partecipanti");
         teammatesBtn.setPreferredSize(new Dimension(150, 35));
         teammatesBtn.setBackground(new Color(70, 130, 180));
@@ -108,7 +126,6 @@ public class MyTeamGUI {
             new TeamMatesGUI(controller, frame, teamName);
         });
 
-        // Bottone "Pubblica"
         JButton publishBtn = new JButton("Pubblica");
         publishBtn.setPreferredSize(new Dimension(120, 35));
         publishBtn.setBackground(new Color(60, 179, 113)); // Verde
@@ -116,13 +133,20 @@ public class MyTeamGUI {
         publishBtn.setFocusPainted(false);
         publishBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         publishBtn.addActionListener(e -> {
+            String title = titleField.getText().trim();
             String text = textArea.getText().trim();
-            if (text.isEmpty()) {
+
+            if (title.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Inserisci un titolo per il documento!", "Errore", JOptionPane.WARNING_MESSAGE);
+            } else if (text.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
-                //logica per pubblicazione col db
-                JOptionPane.showMessageDialog(frame, "Documento pubblicato con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-                textArea.setText(""); // Pulisce l'area di testo dopo la pubblicazione
+                // logica per pubblicazione con DB
+                JOptionPane.showMessageDialog(frame,
+                        "Documento \"" + title + "\" pubblicato con successo!",
+                        "Successo", JOptionPane.INFORMATION_MESSAGE);
+                titleField.setText("");
+                textArea.setText("");
             }
         });
 

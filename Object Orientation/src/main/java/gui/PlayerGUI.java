@@ -12,7 +12,7 @@ public class PlayerGUI {
 
     public PlayerGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Partecipa a Team");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -31,28 +31,28 @@ public class PlayerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Lista di team disponibili
-        String[] teamList = {
-                "Team Alpha",
-                "Team Beta",
-                "Team Gamma",
-                "Team Delta",
-                "Team Epsilon",
-                "Team Omega",
-                "Team Innovatori"
+        // Team e Hackathon di appartenenza
+        String[][] teamData = {
+                {"Team Alpha", "Hack4Future 2025"},
+                {"Team Beta", "TechSprint 2025"},
+                {"Team Gamma", "Innovathon Roma"},
+                {"Team Delta", "AI Challenge"},
+                {"Team Epsilon", "Green Hack 2025"},
+                {"Team Omega", "Design Jam 2025"},
+                {"Team Innovatori", "HealthTech Hack"}
         };
 
         teamGroup = new ButtonGroup();
-        for (String team : teamList) {
-            JPanel card = createTeamCard(team);
+        for (String[] data : teamData) {
+            JPanel card = createTeamCard(data[0], data[1]);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
         // Forza il preferred size del listPanel in base al numero di elementi
-        int cardHeight = 50;
+        int cardHeight = 60;
         int gap = 10;
-        int totalHeight = teamList.length * (cardHeight + gap) + 20;
+        int totalHeight = teamData.length * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
@@ -80,7 +80,7 @@ public class PlayerGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true); // torna alla GUI chiamante
+            callerFrame.setVisible(true);
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
@@ -89,7 +89,6 @@ public class PlayerGUI {
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setBackground(new Color(240, 240, 245));
 
-        // Bottone "Cambia"
         JButton changeBtn = new JButton("Cambia");
         changeBtn.setPreferredSize(new Dimension(120, 35));
         changeBtn.setBackground(new Color(220, 120, 60)); // Colore arancione
@@ -102,11 +101,10 @@ public class PlayerGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                new JoinGUI(controller, frame, selectedTeam); // Apre JoinGUI
+                new JoinGUI(controller, frame, selectedTeam);
             }
         });
 
-        // Bottone "Partecipa"
         JButton openBtn = new JButton("Apri");
         openBtn.setPreferredSize(new Dimension(120, 35));
         openBtn.setBackground(new Color(70, 130, 180));
@@ -119,7 +117,7 @@ public class PlayerGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                new MyTeamGUI(controller, frame, selectedTeam); // Apre MyTeamGUI
+                new MyTeamGUI(controller, frame, selectedTeam);
             }
         });
 
@@ -134,31 +132,63 @@ public class PlayerGUI {
     }
 
     // ====== CREAZIONE CARD TEAM ======
-    private JPanel createTeamCard(String teamName) {
+    // ====== CREAZIONE CARD TEAM ======
+    private JPanel createTeamCard(String teamName, String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        JRadioButton radio = new JRadioButton(teamName);
+        // --- RadioButton a sinistra ---
+        JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
-        radio.setFont(new Font("Arial", Font.PLAIN, 16));
+        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        radio.setActionCommand(teamName);
         teamGroup.add(radio);
 
-        card.add(radio, BorderLayout.CENTER);
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+        leftPanel.setBackground(Color.WHITE);
+        leftPanel.add(radio);
+        card.add(leftPanel, BorderLayout.WEST);
+
+        // --- Informazioni del team (destra) ---
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(Color.WHITE);
+
+        JLabel teamLabel = new JLabel(teamName);
+        teamLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel hackathonLabel = new JLabel("<html><i>" + hackathonName + "</i></html>");
+        hackathonLabel.setFont(new Font("Arial", Font.PLAIN, 13));
+
+        infoPanel.add(teamLabel);
+        infoPanel.add(hackathonLabel);
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        // === RENDI LA CARD CLICCABILE ===
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+                radio.requestFocusInWindow(); // forza il focus
+            }
+        });
+
 
         return card;
     }
 
+
+
+
     // ====== OTTIENI TEAM SELEZIONATO ======
     private String getSelectedTeam() {
-        for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
-            if (button.isSelected()) return button.getText();
-        }
-        return null;
+        ButtonModel selectedModel = teamGroup.getSelection();
+        return (selectedModel != null) ? selectedModel.getActionCommand() : null;
     }
+
 }

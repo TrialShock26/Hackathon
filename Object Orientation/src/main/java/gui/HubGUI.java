@@ -12,7 +12,7 @@ public class HubGUI {
     private JButton nuovaPartitaButton;
     private JButton giudicaButton;
     private JButton gestisciButton;
-    private JButton resocontoButton;
+    private JButton classificaButton;
     private JButton indietroButton;
     private JLabel title;
     private JLabel subtitle;
@@ -34,7 +34,7 @@ public class HubGUI {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
         // Titolo principale
-        title = new JLabel("Benvenuto in HackathON!");
+        title = new JLabel("Benvenut3 in HackathON!");
         title.setFont(new Font("Arial", Font.BOLD, 32));
         title.setForeground(new Color(50, 50, 50));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -62,7 +62,7 @@ public class HubGUI {
         nuovaPartitaButton = createStyledButton("Nuova Partita", new Color(255, 140, 0));
         giudicaButton = createStyledButton("Valuta", new Color(138, 43, 226));
         gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
-        resocontoButton = createStyledButton("Resoconto", new Color(100, 149, 237));
+        classificaButton = createStyledButton("Classifica", new Color(100, 149, 237));
 
         // --- Azione per il bottone CREA ---
         creaButton.addActionListener(e -> {
@@ -94,12 +94,18 @@ public class HubGUI {
             new RegistrationGUI(controller, frame);
         });
 
+        // --- Azione per il bottone Classifica ---
+        classificaButton.addActionListener(e -> {
+            frame.setVisible(false);
+            new RankingGUI(controller, frame);
+        });
+
         gridButtonsPanel.add(gioButton);
         gridButtonsPanel.add(creaButton);
         gridButtonsPanel.add(nuovaPartitaButton);
         gridButtonsPanel.add(giudicaButton);
         gridButtonsPanel.add(gestisciButton);
-        gridButtonsPanel.add(resocontoButton);
+        gridButtonsPanel.add(classificaButton);
 
         centerPanel.add(gridButtonsPanel);
         hubPanel.add(centerPanel, BorderLayout.CENTER);
