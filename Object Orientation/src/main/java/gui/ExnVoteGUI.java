@@ -110,7 +110,6 @@ public class ExnVoteGUI {
     }
 
     // ===== CREA CARD DOCUMENTO =====
-    // ===== CREA CARD DOCUMENTO =====
     private JPanel createDocumentCard(String docName, String preview, int index) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
@@ -118,6 +117,18 @@ public class ExnVoteGUI {
                 BorderFactory.createLineBorder(new Color(200, 200, 200)),
                 BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
+
+        // --- RadioButton a sinistra ---
+        JRadioButton radio = new JRadioButton();
+        radio.setBackground(Color.WHITE);
+        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        documentButtons[index] = radio;
+        documentGroup.add(radio);
+
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        leftPanel.setBackground(Color.WHITE);
+        leftPanel.add(radio);
+        card.add(leftPanel, BorderLayout.WEST);
 
         // --- Pannello centrale con nome e anteprima ---
         JPanel infoPanel = new JPanel();
@@ -134,21 +145,19 @@ public class ExnVoteGUI {
 
         card.add(infoPanel, BorderLayout.CENTER);
 
-        // --- RadioButton a destra ---
-        JRadioButton radio = new JRadioButton();
-        radio.setBackground(Color.WHITE);
-        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        documentButtons[index] = radio;
-        documentGroup.add(radio);
-
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        rightPanel.setBackground(Color.WHITE);
-        rightPanel.add(radio);
-
-        card.add(rightPanel, BorderLayout.EAST);
+        // --- Rendi cliccabile tutta la card ---
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+            }
+        });
 
         return card;
     }
+
+
 
 
     // ===== APRE DOCUMENTO SELEZIONATO =====
@@ -168,11 +177,17 @@ public class ExnVoteGUI {
     // ===== POPUP DOCUMENTO =====
     private void openDocumentPopup(String docName, String contentPreview) {
         JDialog dialog = new JDialog(frame, "Documento - " + docName, true);
-        dialog.setSize(600, 400);
+        dialog.setSize(800, 500);
         dialog.setLocationRelativeTo(frame);
         dialog.setLayout(new BorderLayout());
         dialog.getContentPane().setBackground(new Color(245, 245, 250));
 
+        // --- Pannello principale con due colonne ---
+        JPanel mainContent = new JPanel(new GridLayout(1, 2, 10, 0)); // due colonne
+        mainContent.setBackground(new Color(245, 245, 250));
+        mainContent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // --- Sezione documento ---
         JTextArea contentArea = new JTextArea();
         contentArea.setText(
                 "Contenuto completo del documento \"" + docName + "\".\n\n"
@@ -186,23 +201,55 @@ public class ExnVoteGUI {
         contentArea.setEditable(false);
         contentArea.setCaretPosition(0);
 
-        JScrollPane scrollPane = new JScrollPane(contentArea);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane contentScroll = new JScrollPane(contentArea);
+        contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto Documento"));
+        contentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        dialog.add(scrollPane, BorderLayout.CENTER);
+        // --- Sezione commenti ---
+        JTextArea commentArea = new JTextArea();
+        commentArea.setFont(new Font("Arial", Font.PLAIN, 15));
+        commentArea.setLineWrap(true);
+        commentArea.setWrapStyleWord(true);
+
+        JScrollPane commentScroll = new JScrollPane(commentArea);
+        commentScroll.setBorder(BorderFactory.createTitledBorder("Il tuo commento"));
+        commentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        mainContent.add(contentScroll);
+        mainContent.add(commentScroll);
+
+        dialog.add(mainContent, BorderLayout.CENTER);
+
+        // --- Pannello bottoni ---
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(new Color(245, 245, 250));
+
+        JButton commentBtn = new JButton("Commenta");
+        commentBtn.setBackground(new Color(70, 130, 180));
+        commentBtn.setForeground(Color.WHITE);
+        commentBtn.setPreferredSize(new Dimension(120, 35));
+        commentBtn.setFocusPainted(false);
+        commentBtn.addActionListener(e -> {
+            String comment = commentArea.getText();
+            // Logica di invio commento non implementata
+            dialog.dispose();
+        });
 
         JButton closeBtn = new JButton("Chiudi");
-        closeBtn.setPreferredSize(new Dimension(100, 30));
+        closeBtn.setBackground(new Color(150, 150, 150));
+        closeBtn.setForeground(Color.WHITE);
+        closeBtn.setPreferredSize(new Dimension(120, 35));
+        closeBtn.setFocusPainted(false);
         closeBtn.addActionListener(e -> dialog.dispose());
 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setBackground(new Color(245, 245, 250));
-        bottomPanel.add(closeBtn);
-        dialog.add(bottomPanel, BorderLayout.SOUTH);
+        buttonPanel.add(commentBtn);
+        buttonPanel.add(closeBtn);
 
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
         dialog.setVisible(true);
     }
+
+
 
     // ===== POPUP VALUTAZIONE =====
     private void openVoteDialog() {

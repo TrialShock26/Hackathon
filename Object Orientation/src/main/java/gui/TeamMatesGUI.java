@@ -17,18 +17,17 @@ public class TeamMatesGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+
         JLabel titleLabel = new JLabel("Partecipanti - " + teamName, SwingConstants.CENTER);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(titleLabel);
 
-        // ====== LISTA PARTECIPANTI ======
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBackground(new Color(240, 240, 245));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
-
-        // Lista di partecipanti (esempio, in futuro prendi la lista dal controller)
+// Campo "Numero membri" (più visibile ma elegante)
         String[] participants = {
                 "Mario Rossi",
                 "Laura Bianchi",
@@ -38,13 +37,28 @@ public class TeamMatesGUI {
                 "Sofia Blu"
         };
 
+        JLabel countLabel = new JLabel("Membri totali: " + participants.length);
+        countLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        countLabel.setForeground(new Color(60, 100, 170)); // blu tenue coerente con il tema
+        countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        countLabel.setBorder(BorderFactory.createEmptyBorder(8, 0, 10, 0));
+        headerPanel.add(countLabel);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+
+        // ====== LISTA PARTECIPANTI ======
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBackground(new Color(240, 240, 245));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
+
         for (String participant : participants) {
             JPanel card = createParticipantCard(participant);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         }
 
-        // Forza il preferred size del listPanel in base al numero di elementi
+        // Calcola altezza dinamica
         int cardHeight = 50;
         int gap = 8;
         int totalHeight = participants.length * (cardHeight + gap) + 20;
@@ -71,7 +85,7 @@ public class TeamMatesGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true); // torna a MyTeamGUI
+            callerFrame.setVisible(true);
         });
 
         bottomPanel.add(backBtn);

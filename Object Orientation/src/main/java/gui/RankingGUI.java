@@ -60,7 +60,7 @@ public class RankingGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Pulsante Indietro a sinistra
+// Pulsante Indietro a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
         JButton backBtn = new JButton("Indietro");
@@ -76,10 +76,10 @@ public class RankingGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pulsante centrale "Visualizza"
+// Pulsante centrale "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
-        JButton viewBtn = new JButton("Visualizza");
+        JButton viewBtn = new JButton("Apri");
         viewBtn.setPreferredSize(new Dimension(150, 40));
         viewBtn.setBackground(new Color(70, 130, 180));
         viewBtn.setForeground(Color.WHITE);
@@ -97,7 +97,24 @@ public class RankingGUI {
         centerPanel.add(viewBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
+// NUOVO PULSANTE GLOBALE a destra
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.setBackground(new Color(240, 240, 245));
+        JButton globalBtn = new JButton("Globale");
+        globalBtn.setPreferredSize(new Dimension(150, 40));
+        globalBtn.setBackground(new Color(255, 140, 0)); // arancione per evidenza
+        globalBtn.setForeground(Color.WHITE);
+        globalBtn.setFocusPainted(false);
+        globalBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        globalBtn.addActionListener(e -> {
+            frame.setVisible(false);
+            new ScoreboardGUI(controller, frame, null); // sostituisci AnotherGUI con la tua GUI reale
+        });
+        rightPanel.add(globalBtn);
+        bottomPanel.add(rightPanel, BorderLayout.EAST);
+
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
 
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
@@ -131,8 +148,18 @@ public class RankingGUI {
         rightPanel.add(nameLabel);
         card.add(rightPanel, BorderLayout.CENTER);
 
+        // --- Rendi cliccabile tutta la card ---
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+            }
+        });
+
         return card;
     }
+
 
     private String getSelectedHackathon() {
         if (hackathonGroup.getSelection() != null) {

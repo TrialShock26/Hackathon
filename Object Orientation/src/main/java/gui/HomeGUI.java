@@ -13,7 +13,7 @@ public class HomeGUI {
     public HomeGUI() {
         Controller controller = new Controller();
 
-        frame = new JFrame("Benvenutə in HackathON!");
+        frame = new JFrame("Benvenut3 in HackathON!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 600);
         frame.setLocationRelativeTo(null);
@@ -34,7 +34,7 @@ public class HomeGUI {
         gradientPanel.setLayout(new BorderLayout());
 
         // ====== TITOLO ======
-        JLabel title = new JLabel("Benvenutə in HackathON!", SwingConstants.CENTER);
+        JLabel title = new JLabel("Benvenut3 in HackathON!", SwingConstants.CENTER);
         title.setFont(new Font("Poppins", Font.BOLD, 38));
         title.setForeground(new Color(45, 60, 90));
         title.setBorder(BorderFactory.createEmptyBorder(40, 10, 10, 10));

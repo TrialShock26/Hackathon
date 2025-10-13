@@ -12,7 +12,7 @@ public class PlayerGUI {
 
     public PlayerGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Partecipa a Team");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -132,6 +132,7 @@ public class PlayerGUI {
     }
 
     // ====== CREAZIONE CARD TEAM ======
+    // ====== CREAZIONE CARD TEAM ======
     private JPanel createTeamCard(String teamName, String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
@@ -145,7 +146,9 @@ public class PlayerGUI {
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        radio.setActionCommand(teamName);
         teamGroup.add(radio);
+
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
         leftPanel.setBackground(Color.WHITE);
         leftPanel.add(radio);
@@ -163,19 +166,29 @@ public class PlayerGUI {
 
         infoPanel.add(teamLabel);
         infoPanel.add(hackathonLabel);
-
         card.add(infoPanel, BorderLayout.CENTER);
+
+        // === RENDI LA CARD CLICCABILE ===
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+                radio.requestFocusInWindow(); // forza il focus
+            }
+        });
+
 
         return card;
     }
 
 
+
+
     // ====== OTTIENI TEAM SELEZIONATO ======
     private String getSelectedTeam() {
-        for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
-            if (button.isSelected()) return button.getText();
-        }
-        return null;
+        ButtonModel selectedModel = teamGroup.getSelection();
+        return (selectedModel != null) ? selectedModel.getActionCommand() : null;
     }
+
 }

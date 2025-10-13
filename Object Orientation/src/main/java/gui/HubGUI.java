@@ -34,7 +34,7 @@ public class HubGUI {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
         // Titolo principale
-        title = new JLabel("Benvenuto in HackathON!");
+        title = new JLabel("Benvenut3 in HackathON!");
         title.setFont(new Font("Arial", Font.BOLD, 32));
         title.setForeground(new Color(50, 50, 50));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);

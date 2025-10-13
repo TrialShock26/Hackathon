@@ -10,6 +10,37 @@ public class RegistrationGUI {
     private JPanel mainPanel;
     private ButtonGroup hackathonGroup;
 
+    // ====== CLASSE DATI HACKATHON ======
+    private static class HackathonInfo {
+        String titolo;
+        String sede;
+        String durata;
+        String dataInizio;
+        String dataFine;
+        String periodoIscrizioni;
+        String dataAperturaIscrizioni;
+        String dataChiusuraIscrizioni;
+        int maxIscritti;
+        int maxDimTeam;
+        String descrizioneProblema;
+
+        public HackathonInfo(String titolo, String sede, String durata, String dataInizio, String dataFine,
+                             String periodoIscrizioni, String dataAperturaIscrizioni, String dataChiusuraIscrizioni,
+                             int maxIscritti, int maxDimTeam, String descrizioneProblema) {
+            this.titolo = titolo;
+            this.sede = sede;
+            this.durata = durata;
+            this.dataInizio = dataInizio;
+            this.dataFine = dataFine;
+            this.periodoIscrizioni = periodoIscrizioni;
+            this.dataAperturaIscrizioni = dataAperturaIscrizioni;
+            this.dataChiusuraIscrizioni = dataChiusuraIscrizioni;
+            this.maxIscritti = maxIscritti;
+            this.maxDimTeam = maxDimTeam;
+            this.descrizioneProblema = descrizioneProblema;
+        }
+    }
+
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -25,15 +56,54 @@ public class RegistrationGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== DESCRIZIONI DEI PROBLEMI ======
-        java.util.Map<String, String> hackathonDescriptions = new java.util.HashMap<>();
-        hackathonDescriptions.put("Hack4Future 2025", "Sviluppa soluzioni digitali sostenibili per il futuro delle città.");
-        hackathonDescriptions.put("TechSprint 2025", "Crea prototipi innovativi in ambito intelligenza artificiale e machine learning.");
-        hackathonDescriptions.put("Innovathon Roma", "Idee creative per migliorare la vita urbana attraverso la tecnologia.");
-        hackathonDescriptions.put("AI Challenge", "Sfida di programmazione e data science per costruire modelli di AI intelligenti.");
-        hackathonDescriptions.put("Green Hack 2025", "Progetta strumenti per favorire la transizione ecologica e ridurre l’impatto ambientale.");
-        hackathonDescriptions.put("Design Jam 2025", "Metti alla prova la tua creatività nel design di interfacce e user experience.");
-        hackathonDescriptions.put("HealthTech Hack", "Sviluppa soluzioni tecnologiche per la salute e il benessere.");
+        // ====== DATI HACKATHON ======
+        java.util.Map<String, HackathonInfo> hackathonData = new java.util.LinkedHashMap<>();
+
+        hackathonData.put("Hack4Future 2025", new HackathonInfo(
+                "Hack4Future 2025", "Milano", "3 giorni",
+                "12/04/2025", "14/04/2025",
+                "dal 01/02/2025 al 10/04/2025",
+                "01/02/2025", "10/04/2025",
+                200, 5,
+                "Sviluppa soluzioni digitali sostenibili per il futuro delle città."
+        ));
+
+        hackathonData.put("TechSprint 2025", new HackathonInfo(
+                "TechSprint 2025", "Torino", "2 giorni",
+                "22/05/2025", "23/05/2025",
+                "dal 01/03/2025 al 20/05/2025",
+                "01/03/2025", "20/05/2025",
+                150, 4,
+                "Crea prototipi innovativi in ambito intelligenza artificiale e machine learning."
+        ));
+
+        hackathonData.put("CodeWave 2025", new HackathonInfo(
+                "CodeWave 2025", "Roma", "3 giorni",
+                "10/06/2025", "12/06/2025",
+                "dal 01/03/2025 al 08/06/2025",
+                "01/03/2025", "08/06/2025",
+                250, 5,
+                "Sfida i tuoi limiti sviluppando applicazioni innovative per il benessere digitale."
+        ));
+
+        hackathonData.put("GreenTech Challenge", new HackathonInfo(
+                "GreenTech Challenge", "Firenze", "4 giorni",
+                "18/07/2025", "21/07/2025",
+                "dal 01/04/2025 al 15/07/2025",
+                "01/04/2025", "15/07/2025",
+                300, 6,
+                "Progetta soluzioni tecnologiche per la sostenibilità ambientale."
+        ));
+
+        hackathonData.put("AI Revolution 2025", new HackathonInfo(
+                "AI Revolution 2025", "Napoli", "2 giorni",
+                "05/09/2025", "06/09/2025",
+                "dal 01/05/2025 al 01/09/2025",
+                "01/05/2025", "01/09/2025",
+                180, 4,
+                "Crea un prototipo basato su intelligenza artificiale che migliori la vita quotidiana."
+        ));
+
 
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
@@ -42,8 +112,9 @@ public class RegistrationGUI {
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
         hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonDescriptions.keySet()) {
-            JPanel card = createHackathonCard(hackathon, hackathonDescriptions.get(hackathon));
+        for (String hackathon : hackathonData.keySet()) {
+            HackathonInfo info = hackathonData.get(hackathon);
+            JPanel card = createHackathonCard(info);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -123,7 +194,7 @@ public class RegistrationGUI {
     }
 
     // ====== CREA CARD HACKATHON ======
-    private JPanel createHackathonCard(String hackathonName, String description) {
+    private JPanel createHackathonCard(HackathonInfo info) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(650, 60));
         card.setBackground(Color.WHITE);
@@ -132,12 +203,12 @@ public class RegistrationGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        JRadioButton radio = new JRadioButton(hackathonName);
+        JRadioButton radio = new JRadioButton(info.titolo);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
 
-        // Quando si seleziona, apre un popup con la descrizione
-        radio.addActionListener(e -> showDescriptionPopup(hackathonName, description));
+        // Quando si seleziona, apre un popup con le info riepilogative
+        radio.addActionListener(e -> showHackathonInfoPopup(info));
 
         hackathonGroup.add(radio);
         card.add(radio, BorderLayout.CENTER);
@@ -145,28 +216,42 @@ public class RegistrationGUI {
         return card;
     }
 
-    // ====== MOSTRA POPUP DESCRIZIONE ======
-    private void showDescriptionPopup(String hackathonName, String description) {
-        JDialog dialog = new JDialog(frame, "Descrizione: " + hackathonName, true);
-        dialog.setSize(500, 300);
+    // ====== MOSTRA POPUP RIEPILOGO HACKATHON ======
+    private void showHackathonInfoPopup(HackathonInfo info) {
+        JDialog dialog = new JDialog(frame, "Dettagli Hackathon", true);
+        dialog.setSize(500, 400);
         dialog.setLocationRelativeTo(frame);
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(245, 245, 250));
-        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JTextArea textArea = new JTextArea(description);
-        textArea.setFont(new Font("Arial", Font.PLAIN, 15));
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setCaretPosition(0);
+        // Tabella di informazioni
+        String[][] data = {
+                {"Titolo", info.titolo},
+                {"Sede", info.sede},
+                {"Durata", info.durata},
+                {"Data Inizio", info.dataInizio},
+                {"Data Fine", info.dataFine},
+                {"Periodo Iscrizioni", info.periodoIscrizioni},
+                {"Apertura Iscrizioni", info.dataAperturaIscrizioni},
+                {"Chiusura Iscrizioni", info.dataChiusuraIscrizioni},
+                {"Max Iscritti", String.valueOf(info.maxIscritti)},
+                {"Max Dimensione Team", String.valueOf(info.maxDimTeam)}
+        };
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Descrizione del Problema"));
-        panel.add(scrollPane, BorderLayout.CENTER);
+        String[] columnNames = {"Campo", "Valore"};
+        JTable table = new JTable(data, columnNames);
+        table.setEnabled(false);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.setRowHeight(25);
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
 
+        JScrollPane tableScroll = new JScrollPane(table);
+        tableScroll.setBorder(BorderFactory.createTitledBorder("Riepilogo Hackathon"));
+        panel.add(tableScroll, BorderLayout.CENTER);
+
+        // Bottone chiudi
         JButton closeBtn = new JButton("Chiudi");
         closeBtn.setBackground(new Color(150, 150, 150));
         closeBtn.setForeground(Color.WHITE);
