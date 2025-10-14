@@ -2,42 +2,29 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.stream.IntStream;
+
 import controller.Controller;
-import java.text.DecimalFormat;
+import controller.ControllerHackathon;
 
 public class ScoreboardGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private final DecimalFormat scoreFormat = new DecimalFormat("#.#");
 
-    // ===== Classe interna per i dati dei team =====
-    private static class TeamScore {
-        String teamName;
-        double score;
-        String hackathon;
-        String location;
+    private ArrayList<String> teams = new ArrayList<>();
+    private ArrayList<Double> scores = new ArrayList<>();
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
 
-        public TeamScore(String teamName, double score) {
-            this.teamName = teamName;
-            this.score = score;
-        }
+    public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
 
-        public TeamScore(String teamName, double score, String hackathon, String location) {
-            this.teamName = teamName;
-            this.score = score;
-            this.hackathon = hackathon;
-            this.location = location;
-        }
-    }
-
-    public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName) {
-
-        frame = new JFrame(hackathonName != null ?
-                "Classifica - " + hackathonName :
-                "Classifica Globale");
+        frame = new JFrame(hackathonName != null
+                ? "Classifica - " + hackathonName
+                : "Classifica Globale");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(750, 500);
@@ -63,32 +50,27 @@ public class ScoreboardGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        List<TeamScore> teams = new ArrayList<>();
+        ControllerHackathon controllerHackathon = new ControllerHackathon();
 
         if (hackathonName != null) {
             // --- Classifica per singolo hackathon ---
-            teams.add(new TeamScore("Team Alpha", 9.8));
-            teams.add(new TeamScore("Team Beta", 8.5));
-            teams.add(new TeamScore("Team Gamma", 7.6));
-            teams.add(new TeamScore("Team Delta", 6.9));
-            teams.add(new TeamScore("Team Epsilon", 6.5));
+            controllerHackathon.controllerScoreboard(hackathonName, location, teams, scores);
         } else {
             // --- Classifica globale ---
-            teams.add(new TeamScore("Team Alpha", 9.8, "Hack4Future", "Milano"));
-            teams.add(new TeamScore("Team Beta", 9.2, "TechSprint", "Roma"));
-            teams.add(new TeamScore("Team Gamma", 8.7, "Green Hack", "Bologna"));
-            teams.add(new TeamScore("Team Delta", 7.9, "AI Challenge", "Napoli"));
-            teams.add(new TeamScore("Team Epsilon", 7.4, "Innovathon", "Torino"));
+            controllerHackathon.controllerOverallRanking(teams, scores, titles, locations);
         }
 
-        // Ordina in ordine decrescente
-        teams.sort(Comparator.comparingDouble((TeamScore t) -> t.score).reversed());
+        // ===== ORDINAMENTO =====
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < teams.size(); i++) indices.add(i);
+        indices.sort(Comparator.comparingDouble(i -> -scores.get(i)));
 
         int rank = 1;
-        for (TeamScore t : teams) {
+        for (int i : indices) {
             JPanel card = (hackathonName != null)
-                    ? createTeamCard(t, rank)
-                    : createGlobalTeamCard(t, rank);
+                    ? createTeamCard(teams.get(i), scores.get(i), rank)
+                    : createGlobalTeamCard(teams.get(i), scores.get(i), titles.get(i), locations.get(i), rank);
+
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             rank++;
@@ -99,7 +81,6 @@ public class ScoreboardGUI {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== PANEL INFERIORE =====
@@ -125,52 +106,50 @@ public class ScoreboardGUI {
         frame.setVisible(true);
     }
 
-    // ===== CREAZIONE CARD (hackathon singolo) =====
-    private JPanel createTeamCard(TeamScore team, int rank) {
+    // ===== CARD per hackathon singolo =====
+    private JPanel createTeamCard(String team, double score, int rank) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
-
         card.setBackground(getPodiumColor(rank));
 
-        JLabel teamLabel = new JLabel(rank + ". " + team.teamName);
+        JLabel teamLabel = new JLabel(rank + ". " + team);
         teamLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         card.add(teamLabel, BorderLayout.WEST);
 
-        JLabel scoreLabel = new JLabel(scoreFormat.format(team.score));
+        JLabel scoreLabel = new JLabel(scoreFormat.format(score));
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         card.add(scoreLabel, BorderLayout.EAST);
 
         return card;
     }
 
-    // ===== CREAZIONE CARD (classifica globale) =====
-    private JPanel createGlobalTeamCard(TeamScore team, int rank) {
+    // ===== CARD per classifica globale =====
+    private JPanel createGlobalTeamCard(String team, double score, String hackathon, String location, int rank) {
         JPanel card = new JPanel(new GridLayout(1, 3));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
                 BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
-
         card.setBackground(getPodiumColor(rank));
 
-        // Pannello info hackathon
+        // Info Hackathon
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(getPodiumColor(rank));
-        infoPanel.add(new JLabel("Hackathon: " + team.hackathon));
-        infoPanel.add(new JLabel("Sede: " + team.location));
+        infoPanel.add(new JLabel("Hackathon: " + hackathon));
+        infoPanel.add(new JLabel("Sede: " + location));
         card.add(infoPanel);
 
-        JLabel teamLabel = new JLabel(rank + ". " + team.teamName, SwingConstants.CENTER);
+        JLabel teamLabel = new JLabel(rank + ". " + team, SwingConstants.CENTER);
         teamLabel.setFont(new Font("Arial", Font.BOLD, 16));
         card.add(teamLabel);
 
-        JLabel scoreLabel = new JLabel(scoreFormat.format(team.score), SwingConstants.RIGHT);
+        JLabel scoreLabel = new JLabel(scoreFormat.format(score), SwingConstants.RIGHT);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
         card.add(scoreLabel);
 

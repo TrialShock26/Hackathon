@@ -136,7 +136,7 @@ public class CreateGUI {
 
             ControllerPlanner planner = new ControllerPlanner();
 
-            planner.controllerOpenHackathon(titolo,sede,dataInizio,dataFine,dataApertura,dataChiusura,maxIscritti,maxDimTeam,   );
+            //planner.controllerOpenHackathon(titolo,sede,dataInizio,dataFine,dataApertura,dataChiusura,maxIscritti,maxDimTeam,);
 
             // Se tutto ok
             JOptionPane.showMessageDialog(frame,
@@ -191,6 +191,8 @@ public class CreateGUI {
     private void mostraDialogSelezioneGiudici() {
 
         //sostituisci con i giudici presi dal db
+
+
 
         String[] utenti = {"Mario Rossi", "Luca Bianchi", "Giulia Verdi", "Sara Neri", "Paolo Gallo"};
 
