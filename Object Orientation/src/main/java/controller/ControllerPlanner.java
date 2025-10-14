@@ -8,6 +8,21 @@ import java.util.ArrayList;
 
 public class ControllerPlanner {
 
+    public void controllerGetUsers(String planUser,
+                                   ArrayList<String> allUsernames,
+                                   ArrayList<String> allNames,
+                                   ArrayList<String> allSurnames,
+                                   ArrayList<String> allPasswords){
+
+        try {
+            PlannerDAO planner = new PlannerImplementationDAO();
+            planner.getUsers(planUser, allUsernames, allNames, allSurnames, allPasswords);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) {
         try {
             PlannerDAO planner = new PlannerImplementationDAO();
@@ -16,6 +31,8 @@ public class ControllerPlanner {
             System.out.println(e.getMessage());
         }
     }
+
+
 
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
                                         Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
