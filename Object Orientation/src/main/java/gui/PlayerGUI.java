@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.*;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
@@ -9,6 +9,10 @@ public class PlayerGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup teamGroup;
+
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
+    private ArrayList<String> teamNames = new ArrayList<>();
 
     public PlayerGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Partecipa a Team");
@@ -31,28 +35,21 @@ public class PlayerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Team e Hackathon di appartenenza
-        String[][] teamData = {
-                {"Team Alpha", "Hack4Future 2025"},
-                {"Team Beta", "TechSprint 2025"},
-                {"Team Gamma", "Innovathon Roma"},
-                {"Team Delta", "AI Challenge"},
-                {"Team Epsilon", "Green Hack 2025"},
-                {"Team Omega", "Design Jam 2025"},
-                {"Team Innovatori", "HealthTech Hack"}
-        };
+        ControllerPlayer controllerPlayer = new ControllerPlayer();
+        controllerPlayer.controllerGetHackathons("andrea.romano", titles, locations, teamNames);
 
         teamGroup = new ButtonGroup();
-        for (String[] data : teamData) {
-            JPanel card = createTeamCard(data[0], data[1]);
+
+        int n = teamNames.size();
+        for (int i = 0; i < n; i++) {
+            JPanel card = createTeamCard(teamNames.get(i), titles.get(i), i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // Forza il preferred size del listPanel in base al numero di elementi
         int cardHeight = 60;
         int gap = 10;
-        int totalHeight = teamData.length * (cardHeight + gap) + 20;
+        int totalHeight = n * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
@@ -68,7 +65,7 @@ public class PlayerGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
+        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -85,23 +82,27 @@ public class PlayerGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pannello centrale con i due pulsanti
+        // Pannello centrale con pulsanti "Cambia" e "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setBackground(new Color(240, 240, 245));
 
         JButton changeBtn = new JButton("Cambia");
         changeBtn.setPreferredSize(new Dimension(120, 35));
-        changeBtn.setBackground(new Color(220, 120, 60)); // Colore arancione
+        changeBtn.setBackground(new Color(220, 120, 60));
         changeBtn.setForeground(Color.WHITE);
         changeBtn.setFocusPainted(false);
         changeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         changeBtn.addActionListener(e -> {
-            String selectedTeam = getSelectedTeam();
-            if (selectedTeam == null) {
+            int selectedIndex = getSelectedTeamIndex();
+            if (selectedIndex == -1) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
+                String selectedTeam = teamNames.get(selectedIndex);
+                String selectedTitle = titles.get(selectedIndex);
+                String selectedLocation = locations.get(selectedIndex);
+
                 frame.setVisible(false);
-                new JoinGUI(controller, frame, selectedTeam);
+                new JoinGUI(controller, frame, selectedTeam, selectedTitle, selectedLocation);
             }
         });
 
@@ -112,12 +113,16 @@ public class PlayerGUI {
         openBtn.setFocusPainted(false);
         openBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         openBtn.addActionListener(e -> {
-            String selectedTeam = getSelectedTeam();
-            if (selectedTeam == null) {
+            int selectedIndex = getSelectedTeamIndex();
+            if (selectedIndex == -1) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
+                String selectedTeam = teamNames.get(selectedIndex);
+                String selectedTitle = titles.get(selectedIndex);
+                String selectedLocation = locations.get(selectedIndex);
+
                 frame.setVisible(false);
-                new MyTeamGUI(controller, frame, selectedTeam);
+                new MyTeamGUI(controller, frame, selectedTeam, selectedTitle, selectedLocation);
             }
         });
 
@@ -132,8 +137,7 @@ public class PlayerGUI {
     }
 
     // ====== CREAZIONE CARD TEAM ======
-    // ====== CREAZIONE CARD TEAM ======
-    private JPanel createTeamCard(String teamName, String hackathonName) {
+    private JPanel createTeamCard(String teamName, String hackathonName, int index) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         card.setBackground(Color.WHITE);
@@ -142,11 +146,10 @@ public class PlayerGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // --- RadioButton a sinistra ---
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        radio.setActionCommand(teamName);
+        radio.setActionCommand(String.valueOf(index)); // Salviamo l'indice
         teamGroup.add(radio);
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
@@ -154,7 +157,6 @@ public class PlayerGUI {
         leftPanel.add(radio);
         card.add(leftPanel, BorderLayout.WEST);
 
-        // --- Informazioni del team (destra) ---
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(Color.WHITE);
@@ -168,27 +170,21 @@ public class PlayerGUI {
         infoPanel.add(hackathonLabel);
         card.add(infoPanel, BorderLayout.CENTER);
 
-        // === RENDI LA CARD CLICCABILE ===
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 radio.setSelected(true);
-                radio.requestFocusInWindow(); // forza il focus
+                radio.requestFocusInWindow();
             }
         });
-
 
         return card;
     }
 
-
-
-
-    // ====== OTTIENI TEAM SELEZIONATO ======
-    private String getSelectedTeam() {
+    // ====== OTTIENI INDICE TEAM SELEZIONATO ======
+    private int getSelectedTeamIndex() {
         ButtonModel selectedModel = teamGroup.getSelection();
-        return (selectedModel != null) ? selectedModel.getActionCommand() : null;
+        return (selectedModel != null) ? Integer.parseInt(selectedModel.getActionCommand()) : -1;
     }
-
 }

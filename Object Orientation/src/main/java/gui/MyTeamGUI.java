@@ -9,8 +9,7 @@ public class MyTeamGUI {
     private JTextArea textArea;
     private JTextField titleField;
 
-    public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName) {
-        // Il titolo della finestra ora è il nome del team
+    public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(800, 600);
@@ -34,7 +33,7 @@ public class MyTeamGUI {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
-        // Username
+        // Username todo, da valorizzare
         String username = "MarioRossi"; // Esempio
         JLabel userLabel = new JLabel("Utente: " + username);
         userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -123,7 +122,7 @@ public class MyTeamGUI {
         teammatesBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         teammatesBtn.addActionListener(e -> {
             frame.setVisible(false);
-            new TeamMatesGUI(controller, frame, teamName);
+            new TeamMatesGUI(controller, frame, teamName,hackTitle,location);
         });
 
         JButton publishBtn = new JButton("Pubblica");
@@ -136,12 +135,17 @@ public class MyTeamGUI {
             String title = titleField.getText().trim();
             String text = textArea.getText().trim();
 
+
+
             if (title.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci un titolo per il documento!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else if (text.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
-                // logica per pubblicazione con DB
+                ControllerTeam team = new ControllerTeam();
+
+                team.controllerPublishProgress(teamName,hackTitle,location,title,text);
+
                 JOptionPane.showMessageDialog(frame,
                         "Documento \"" + title + "\" pubblicato con successo!",
                         "Successo", JOptionPane.INFORMATION_MESSAGE);

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import controller.Controller;
+import controller.ControllerPlanner;
 
 public class CreateGUI {
     private JFrame frame;
@@ -122,6 +123,21 @@ public class CreateGUI {
                 return;
             }
 
+            String titolo = titoloField.getText().trim();
+            String sede = sedeField.getText().trim();
+            String durata = durataField.getText().trim();
+            String dataInizio = dataInizioField.getText().trim();
+            String dataFine = dataFineField.getText().trim();
+            String periodoIscrizioni = periodoIscrizioniField.getText().trim();
+            String dataApertura = dataAperturaIscrizioniField.getText().trim();
+            String dataChiusura = dataChiusuraIscrizioniField.getText().trim();
+            int maxIscritti = Integer.parseInt(maxIscrittiField.getText().trim());
+            int maxDimTeam = Integer.parseInt(maxDimTeamField.getText().trim());
+
+            ControllerPlanner planner = new ControllerPlanner();
+
+            planner.controllerOpenHackathon(titolo,sede,dataInizio,dataFine,dataApertura,dataChiusura,maxIscritti,maxDimTeam,   );
+
             // Se tutto ok
             JOptionPane.showMessageDialog(frame,
                     "Hackathon creato con successo!",
@@ -173,6 +189,9 @@ public class CreateGUI {
 
     // ===== DIALOG SELEZIONE GIUDICI =====
     private void mostraDialogSelezioneGiudici() {
+
+        //sostituisci con i giudici presi dal db
+
         String[] utenti = {"Mario Rossi", "Luca Bianchi", "Giulia Verdi", "Sara Neri", "Paolo Gallo"};
 
         JDialog dialog = new JDialog(frame, "Seleziona Giudici", true);
