@@ -19,50 +19,61 @@ public class JudgeImplementationDAO implements JudgeDAO {
     @Override
     public void publishProblem(String text, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "{ CALL publish_problem((SELECT id_hackathon" +
-                                                "FROM Hackathon" +
-                                                "WHERE titolo = ? AND sede = ?), ?) }";
+        String query = "DO $$ " +
+                "DECLARE " +
+                    "hackId Hackathon.id_hackathon%TYPE;" +
+                "BEGIN " +
+                    "SELECT id_hackathon INTO hackId " +
+                    "FROM Hackathon " +
+                    "WHERE titolo = '" + title + "' AND sede = '" + location + "';" +
+                    "CALL publish_problem(hackId, '" + text + "');" +
+                "END $$;";
         cs = connection.prepareCall(query);
-        cs.setString(1, title);
-        cs.setString(2, location);
-        cs.setString(3, text);
         cs.execute();
     }
 
     @Override
-    public void examineDocument(String username, String docTitle, String content, String teamName, String hackTitle, String location) throws SQLException {
+    public void examineDocument(String username, String docTitle, String content,
+                                String teamName, String hackTitle, String location, String text) throws SQLException {
         PreparedStatement ps;
-        String query = "INSERT INTO Esaminazione VALUES ((SELECT id_giudice " +
-                                                         "FROM Giudice " +
-                                                         "WHERE username = ?), (SELECT d.id_documento " +
-                                                                                "FROM Documento d NATURAL JOIN Team t " +
-                                                                                    "JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +
-                                                                                "WHERE d.titolo = ? AND d.contenuto = ? " +
-                                                                                    "AND t.nome = ? AND h.titolo = ? AND h.sede = ?));";
+        String query = "DO $$ " +
+                "DECLARE " +
+                    "judgeId Giudice.id_giudice%TYPE;" +
+                    "docId Documento.id_documento%TYPE;" +
+                "BEGIN " +
+                    "SELECT id_giudice INTO judgeId " +
+                        "FROM Giudice " +
+                        "WHERE username = '" + username + "';" +
+                    "SELECT d.id_documento INTO docId " +
+                        "FROM Documento d NATURAL JOIN Team t " +
+                            "JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +
+                        "WHERE d.titolo = '" + docTitle + "' AND d.contenuto = '" + content + "' " +
+                            "AND t.nome = '" + teamName + "' AND h.titolo = '" + hackTitle + "' AND h.sede = '" + location + "'; " +
+                    "INSERT INTO Esaminazione VALUES (judgeId, docId); " +
+                    "UPDATE Documento SET commento = '" + text + "' " +
+                        "WHERE id_documento = docId; " +
+                "END $$;";
         ps = connection.prepareStatement(query);
-        ps.setString(1, username);
-        ps.setString(2, docTitle);
-        ps.setString(3, content);
-        ps.setString(4, teamName);
-        ps.setString(5, hackTitle);
-        ps.setString(6, location);
         ps.executeUpdate();
     }
 
     @Override
     public void gradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
         CallableStatement cs;
-        String query = "{ CALL grade_team((SELECT id_giudice " +
-                                            "FROM Giudice " +
-                                            "WHERE username = ?), (SELECT id_team " +
-                                                                    "FROM Team NATURAL JOIN Hackathon " +
-                                                                    "WHERE nome = ? AND titolo = ? AND sede = ?), ?) }";
+        String query = "DO $$ " +
+                "DECLARE " +
+                    "judgeId Giudice.id_giudice%TYPE;" +
+                    "teamId Team.id_team%TYPE;" +
+                "BEGIN " +
+                    "SELECT id_giudice INTO judgeId " +
+                    "FROM Giudice " +
+                    "WHERE username = '" + username + "';" +
+                    "SELECT id_team INTO teamId " +
+                    "FROM Team NATURAL JOIN Hackathon " +
+                    "WHERE nome = '" + teamName + "' AND titolo = '" + title + "' AND sede = '" + location + "';" +
+                    "CALL grade_team(judgeId, teamId, " + value + ");" +
+                "END $$;";
         cs = connection.prepareCall(query);
-        cs.setString(1, username);
-        cs.setString(2, teamName);
-        cs.setString(3, title);
-        cs.setString(4, location);
-        cs.setInt(5, value);
         cs.execute();
     }
 

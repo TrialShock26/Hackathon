@@ -19,27 +19,32 @@ public class PlayerImplementationDAO implements PlayerDAO {
     @Override
     public void subscribe(String username, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "{ CALL subscribe((SELECT id_hackathon " +
-                                            "FROM Hackathon " +
-                                            "WHERE titolo = ? AND sede = ?), ?) }";
+        String query = "DO $$ " +
+                "DECLARE " +
+                    "hackId Hackathon.id_hackathon%TYPE;" +
+                "BEGIN " +
+                    "SELECT id_hackathon INTO hackId " +
+                    "FROM Hackathon " +
+                    "WHERE titolo = '" + title + "' AND sede = '" + location + "';" +
+                    "CALL subscribe(hackId, '" + username + "');" +
+                "END $$;";
         cs = connection.prepareCall(query);
-        cs.setString(1, title);
-        cs.setString(2, location);
-        cs.setString(3, username);
         cs.execute();
     }
 
     @Override
     public void joinTeam(String username, String teamName, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "{ CALL join_team(?, (SELECT id_team " +
-                                            "FROM Team NATURAL JOIN Hackathon " +
-                                            "WHERE nome = ? AND titolo = ? AND sede = ?)) }";
+        String query = "DO $$ " +
+                "DECLARE " +
+                    "teamId Team.id_team%TYPE;" +
+                "BEGIN " +
+                    "SELECT id_team INTO teamId " +
+                    "FROM Team NATURAL JOIN Hackathon " +
+                    "WHERE nome = '" + teamName + "' AND titolo = '" + title + "' AND sede = '" + location + "';" +
+                    "CALL join_team('" + username + "', teamId);" +
+                "END $$;";
         cs = connection.prepareCall(query);
-        cs.setString(1, username);
-        cs.setString(2, teamName);
-        cs.setString(3, title);
-        cs.setString(4, location);
         cs.execute();
     }
 

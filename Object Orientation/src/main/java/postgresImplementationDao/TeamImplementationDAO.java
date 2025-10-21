@@ -20,15 +20,15 @@ public class TeamImplementationDAO implements TeamDAO {
     @Override
     public void publishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
         CallableStatement cs;
-        String query = "{ CALL publish_progress((SELECT id_team " +
-                                                "FROM Team NATURAL JOIN Hackathon " +
-                                                "WHERE nome = ? AND titolo = ? AND sede = ?), ?, ?) }";
+        String query = "DO $$ " +
+                "DECLARE teamId Team.id_team%TYPE;" +
+                    "BEGIN " +
+                        "SELECT id_team INTO teamId " +
+                        "FROM Team NATURAL JOIN Hackathon " +
+                        "WHERE nome = '"+ teamName +"' AND titolo = '"+ hackTitle +"' AND sede = '"+ location +"';" +
+                    "CALL publish_progress(teamId, '"+ content +"', '"+ docTitle +"');" +
+                "END $$;";
         cs = connection.prepareCall(query);
-        cs.setString(1, teamName);
-        cs.setString(2, hackTitle);
-        cs.setString(3, location);
-        cs.setString(4, content);
-        cs.setString(5, docTitle);
         cs.execute();
     }
 }
