@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
@@ -36,7 +37,11 @@ public class JoinGUI {
 
         ControllerPlayer controllerplayer = new ControllerPlayer();
 
-        controllerplayer.controllerGetOtherTeams("andrea.romano",currentTitle,currentLocation,teamList);
+        try{
+            controllerplayer.controllerGetOtherTeams("andrea.romano",currentTitle,currentLocation,teamList);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
         teamGroup = new ButtonGroup();
         for (String team : teamList) {
@@ -100,30 +105,38 @@ public class JoinGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Popup di conferma
-
                 ControllerPlayer player = new ControllerPlayer();
 
-                player.controllerJoinTeam("andrea.romano",selectedTeam,currentTitle,currentLocation);
+                try{
+                    player.controllerJoinTeam("andrea.romano",selectedTeam,currentTitle,currentLocation);
+                    int response = JOptionPane.showConfirmDialog(
+                            frame,
+                            "Sei sicuro di voler cambiare team?\nDa: " + currentTeam + "\nA: " + selectedTeam,
+                            "Conferma Cambio Team",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
 
-                int response = JOptionPane.showConfirmDialog(
-                        frame,
-                        "Sei sicuro di voler cambiare team?\nDa: " + currentTeam + "\nA: " + selectedTeam,
-                        "Conferma Cambio Team",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
+                    if (response == JOptionPane.YES_OPTION) {
+                        // Qui puoi aggiungere la logica per effettuare il cambio team nel controller
+                        JOptionPane.showMessageDialog(frame,
+                                "Team cambiato con successo!\nNuovo team: " + selectedTeam,
+                                "Successo",
+                                JOptionPane.INFORMATION_MESSAGE);
 
-                if (response == JOptionPane.YES_OPTION) {
-                    // Qui puoi aggiungere la logica per effettuare il cambio team nel controller
-                    JOptionPane.showMessageDialog(frame,
-                            "Team cambiato con successo!\nNuovo team: " + selectedTeam,
-                            "Successo",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    // Torna alla schermata precedente
-                    frame.dispose();
-                    callerFrame.setVisible(true);
+                        // Torna alla schermata precedente
+                        frame.dispose();
+                        callerFrame.setVisible(true);
+                    }
+                }catch (SQLException ex){
+                    String errormsg = ex.getMessage();
+                    int whereIndex = errormsg.indexOf("W");
+                    if (whereIndex != -1) {
+                        errormsg= errormsg.substring(0, whereIndex).trim();
+                    }
+                    JOptionPane.showMessageDialog(frame,errormsg , "Errore", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         });
 

@@ -1,12 +1,16 @@
 package controller;
 
 import dao.PlannerDAO;
+import model.Hackathon;
+import model.Planner;
 import postgresImplementationDao.PlannerImplementationDAO;
 
 import java.sql.Date;
 import java.util.ArrayList;
 
 public class ControllerPlanner {
+
+    ArrayList<Hackathon> hackathons;
 
     public void controllerGetUsers(String planUser,
                                    ArrayList<String> allUsernames,
@@ -22,8 +26,9 @@ public class ControllerPlanner {
         }
     }
 
-
-    public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) {
+    public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
+                                         ArrayList<Date> startDate, ArrayList<Date> endDate,
+                                        ArrayList<Date> startSubDate, ArrayList<Date> endSubDate, ArrayList maxPlayers, ArrayList maxTeamDim) {
         try {
             PlannerDAO planner = new PlannerImplementationDAO();
             planner.getHackathons(username, titles, locations);
@@ -31,8 +36,6 @@ public class ControllerPlanner {
             System.out.println(e.getMessage());
         }
     }
-
-
 
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
                                         Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
