@@ -30,13 +30,13 @@ public class UserImplementationDAO implements UserDAO {
 
     @Override
     public void newUser(String username, String name, String surname, String password)  throws SQLException{
-        PreparedStatement query;
-        query = connection.prepareCall("CALL new_user(?, ?, ?, ?)");
+        CallableStatement query;
+        query = connection.prepareCall("{ CALL new_user(?, ?, ?, ?) }");
         query.setString(1, username);
         query.setString(2, name);
         query.setString(3, surname);
         query.setString(4, password);
-        query.executeUpdate();
+        query.execute();
     }
 
     @Override
@@ -63,5 +63,6 @@ public class UserImplementationDAO implements UserDAO {
             maxPlayers.add(rs.getInt("max_iscritti"));
             maxTeamDim.add(rs.getInt("max_dim_team"));
         }
+        rs.close();
     }
 }

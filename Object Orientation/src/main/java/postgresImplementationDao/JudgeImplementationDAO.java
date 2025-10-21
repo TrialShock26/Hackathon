@@ -19,16 +19,9 @@ public class JudgeImplementationDAO implements JudgeDAO {
     @Override
     public void publishProblem(String text, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "  hackId Hackathon.id_hackathon%TYPE; " +
-                "BEGIN " +
-                "    SELECT id_hackathon INTO hackId " +
-                "    FROM Hackathon " +
-                "    WHERE titolo = ? AND sede = ?; " +
-                "    CALL publish_problem(hackId, ?); " +
-                "END " +
-                "$$;";
+        String query = "{ CALL publish_problem((SELECT id_hackathon" +
+                                                "FROM Hackathon" +
+                                                "WHERE titolo = ? AND sede = ?), ?) }";
         cs = connection.prepareCall(query);
         cs.setString(1, title);
         cs.setString(2, location);
@@ -39,20 +32,13 @@ public class JudgeImplementationDAO implements JudgeDAO {
     @Override
     public void examineDocument(String username, String docTitle, String content, String teamName, String hackTitle, String location) throws SQLException {
         PreparedStatement ps;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "   judgeId Giudice.id_giudice%TYPE; " +
-                "   docId Documento.id_documento%TYPE; " +
-                "BEGIN " +
-                "   SELECT id_giudice INTO judgeId " +
-                "   FROM Giudice " +
-                "   WHERE username = ?; " +
-                "   SELECT d.id_documento INTO docId " +
-                "   FROM Documento d NATURAL JOIN Team t JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +
-                "   WHERE d.titolo = ? AND d.contenuto = ? AND t.nome = ? AND h.titolo = ? AND h.sede = ?; " +
-                "   INSERT INTO Esaminazione VALUES (judgeId, docId);" +
-                "END" +
-                "$$;";
+        String query = "INSERT INTO Esaminazione VALUES ((SELECT id_giudice " +
+                                                         "FROM Giudice " +
+                                                         "WHERE username = ?), (SELECT d.id_documento " +
+                                                                                "FROM Documento d NATURAL JOIN Team t " +
+                                                                                    "JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +
+                                                                                "WHERE d.titolo = ? AND d.contenuto = ? " +
+                                                                                    "AND t.nome = ? AND h.titolo = ? AND h.sede = ?));";
         ps = connection.prepareStatement(query);
         ps.setString(1, username);
         ps.setString(2, docTitle);
@@ -65,28 +51,19 @@ public class JudgeImplementationDAO implements JudgeDAO {
 
     @Override
     public void gradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
-        PreparedStatement ps;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "   judgeId Giudice.id_giudice%TYPE; " +
-                "   teamId Team.id_team%TYPE; " +
-                "BEGIN " +
-                "   SELECT id_giudice INTO judgeId " +
-                "   FROM Giudice " +
-                "   WHERE username = ?; " +
-                "   SELECT id_team INTO teamId " +
-                "   FROM Team NATURAL JOIN Hackathon " +
-                "   WHERE nome = ? AND titolo = ? AND sede = ?; " +
-                "   CALL grade_team(judgeId, teamId, ?); " +
-                "END " +
-                "$$;";
-        ps = connection.prepareStatement(query);
-        ps.setString(1, username);
-        ps.setString(2, teamName);
-        ps.setString(3, title);
-        ps.setString(4, location);
-        ps.setInt(5, value);
-        ps.executeUpdate();
+        CallableStatement cs;
+        String query = "{ CALL grade_team((SELECT id_giudice " +
+                                            "FROM Giudice " +
+                                            "WHERE username = ?), (SELECT id_team " +
+                                                                    "FROM Team NATURAL JOIN Hackathon " +
+                                                                    "WHERE nome = ? AND titolo = ? AND sede = ?), ?) }";
+        cs = connection.prepareCall(query);
+        cs.setString(1, username);
+        cs.setString(2, teamName);
+        cs.setString(3, title);
+        cs.setString(4, location);
+        cs.setInt(5, value);
+        cs.execute();
     }
 
     @Override
@@ -105,6 +82,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
         }
+        rs.close();
     }
 
     @Override
@@ -121,6 +99,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
         while (rs.next()) {
             teamNames.add(rs.getString("nome"));
         }
+        rs.close();
     }
 
     @Override
@@ -141,5 +120,6 @@ public class JudgeImplementationDAO implements JudgeDAO {
             contents.add(rs.getString("contenuto"));
             comments.add(rs.getString("commento"));
         }
+        rs.close();
     }
 }

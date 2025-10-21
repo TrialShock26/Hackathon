@@ -19,16 +19,9 @@ public class PlayerImplementationDAO implements PlayerDAO {
     @Override
     public void subscribe(String username, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "   hackId Hackathon.id_hackathon%TYPE; " +
-                "BEGIN " +
-                "   SELECT id_hackathon INTO hackId " +
-                "   FROM Hackathon " +
-                "   WHERE titolo = ? AND sede = ?; " +
-                "   CALL subscribe(hackId, ?); " +
-                "END " +
-                "$$;";
+        String query = "{ CALL subscribe((SELECT id_hackathon " +
+                                            "FROM Hackathon " +
+                                            "WHERE titolo = ? AND sede = ?), ?) }";
         cs = connection.prepareCall(query);
         cs.setString(1, title);
         cs.setString(2, location);
@@ -39,21 +32,15 @@ public class PlayerImplementationDAO implements PlayerDAO {
     @Override
     public void joinTeam(String username, String teamName, String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "  teamId Team.id_team%TYPE; " +
-                "BEGIN " +
-                "    SELECT id_team INTO teamId " +
-                "    FROM Team NATURAL JOIN Hackathon " +
-                "    WHERE nome = ? AND titolo = ? AND sede = ?; " +
-                "    CALL join_team(?, teamId); " +
-                "END " +
-                "$$;";
+        String query = "{ CALL join_team(?, (SELECT id_team " +
+                                            "FROM Team NATURAL JOIN Hackathon " +
+                                            "WHERE nome = ? AND titolo = ? AND sede = ?)) }";
         cs = connection.prepareCall(query);
-        cs.setString(1, teamName);
-        cs.setString(2, title);
-        cs.setString(3, location);
-        cs.setString(4, username);
+        cs.setString(1, username);
+        cs.setString(2, teamName);
+        cs.setString(3, title);
+        cs.setString(4, location);
+        cs.execute();
     }
 
     @Override
@@ -73,6 +60,7 @@ public class PlayerImplementationDAO implements PlayerDAO {
             locations.add(rs.getString("sede"));
             teamNames.add(rs.getString("nome"));
         }
+        rs.close();
     }
 
     @Override
@@ -81,9 +69,10 @@ public class PlayerImplementationDAO implements PlayerDAO {
         String query = "SELECT nome " +
                 "FROM Team NATURAL JOIN Hackathon " +
                 "WHERE titolo = ? AND sede = ? " +
-                "  AND nome NOT IN (SELECT t.nome " +
-                "                   FROM Team t NATURAL JOIN Partecipazione NATURAL JOIN Partecipante p JOIN Utente u ON u.username = p.username " +
-                "                   WHERE u.username = ?)";
+                  "AND nome NOT IN (SELECT t.nome " +
+                                   "FROM Team t NATURAL JOIN Partecipazione NATURAL JOIN Partecipante p " +
+                                        "JOIN Utente u ON u.username = p.username " +
+                                   "WHERE u.username = ?)";
         ps = connection.prepareStatement(query);
         ps.setString(1, title);
         ps.setString(2, location);
@@ -93,13 +82,15 @@ public class PlayerImplementationDAO implements PlayerDAO {
         while (rs.next()) {
             teamNames.add(rs.getString("nome"));
         }
+        rs.close();
     }
 
     @Override
     public void getTeammates(String username, String teamName, String title, String location, ArrayList<String> names, ArrayList<String> surnames) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT u.nome, cognome " +
-                "FROM Partecipante p NATURAL JOIN Partecipazione NATURAL JOIN Team t NATURAL JOIN Hackathon JOIN Utente u ON u.username = p.username " +
+                "FROM Partecipante p NATURAL JOIN Partecipazione NATURAL JOIN Team t NATURAL JOIN Hackathon " +
+                    "JOIN Utente u ON u.username = p.username " +
                 "WHERE t.nome = ? AND titolo = ? AND sede = ? AND u.username <> ?;";
         ps = connection.prepareStatement(query);
         ps.setString(1, teamName);
@@ -112,5 +103,6 @@ public class PlayerImplementationDAO implements PlayerDAO {
             names.add(rs.getString("nome"));
             surnames.add(rs.getString("cognome"));
         }
+        rs.close();
     }
 }

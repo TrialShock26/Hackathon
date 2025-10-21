@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class HackathonImplementationDAO implements HackathonDAO {
     private Connection connection;
 
-    public HackathonImplementationDAO() {
+    public HackathonImplementationDAO() throws SQLException {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
         } catch (SQLException e) {
@@ -30,32 +30,30 @@ public class HackathonImplementationDAO implements HackathonDAO {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
         }
+        rs.close();
     }
 
     @Override
     public void scoreboard(String title, String location, ArrayList<String> teamNames, ArrayList<Double> scores) throws SQLException {
+        connection.setAutoCommit(false);
         CallableStatement cs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "   hackId Hackathon.id_hackathon%TYPE; " +
-                "BEGIN " +
-                "   SELECT id_hackathon INTO hackId " +
-                "   FROM Hackathon " +
-                "   WHERE titolo = ? AND sede = ?; " +
-                "   SELECT scoreboard(hackId) INTO ?; " +
-                "END " +
-                "$$;";
+        String query = "{ ? = CALL scoreboard((SELECT id_hackathon " +
+                                              "FROM Hackathon " +
+                                              "WHERE titolo = ? AND sede = ?)) }";
         cs = connection.prepareCall(query);
-        cs.setString(1, title);
-        cs.setString(2, location);
-        cs.registerOutParameter(3, Types.OTHER);
+        cs.registerOutParameter(1, Types.OTHER);
+        cs.setString(2, title);
+        cs.setString(3, location);
         cs.execute();
-        ResultSet rs = (ResultSet) cs.getObject(3);
+        ResultSet rs = (ResultSet) cs.getObject(1);
 
         while (rs.next()) {
             teamNames.add(rs.getString("nome_team"));
             scores.add(rs.getDouble("voto_finale"));
         }
+        rs.close();
+        connection.commit();
+        connection.setAutoCommit(true);
     }
 
     @Override
@@ -71,5 +69,6 @@ public class HackathonImplementationDAO implements HackathonDAO {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
         }
+        rs.close();
     }
 }

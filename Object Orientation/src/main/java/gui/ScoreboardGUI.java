@@ -13,7 +13,7 @@ import controller.ControllerHackathon;
 public class ScoreboardGUI {
     private JFrame frame;
     private JPanel mainPanel;
-    private final DecimalFormat scoreFormat = new DecimalFormat("#.#");
+    private final DecimalFormat scoreFormat = new DecimalFormat("#.##");
 
     private ArrayList<String> teams = new ArrayList<>();
     private ArrayList<Double> scores = new ArrayList<>();
