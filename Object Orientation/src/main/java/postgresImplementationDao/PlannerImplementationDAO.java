@@ -21,7 +21,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
                               Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
                               String planUsername, String judgesUsernames) throws SQLException {
         CallableStatement query;
-        query = connection.prepareCall("{ CALL add_hackathon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+        query = connection.prepareCall("CALL add_hackathon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         query.setString(1, title);
         query.setString(2, location);
         query.setDate(3, startDate);

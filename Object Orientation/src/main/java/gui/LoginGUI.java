@@ -79,15 +79,14 @@ public class LoginGUI {
                     return;
                 }
 
-                frame.dispose();
-                //  controller per verificare login
-                // boolean success = controller.login(username, password);
-                // if (success) {
-                //new RegistrationGUI(controller, callerFrame);
-                // } else {
-                //     JOptionPane.showMessageDialog(frame, "Credenziali errate!", "Errore", JOptionPane.ERROR_MESSAGE);
-                // }
-                new HubGUI(controller,frame);
+                //  Controller per verificare login
+                boolean success = controller.login(username, password);
+                if (success) {
+                    frame.dispose();
+                    new HubGUI(controller, callerFrame);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Credenziali errate!", "Errore", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
