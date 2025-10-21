@@ -20,8 +20,8 @@ public class PlannerImplementationDAO implements PlannerDAO {
     public void openHackathon(String title, String location, Date startDate, Date endDate,
                               Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
                               String planUsername, String judgesUsernames) throws SQLException {
-        PreparedStatement query;
-        query = connection.prepareCall("CALL add_hackathon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        CallableStatement query;
+        query = connection.prepareCall("{ CALL add_hackathon(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
         query.setString(1, title);
         query.setString(2, location);
         query.setDate(3, startDate);
@@ -32,22 +32,15 @@ public class PlannerImplementationDAO implements PlannerDAO {
         query.setInt(8, maxTeamDim);
         query.setString(9, planUsername);
         query.setString(10, judgesUsernames);
-        query.executeUpdate();
+        query.execute();
     }
 
     @Override
     public void startHackathon(String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "  hackId Hackathon.id_hackathon%TYPE; " +
-                "BEGIN " +
-                "    SELECT id_hackathon INTO hackId " +
-                "    FROM Hackathon " +
-                "    WHERE titolo = ? AND sede = ?; " +
-                "    CALL start_hackathon(hackId); " +
-                "END " +
-                "$$;";
+        String query = "{ CALL start_hackathon((SELECT id_hackathon " +
+                                                "FROM Hackathon " +
+                                                "WHERE titolo = ? AND sede = ?)) }";
         cs = connection.prepareCall(query);
         cs.setString(1, title);
         cs.setString(2, location);
@@ -56,29 +49,26 @@ public class PlannerImplementationDAO implements PlannerDAO {
 
     @Override
     public void endHackathon(String title, String location, ArrayList<String> teamNames, ArrayList<Double> finalScores) throws SQLException {
+        connection.setAutoCommit(false);
         CallableStatement cs;
         ResultSet rs;
-        String query = "DO $$ " +
-                "DECLARE " +
-                "  hackId Hackathon.id_hackathon%TYPE; " +
-                "BEGIN " +
-                "    SELECT id_hackathon INTO hackId " +
-                "    FROM Hackathon " +
-                "    WHERE titolo = ? AND sede = ?; " +
-                "    SELECT end_hackathon(hackId) INTO ?; " +
-                "END " +
-                "$$;";
+        String query = "{ ? = CALL end_hackathon((SELECT id_hackathon " +
+                                                    "FROM Hackathon " +
+                                                    "WHERE titolo = ? AND sede = ?)) }";
         cs = connection.prepareCall(query);
-        cs.setString(1, title);
-        cs.setString(2, location);
-        cs.registerOutParameter(3, Types.OTHER);
+        cs.registerOutParameter(1, Types.OTHER);
+        cs.setString(2, title);
+        cs.setString(3, location);
         cs.execute();
-        rs = (ResultSet) cs.getObject(3);
+        rs = (ResultSet) cs.getObject(1);
 
         while (rs.next()) {
             teamNames.add(rs.getString("nome_team"));
             finalScores.add(rs.getDouble("voto_finale"));
         }
+        rs.close();
+        connection.commit();
+        connection.setAutoCommit(true);
     }
 
     @Override
@@ -97,6 +87,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
         }
+        rs.close();
     }
 
     @Override
@@ -119,5 +110,6 @@ public class PlannerImplementationDAO implements PlannerDAO {
             allSurnames.add(rs.getString("cognome"));
             allPasswords.add(rs.getString("password"));
         }
+        rs.close();
     }
 }
