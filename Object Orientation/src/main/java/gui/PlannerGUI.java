@@ -40,7 +40,7 @@ public class PlannerGUI {
 
         ControllerPlanner planner = new ControllerPlanner();
 
-// Inizializzi le liste (procedura)
+        // Inizializzi le liste (procedura)
         hackathonList = new ArrayList<>();
         hlocations = new ArrayList<>();
         planner.controllerGetHackathons("luca.bianchi", hackathonList, hlocations);

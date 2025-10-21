@@ -74,7 +74,8 @@ public class PlannerImplementationDAO implements PlannerDAO {
     @Override
     public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
         PreparedStatement ps;
-        String query = "SELECT titolo, sede " +
+        String query = "SELECT titolo, sede , durata, data_inizio, data_fine, descrizione_problema, " +
+                "data_apertura_iscrizioni, data_chiusura_iscrizioni, max_iscritti, max_dim_team " +
                 "FROM Hackathon " +
                 "WHERE id_organizzatore = (SELECT id_organizzatore " +
                                             "FROM Organizzatore " +

@@ -37,6 +37,10 @@ public class ResumeGUI {
         contentPanel.add(hackTitle);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
+        controller.planner
+
+        planner.controllerGetHackathons("mario.rossi",locations,);
+
         // Campi informativi
         contentPanel.add(createInfoRow("Sede:", "Roma Innovation Hub"));
         contentPanel.add(createInfoRow("Durata:", "2 giorni"));
@@ -54,6 +58,7 @@ public class ResumeGUI {
         problemLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(problemLabel);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
 
         JTextArea problemArea = new JTextArea(
                 "Sviluppare soluzioni innovative per la sostenibilità urbana. "

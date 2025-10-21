@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import dao.PlayerDAO;
 import postgresImplementationDao.PlayerImplementationDAO;
@@ -19,28 +20,18 @@ public class ControllerPlayer {
     }
 
     public void controllerGetOtherTeams(String username, String title, String location,
-                                        ArrayList<String> teamNames) {
-        try {
+                                        ArrayList<String> teamNames) throws SQLException {
             PlayerDAO player = new PlayerImplementationDAO();
 
             player.getOtherTeams(username,title,location,teamNames);
-        }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
-    public void controllerJoinTeam(String username, String teamName, String title, String location) {
-
-        try{
+    public void controllerJoinTeam(String username, String teamName, String title, String location) throws SQLException {
 
             PlayerDAO player = new PlayerImplementationDAO();
 
             player.joinTeam(username,teamName,title,location);
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     public void controllerGetTeammates(String username, String teamName, String title, String location,
