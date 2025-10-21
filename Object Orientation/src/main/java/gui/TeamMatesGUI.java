@@ -1,13 +1,17 @@
 package gui;
 
 import java.awt.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
 public class TeamMatesGUI {
     private JFrame frame;
 
-    public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName) {
+    private ArrayList<String> names = new ArrayList<>();
+    private ArrayList<String> surnames = new ArrayList<>();
+
+    public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame("Partecipanti del Team");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(600, 500);
@@ -27,19 +31,22 @@ public class TeamMatesGUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel);
 
-// Campo "Numero membri" (più visibile ma elegante)
-        String[] participants = {
-                "Mario Rossi",
-                "Laura Bianchi",
-                "Giuseppe Verdi",
-                "Anna Neri",
-                "Luca Gialli",
-                "Sofia Blu"
-        };
+        // ====== RECUPERA I PARTECIPANTI ======
+        ControllerPlayer player = new ControllerPlayer();
+        player.controllerGetTeammates("andrea.romano", teamName, hackTitle, location, names, surnames);
 
-        JLabel countLabel = new JLabel("Membri totali: " + participants.length);
+        int size = Math.min(names.size(), surnames.size());
+        String[][] participants = new String[size][2];
+
+        for (int i = 0; i < size; i++) {
+            participants[i][0] = names.get(i);
+            participants[i][1] = surnames.get(i);
+        }
+
+        // ====== LABEL NUMERO MEMBRI ======
+        JLabel countLabel = new JLabel("Membri totali: " + size);
         countLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        countLabel.setForeground(new Color(60, 100, 170)); // blu tenue coerente con il tema
+        countLabel.setForeground(new Color(60, 100, 170));
         countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         countLabel.setBorder(BorderFactory.createEmptyBorder(8, 0, 10, 0));
         headerPanel.add(countLabel);
@@ -52,8 +59,9 @@ public class TeamMatesGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        for (String participant : participants) {
-            JPanel card = createParticipantCard(participant);
+        for (String[] participant : participants) {
+            String fullName = participant[0] + " " + participant[1];
+            JPanel card = createParticipantCard(fullName);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         }
@@ -61,7 +69,7 @@ public class TeamMatesGUI {
         // Calcola altezza dinamica
         int cardHeight = 50;
         int gap = 8;
-        int totalHeight = participants.length * (cardHeight + gap) + 20;
+        int totalHeight = size * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(500, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);

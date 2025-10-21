@@ -1,14 +1,21 @@
 package gui;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
+import dao.PlannerDAO;
 
 public class PlannerGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup hackathonGroup;
+
+    //luca è omosessuale
+
+    private ArrayList<String> hackathonList = new ArrayList<>();
+    private ArrayList<String> hlocations = new ArrayList<>();
 
     public PlannerGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Gestisci");
@@ -31,23 +38,22 @@ public class PlannerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        String[] hackathonList = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
-        };
+        ControllerPlanner planner = new ControllerPlanner();
+
+// Inizializzi le liste (procedura)
+        hackathonList = new ArrayList<>();
+        hlocations = new ArrayList<>();
+        planner.controllerGetHackathons("luca.bianchi", hackathonList, hlocations);
 
         hackathonGroup = new ButtonGroup();
+
         for (String hackathon : hackathonList) {
             JPanel card = createHackathonCard(hackathon);
             listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spazio tra i card
         }
 
+        // ScrollPane
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -110,14 +116,17 @@ public class PlannerGUI {
 
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
-        card.setPreferredSize(new Dimension(650, 60));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Radio button + testo
+        // Impostazioni layout flessibile
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // larghezza massima illimitata, altezza fissa
+        card.setAlignmentX(Component.LEFT_ALIGNMENT); // evita stretching orizzontale
+
+        // Radio button
         JRadioButton radio = new JRadioButton(hackathonName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -127,6 +136,7 @@ public class PlannerGUI {
 
         return card;
     }
+
 
     // ====== OTTIENI HACKATHON SELEZIONATO ======
     private String getSelectedHackathon() {

@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
@@ -10,7 +11,9 @@ public class JoinGUI {
     private JPanel mainPanel;
     private ButtonGroup teamGroup;
 
-    public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam) {
+    private ArrayList<String> teamList = new ArrayList<>();
+
+    public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam, String currentTitle,String currentLocation) {
         frame = new JFrame("Cambia Team");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(700, 500);
@@ -31,16 +34,9 @@ public class JoinGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Lista di team disponibili
-        String[] teamList = {
-                "Team Alpha",
-                "Team Beta",
-                "Team Gamma",
-                "Team Delta",
-                "Team Epsilon",
-                "Team Omega",
-                "Team Innovatori"
-        };
+        ControllerPlayer controllerplayer = new ControllerPlayer();
+
+        controllerplayer.controllerGetOtherTeams("andrea.romano",currentTitle,currentLocation,teamList);
 
         teamGroup = new ButtonGroup();
         for (String team : teamList) {
@@ -55,7 +51,7 @@ public class JoinGUI {
         // Forza il preferred size del listPanel in base al numero di elementi
         int cardHeight = 50;
         int gap = 10;
-        int totalHeight = (teamList.length - 1) * (cardHeight + gap) + 20; // -1 perché escludiamo il team corrente
+        int totalHeight = (teamList.size() - 1) * (cardHeight + gap) + 20; // -1 perché escludiamo il team corrente
         listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
@@ -104,6 +100,11 @@ public class JoinGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Popup di conferma
+
+                ControllerPlayer player = new ControllerPlayer();
+
+                player.controllerJoinTeam("andrea.romano",selectedTeam,currentTitle,currentLocation);
+
                 int response = JOptionPane.showConfirmDialog(
                         frame,
                         "Sei sicuro di voler cambiare team?\nDa: " + currentTeam + "\nA: " + selectedTeam,
