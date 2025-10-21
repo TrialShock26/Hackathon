@@ -63,10 +63,14 @@ public class SubscribeGUI {
                 return;
             }
 
-            // boolean success = controller.register(nome, cognome, username, password);
-            JOptionPane.showMessageDialog(frame, "Registrazione completata!");
-            frame.dispose();
-            new HubGUI(controller, frame);
+            boolean success = controller.newUser(username, nome, cognome, password);
+            if (success) {
+                JOptionPane.showMessageDialog(frame, "Registrazione completata!");
+                frame.dispose();
+                new HubGUI(controller, frame);
+            } else {
+                JOptionPane.showMessageDialog(frame, "Errore!", "Errore", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         mainPanel.add(formPanel, BorderLayout.CENTER);
