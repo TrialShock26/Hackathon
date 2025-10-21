@@ -37,9 +37,9 @@ public class ResumeGUI {
         contentPanel.add(hackTitle);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        controller.planner
-
-        planner.controllerGetHackathons("mario.rossi",locations,);
+//        controller.planner
+//
+//        planner.controllerGetHackathons("mario.rossi",locations,);
 
         // Campi informativi
         contentPanel.add(createInfoRow("Sede:", "Roma Innovation Hub"));
