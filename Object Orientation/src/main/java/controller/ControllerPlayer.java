@@ -47,4 +47,9 @@ public class ControllerPlayer {
         }
 
     }
+
+    public void subscribe(String username, String title, String location) throws SQLException {
+        PlayerDAO player = new PlayerImplementationDAO();
+        player.subscribe(username, title, location);
+    }
 }

@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Planner extends User {
@@ -25,7 +26,8 @@ public class Planner extends User {
     public void openHackathon (String title, String location, Date startDate, Date endDate,
                                Date startSubscriptionDate, Date endSubscriptionDate,
                                int maxPlayers, int maxTeamDim) {
-        Hackathon h = new Hackathon(title, location, startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
+        Hackathon h = new Hackathon(title, location, ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate()),
+                startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
         myHackathons.add(h);
     }
 

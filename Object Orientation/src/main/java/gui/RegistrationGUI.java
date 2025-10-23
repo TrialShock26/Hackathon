@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
@@ -10,40 +13,9 @@ public class RegistrationGUI {
     private JPanel mainPanel;
     private ButtonGroup hackathonGroup;
 
-    // ====== CLASSE DATI HACKATHON ======
-    private static class HackathonInfo {
-        String titolo;
-        String sede;
-        String durata;
-        String dataInizio;
-        String dataFine;
-        String periodoIscrizioni;
-        String dataAperturaIscrizioni;
-        String dataChiusuraIscrizioni;
-        int maxIscritti;
-        int maxDimTeam;
-        String descrizioneProblema;
-
-        public HackathonInfo(String titolo, String sede, String durata, String dataInizio, String dataFine,
-                             String periodoIscrizioni, String dataAperturaIscrizioni, String dataChiusuraIscrizioni,
-                             int maxIscritti, int maxDimTeam, String descrizioneProblema) {
-            this.titolo = titolo;
-            this.sede = sede;
-            this.durata = durata;
-            this.dataInizio = dataInizio;
-            this.dataFine = dataFine;
-            this.periodoIscrizioni = periodoIscrizioni;
-            this.dataAperturaIscrizioni = dataAperturaIscrizioni;
-            this.dataChiusuraIscrizioni = dataChiusuraIscrizioni;
-            this.maxIscritti = maxIscritti;
-            this.maxDimTeam = maxDimTeam;
-            this.descrizioneProblema = descrizioneProblema;
-        }
-    }
-
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -57,53 +29,26 @@ public class RegistrationGUI {
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
         // ====== DATI HACKATHON ======
-        java.util.Map<String, HackathonInfo> hackathonData = new java.util.LinkedHashMap<>();
-
-        hackathonData.put("Hack4Future 2025", new HackathonInfo(
-                "Hack4Future 2025", "Milano", "3 giorni",
-                "12/04/2025", "14/04/2025",
-                "dal 01/02/2025 al 10/04/2025",
-                "01/02/2025", "10/04/2025",
-                200, 5,
-                "Sviluppa soluzioni digitali sostenibili per il futuro delle città."
-        ));
-
-        hackathonData.put("TechSprint 2025", new HackathonInfo(
-                "TechSprint 2025", "Torino", "2 giorni",
-                "22/05/2025", "23/05/2025",
-                "dal 01/03/2025 al 20/05/2025",
-                "01/03/2025", "20/05/2025",
-                150, 4,
-                "Crea prototipi innovativi in ambito intelligenza artificiale e machine learning."
-        ));
-
-        hackathonData.put("CodeWave 2025", new HackathonInfo(
-                "CodeWave 2025", "Roma", "3 giorni",
-                "10/06/2025", "12/06/2025",
-                "dal 01/03/2025 al 08/06/2025",
-                "01/03/2025", "08/06/2025",
-                250, 5,
-                "Sfida i tuoi limiti sviluppando applicazioni innovative per il benessere digitale."
-        ));
-
-        hackathonData.put("GreenTech Challenge", new HackathonInfo(
-                "GreenTech Challenge", "Firenze", "4 giorni",
-                "18/07/2025", "21/07/2025",
-                "dal 01/04/2025 al 15/07/2025",
-                "01/04/2025", "15/07/2025",
-                300, 6,
-                "Progetta soluzioni tecnologiche per la sostenibilità ambientale."
-        ));
-
-        hackathonData.put("AI Revolution 2025", new HackathonInfo(
-                "AI Revolution 2025", "Napoli", "2 giorni",
-                "05/09/2025", "06/09/2025",
-                "dal 01/05/2025 al 01/09/2025",
-                "01/05/2025", "01/09/2025",
-                180, 4,
-                "Crea un prototipo basato su intelligenza artificiale che migliori la vita quotidiana."
-        ));
-
+        ArrayList<String> titles = new ArrayList<>();
+        ArrayList<String> locations = new ArrayList<>();
+        ArrayList<Integer> periodsOfTime = new ArrayList<>();
+        ArrayList<Date> startDates = new ArrayList<>();
+        ArrayList<Date> endDates = new ArrayList<>();
+        ArrayList<Date> startSubDates = new ArrayList<>();
+        ArrayList<Date> endSubDates = new ArrayList<>();
+        ArrayList<Integer> maxPlayers = new ArrayList<>();
+        ArrayList<Integer> maxTeamDims = new ArrayList<>();
+        try {
+            controller.getControllerHackathon().controllerGetAvailableHackathonsDB(titles, locations, periodsOfTime, startDates, endDates,
+                    startSubDates, endSubDates, maxPlayers, maxTeamDims);
+        } catch (SQLException e) {
+            String error = e.getMessage();
+            int idx = error.indexOf("D");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
 
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
@@ -112,9 +57,10 @@ public class RegistrationGUI {
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
         hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonData.keySet()) {
-            HackathonInfo info = hackathonData.get(hackathon);
-            JPanel card = createHackathonCard(info);
+        for (int i = 0; i < titles.size(); i++) {
+            JPanel card = createHackathonCard(titles.get(i), locations.get(i), periodsOfTime.get(i),
+                                                startDates.get(i), endDates.get(i), startSubDates.get(i), endSubDates.get(i),
+                                                maxPlayers.get(i), maxTeamDims.get(i));
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -173,13 +119,23 @@ public class RegistrationGUI {
                 );
 
                 if (response == JOptionPane.YES_OPTION) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Registrazione completata con successo!\nHackathon: " + selectedHackathon,
-                            "Registrazione Effettuata",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    frame.dispose();
-                    callerFrame.setVisible(true);
+                    try {
+                        controller.getControllerPlayer().subscribe(controller.getUser().getUsername(), selectedHackathon,
+                                locations.get(titles.indexOf(selectedHackathon)));
+                        JOptionPane.showMessageDialog(frame,
+                                "Registrazione completata con successo!\nHackathon: " + selectedHackathon,
+                                "Registrazione Effettuata",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        frame.dispose();
+                        callerFrame.setVisible(true);
+                    } catch (SQLException ex) {
+                        String error = ex.getMessage();
+                        int idx = error.indexOf("D");
+                        error = error.substring(0, idx);
+                        JOptionPane.showMessageDialog(frame,
+                                "C'è stato un errore!\n" + error,
+                                "Registrazione Fallita", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
@@ -194,7 +150,8 @@ public class RegistrationGUI {
     }
 
     // ====== CREA CARD HACKATHON ======
-    private JPanel createHackathonCard(HackathonInfo info) {
+    private JPanel createHackathonCard(String titolo, String sede, int durata, Date dataInizio, Date dataFine,
+                                       Date dataAperturaIscrizioni, Date dataChiusuraIscrizioni, int maxIscritti, int maxDimTeam) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(650, 60));
         card.setBackground(Color.WHITE);
@@ -203,12 +160,13 @@ public class RegistrationGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        JRadioButton radio = new JRadioButton(info.titolo);
+        JRadioButton radio = new JRadioButton(titolo);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
 
         // Quando si seleziona, apre un popup con le info riepilogative
-        radio.addActionListener(e -> showHackathonInfoPopup(info));
+        radio.addActionListener(e -> showHackathonInfoPopup(titolo, sede, durata, dataInizio, dataFine, dataAperturaIscrizioni,
+                                                                        dataChiusuraIscrizioni, maxIscritti, maxDimTeam));
 
         hackathonGroup.add(radio);
         card.add(radio, BorderLayout.CENTER);
@@ -217,7 +175,8 @@ public class RegistrationGUI {
     }
 
     // ====== MOSTRA POPUP RIEPILOGO HACKATHON ======
-    private void showHackathonInfoPopup(HackathonInfo info) {
+    private void showHackathonInfoPopup(String titolo, String sede, int durata, Date dataInizio, Date dataFine,
+                                        Date dataAperturaIscrizioni, Date dataChiusuraIscrizioni, int maxIscritti, int maxDimTeam) {
         JDialog dialog = new JDialog(frame, "Dettagli Hackathon", true);
         dialog.setSize(500, 400);
         dialog.setLocationRelativeTo(frame);
@@ -228,19 +187,18 @@ public class RegistrationGUI {
 
         // Tabella di informazioni
         String[][] data = {
-                {"Titolo", info.titolo},
-                {"Sede", info.sede},
-                {"Durata", info.durata},
-                {"Data Inizio", info.dataInizio},
-                {"Data Fine", info.dataFine},
-                {"Periodo Iscrizioni", info.periodoIscrizioni},
-                {"Apertura Iscrizioni", info.dataAperturaIscrizioni},
-                {"Chiusura Iscrizioni", info.dataChiusuraIscrizioni},
-                {"Max Iscritti", String.valueOf(info.maxIscritti)},
-                {"Max Dimensione Team", String.valueOf(info.maxDimTeam)}
+                {"Titolo", titolo},
+                {"Sede", sede},
+                {"Durata", String.valueOf(durata)},
+                {"Data Inizio", dataInizio.toString()},
+                {"Data Fine", dataFine.toString()},
+                {"Apertura Iscrizioni", dataAperturaIscrizioni.toString()},
+                {"Chiusura Iscrizioni", dataChiusuraIscrizioni.toString()},
+                {"Max Iscritti", String.valueOf(maxIscritti)},
+                {"Max Dimensione Team", String.valueOf(maxDimTeam)}
         };
 
-        String[] columnNames = {"Campo", "Valore"};
+        String[] columnNames = {"Tipo", "Informazione"};
         JTable table = new JTable(data, columnNames);
         table.setEnabled(false);
         table.setFont(new Font("Arial", Font.PLAIN, 14));

@@ -17,15 +17,18 @@ public class UserImplementationDAO implements UserDAO {
     }
 
     @Override
-    public boolean login(String username, String password) throws SQLException {
-        boolean isRegistered = false;
+    public String login(String username, String password) throws SQLException {
+        String credentials = null;
         PreparedStatement query;
         query = connection.prepareStatement("SELECT * FROM Utente WHERE username = ? AND password = ?");
         query.setString(1, username);
         query.setString(2, password);
         ResultSet rs = query.executeQuery();
-        if (rs.next()) {isRegistered = true;}
-        return isRegistered;
+        if (rs.next()) {
+            credentials = rs.getString("nome") + "@" + rs.getString("cognome");
+        }
+        rs.close();
+        return credentials;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class UserImplementationDAO implements UserDAO {
         String query = "SELECT titolo, sede, durata, data_inizio, data_fine, " +
                             "data_apertura_iscrizioni, data_chiusura_iscrizioni, " +
                             "max_iscritti, max_dim_team " +
-                        "FROM Hackathon" +
+                        "FROM Hackathon " +
                         "WHERE data_chiusura_iscrizioni > CURRENT_DATE; ";
         ps = connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();

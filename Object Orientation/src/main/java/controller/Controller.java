@@ -2,41 +2,47 @@ package controller;
 
 import dao.*;
 import postgresImplementationDao.*;
+import model.*;
 
 import java.sql.SQLException;
 
 public class Controller {
-    private String username;
-    private String name;
-    private String surname;
-    private ControllerHackathon hackathon;
-    private ControllerPlanner planner;
-    private ControllerPlayer player;
-    private ControllerTeam team;
+    private User user;
+    private Player player;
+    private Planner planner;
+    private Judge judge;
+    private ControllerHackathon controllerHackathon;
+    private ControllerPlanner controllerPlanner;
+    private ControllerPlayer controllerPlayer;
+    private ControllerTeam controllerTeam;
 
     public Controller() {
-        hackathon = null;
-        planner = null;
+        user = null;
         player = null;
-        team = null;
+        planner = null;
+        judge = null;
+        controllerHackathon = null;
+        controllerPlanner = null;
+        controllerPlayer = null;
+        controllerTeam = null;
     }
 
     public boolean login(String username, String password) {
-        boolean success = false;
-        UserDAO user = new UserImplementationDAO();
+        String nameSurname = null;
+        UserDAO userDB = new UserImplementationDAO();
 
         try {
-            success = user.login(username, password);
+            nameSurname = userDB.login(username, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (success) {
-            this.username = username;
-            this.name = username;
-            this.surname = username;
+        if (nameSurname != null) {
+            int idx = nameSurname.indexOf('@');
+            user = new User(username, password, nameSurname.substring(0, idx), nameSurname.substring(idx+1));
+            return true;
         }
-        return success;
+        return false;
     }
 
     public boolean newUser(String username, String name, String surname, String password) {
@@ -52,11 +58,27 @@ public class Controller {
         return success;
     }
 
-    public String getUsername() {return username;}
-    public String getName() {return name;}
-    public String getSurname() {return surname;}
-    public ControllerHackathon getHackathon() {return hackathon;}
-    public ControllerPlanner getPlanner() {return planner;}
-    public ControllerPlayer getPlayer() {return player;}
-    public ControllerTeam getTeam() {return team;}
+    public User getUser() {return user;}
+    public Planner getPlanner() {
+        if (planner == null) {
+            planner = new Planner(user.getUsername(), user.getPassword(), user.getName(), user.getSurname());
+        }
+        return planner;
+    }
+    public ControllerHackathon getControllerHackathon() {
+        if (controllerHackathon == null) {controllerHackathon = new ControllerHackathon();}
+        return controllerHackathon;
+    }
+    public ControllerPlanner getControllerPlanner() {
+        if (controllerPlanner == null) {controllerPlanner = new ControllerPlanner();}
+        return controllerPlanner;
+    }
+    public ControllerPlayer getControllerPlayer() {
+        if (controllerPlayer == null) {controllerPlayer = new ControllerPlayer();}
+        return controllerPlayer;
+    }
+    public ControllerTeam getControllerTeam() {
+        if (controllerTeam == null) {controllerTeam = new ControllerTeam();}
+        return controllerTeam;
+    }
 }
