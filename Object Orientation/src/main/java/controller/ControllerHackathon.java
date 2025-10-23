@@ -1,10 +1,16 @@
 package controller;
 
 import dao.HackathonDAO;
+import dao.UserDAO;
+import model.Hackathon;
 import postgresImplementationDao.HackathonImplementationDAO;
-import java.util.ArrayList;
+import postgresImplementationDao.UserImplementationDAO;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.*;
 
 public class ControllerHackathon {
+    private ArrayList<Hackathon> availableHackathons;
 
     public void controllerOverallRanking(ArrayList<String> teamNames, ArrayList<Double> scores, ArrayList<String> titles, ArrayList<String> locations) {
 
@@ -26,6 +32,18 @@ public class ControllerHackathon {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void controllerGetAvailableHackathonsDB(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
+                                                   ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates,
+                                                   ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+        UserDAO user = new UserImplementationDAO();
+        user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
+        availableHackathons = new ArrayList<Hackathon>();
+        for (int i = 0; i < titles.size(); i++) {
+            availableHackathons.add(new Hackathon(titles.get(i), locations.get(i), periodsOfTime.get(i).longValue(), startDates.get(i),
+                    endDates.get(i), startSubDates.get(i), endSubDates.get(i), maxPlayers.get(i), maxTeamDim.get(i), null));
+        } //TODO Planner corretto dal DB
     }
 
     public void controllerGetClosedHackathons(ArrayList<String> titles, ArrayList<String> locations){

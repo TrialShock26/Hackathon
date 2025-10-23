@@ -82,6 +82,9 @@ public class LoginGUI {
                 //  Controller per verificare login
                 boolean success = controller.login(username, password);
                 if (success) {
+                    JOptionPane.showMessageDialog(frame, "Benvenut3 " +
+                                    controller.getUser().getName() + " " + controller.getUser().getSurname(),
+                                    "Ciao!", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
                     new HubGUI(controller, callerFrame);
                 } else {

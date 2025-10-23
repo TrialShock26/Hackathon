@@ -20,14 +20,14 @@ public class Hackathon {
     private Planner planner;
     private Selection selection;
 
-    public Hackathon(String title, String location, Date startDate, Date endDate,
+    public Hackathon(String title, String location, long periodOfTime, Date startDate, Date endDate,
                      Date startSubscriptionDate, Date endSubscriptionDate, int maxPlayers, int maxTeamDim,
                      Planner planner) {
         this.title = title;
         this.location = location;
         this.startDate = startDate;
         this.endDate = endDate;
-        periodOfTime = ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate());
+        this.periodOfTime = periodOfTime;
         this.startSubscriptionDate = startSubscriptionDate;
         this.endSubscriptionDate = endSubscriptionDate;
         this.maxPlayers = maxPlayers;
