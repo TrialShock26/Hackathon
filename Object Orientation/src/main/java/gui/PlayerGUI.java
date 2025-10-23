@@ -35,7 +35,7 @@ public class PlayerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerPlayer controllerPlayer = new ControllerPlayer();
+        ControllerPlayer controllerPlayer = new ControllerPlayer(controller);
         controllerPlayer.controllerGetHackathons("andrea.romano", titles, locations, teamNames);
 
         teamGroup = new ButtonGroup();

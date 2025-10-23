@@ -35,7 +35,7 @@ public class JoinGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerPlayer controllerplayer = new ControllerPlayer();
+        ControllerPlayer controllerplayer = new ControllerPlayer(controller);
 
         try{
             controllerplayer.controllerGetOtherTeams("andrea.romano",currentTitle,currentLocation,teamList);
@@ -105,7 +105,7 @@ public class JoinGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Popup di conferma
-                ControllerPlayer player = new ControllerPlayer();
+                ControllerPlayer player = new ControllerPlayer(controller);
 
                 try{
                     player.controllerJoinTeam("andrea.romano",selectedTeam,currentTitle,currentLocation);

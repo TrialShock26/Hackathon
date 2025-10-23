@@ -34,16 +34,30 @@ public class ControllerHackathon {
         }
     }
 
-    public void controllerGetAvailableHackathonsDB(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
+    public void controllerGetAvailableHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
                                                    ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates,
                                                    ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
-        UserDAO user = new UserImplementationDAO();
-        user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
-        availableHackathons = new ArrayList<Hackathon>();
-        for (int i = 0; i < titles.size(); i++) {
-            availableHackathons.add(new Hackathon(titles.get(i), locations.get(i), periodsOfTime.get(i).longValue(), startDates.get(i),
-                    endDates.get(i), startSubDates.get(i), endSubDates.get(i), maxPlayers.get(i), maxTeamDim.get(i), null));
-        } //TODO Planner corretto dal DB
+        if (availableHackathons == null) {
+            UserDAO user = new UserImplementationDAO();
+            user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
+            availableHackathons = new ArrayList<Hackathon>();
+            for (int i = 0; i < titles.size(); i++) {
+                availableHackathons.add(new Hackathon(titles.get(i), locations.get(i), periodsOfTime.get(i).longValue(), startDates.get(i),
+                        endDates.get(i), startSubDates.get(i), endSubDates.get(i), maxPlayers.get(i), maxTeamDim.get(i), null));
+            } //TODO Planner corretto dal DB
+        } else {
+            for (Hackathon availableHackathon : availableHackathons) {
+                titles.add(availableHackathon.getTitle());
+                locations.add(availableHackathon.getLocation());
+                periodsOfTime.add((int)availableHackathon.getPeriodOfTime());
+                startDates.add(availableHackathon.getStartDate());
+                endDates.add(availableHackathon.getEndDate());
+                startSubDates.add(availableHackathon.getStartSubscriptionDate());
+                endSubDates.add(availableHackathon.getEndSubscriptionDate());
+                maxPlayers.add(availableHackathon.getMaxPlayers());
+                maxTeamDim.add(availableHackathon.getMaxTeamDim());
+            }
+        }
     }
 
     public void controllerGetClosedHackathons(ArrayList<String> titles, ArrayList<String> locations){
@@ -55,5 +69,12 @@ public class ControllerHackathon {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Hackathon getHackathon(String title, String location) {
+        for (Hackathon h : availableHackathons) {
+            if (h.getTitle().equals(title) && h.getLocation().equals(location)) {return h;}
+        }
+        return null;
     }
 }

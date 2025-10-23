@@ -32,7 +32,7 @@ public class TeamMatesGUI {
         headerPanel.add(titleLabel);
 
         // ====== RECUPERA I PARTECIPANTI ======
-        ControllerPlayer player = new ControllerPlayer();
+        ControllerPlayer player = new ControllerPlayer(controller);
         player.controllerGetTeammates("andrea.romano", teamName, hackTitle, location, names, surnames);
 
         int size = Math.min(names.size(), surnames.size());

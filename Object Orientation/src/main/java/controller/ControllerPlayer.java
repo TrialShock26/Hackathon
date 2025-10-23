@@ -3,9 +3,15 @@ package controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import dao.PlayerDAO;
+import model.*;
 import postgresImplementationDao.PlayerImplementationDAO;
 
 public class ControllerPlayer {
+    private Controller controller;
+
+    public ControllerPlayer(Controller controller) {
+        this.controller = controller;
+    }
 
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
                                         ArrayList<String> teamNames) {
@@ -51,5 +57,6 @@ public class ControllerPlayer {
     public void subscribe(String username, String title, String location) throws SQLException {
         PlayerDAO player = new PlayerImplementationDAO();
         player.subscribe(username, title, location);
+        controller.getPlayer().signUpHackathon(controller.getControllerHackathon().getHackathon(title, location));
     }
 }

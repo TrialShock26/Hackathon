@@ -65,7 +65,7 @@ public class SubscribeGUI {
 
             boolean success = controller.newUser(username, nome, cognome, password);
             if (success) {
-                JOptionPane.showMessageDialog(frame, "Registrazione completata!");
+                JOptionPane.showMessageDialog(frame, "Registrazione completata!\nBenvenut3 "+ nome +" "+ cognome);
                 frame.dispose();
                 new HubGUI(controller, frame);
             } else {

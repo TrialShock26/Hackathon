@@ -1,7 +1,10 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 
@@ -25,24 +28,28 @@ public class JudgeGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
+        // ====== DATI HACKATHON ======
+        ArrayList<String> titles = new ArrayList<>();
+        ArrayList<String> locations = new ArrayList<>();
+        try {
+            controller.getControllerJudge().controllerGetHackathons(controller.getUser().getUsername(), titles, locations);
+        } catch (SQLException e) {
+            String error = e.getMessage();
+            int idx = error.indexOf("D");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        String[] hackathonList = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
-        };
-
         hackathonGroup = new ButtonGroup();
-        for (String hackathon : hackathonList) {
+        for (String hackathon : titles) {
             JPanel card = createHackathonCard(hackathon);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -125,8 +132,17 @@ public class JudgeGUI {
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        frame.setContentPane(mainPanel);
-        frame.setVisible(true);
+        try {
+            frame.setContentPane(mainPanel);
+            frame.setVisible(true);
+            titles.getFirst();
+        } catch (NoSuchElementException e) {
+            JOptionPane.showMessageDialog(frame,
+                    "Non sei Giudice in nessuna competizione!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            frame.dispose();
+            callerFrame.setVisible(true);
+        }
     }
 
     private JPanel createHackathonCard(String hackathonName) {

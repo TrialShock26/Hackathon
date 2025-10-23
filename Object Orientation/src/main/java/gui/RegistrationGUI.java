@@ -39,7 +39,7 @@ public class RegistrationGUI {
         ArrayList<Integer> maxPlayers = new ArrayList<>();
         ArrayList<Integer> maxTeamDims = new ArrayList<>();
         try {
-            controller.getControllerHackathon().controllerGetAvailableHackathonsDB(titles, locations, periodsOfTime, startDates, endDates,
+            controller.getControllerHackathon().controllerGetAvailableHackathons(titles, locations, periodsOfTime, startDates, endDates,
                     startSubDates, endSubDates, maxPlayers, maxTeamDims);
         } catch (SQLException e) {
             String error = e.getMessage();

@@ -1,10 +1,8 @@
 package controller;
 
 import dao.PlannerDAO;
-import model.Hackathon;
-import model.Planner;
+import model.*;
 import postgresImplementationDao.PlannerImplementationDAO;
-
 import java.sql.Date;
 import java.util.ArrayList;
 
