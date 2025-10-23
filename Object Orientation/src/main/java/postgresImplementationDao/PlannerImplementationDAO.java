@@ -72,7 +72,9 @@ public class PlannerImplementationDAO implements PlannerDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
+    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,ArrayList<Date> startDates,
+                              ArrayList<Date> endDates,ArrayList<Date> startSubDate,ArrayList<Date> endSubDate,
+                              ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede , durata, data_inizio, data_fine, descrizione_problema, " +
                 "data_apertura_iscrizioni, data_chiusura_iscrizioni, max_iscritti, max_dim_team " +
@@ -87,6 +89,12 @@ public class PlannerImplementationDAO implements PlannerDAO {
         while (rs.next()) {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
+            startDates.add(rs.getDate("data_inizio"));
+            endDates.add(rs.getDate("data_fine"));
+            startSubDate.add(rs.getDate("data_apertura_iscrizioni"));
+            maxPlayers.add(rs.getInt("max_iscritti"));
+            maxTeamDim.add(rs.getInt("max_team"));
+
         }
         rs.close();
     }

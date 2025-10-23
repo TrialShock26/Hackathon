@@ -2,12 +2,16 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Date;
+import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
+import model.Hackathon;
 
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
+
 
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
         frame = new JFrame("Riepilogo");
@@ -37,19 +41,23 @@ public class ResumeGUI {
         contentPanel.add(hackTitle);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-//        controller.planner
-//
-//        planner.controllerGetHackathons("mario.rossi",locations,);
+        Hackathon selectedHackathon = new Hackathon();
+
+        for(int i=0;i<controller.getControllerPlanner().getMyHackathons().size();i++){
+            if(controller.getControllerPlanner().getMyHackathons().get(i).getTitle() == hackathonName){
+                selectedHackathon = controller.getControllerPlanner().getMyHackathons().get(i);
+            }
+        }
 
         // Campi informativi
-        contentPanel.add(createInfoRow("Sede:", "Roma Innovation Hub"));
-        contentPanel.add(createInfoRow("Durata:", "2 giorni"));
-        contentPanel.add(createInfoRow("Data Inizio:", "12 Maggio 2025"));
-        contentPanel.add(createInfoRow("Data Fine:", "14 Maggio 2025"));
-        contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", "1 Marzo 2025"));
-        contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", "30 Aprile 2025"));
-        contentPanel.add(createInfoRow("Max Iscritti:", "150"));
-        contentPanel.add(createInfoRow("Max Dim. Team:", "5"));
+        contentPanel.add(createInfoRow("Sede:", selectedHackathon.getLocation()));
+        contentPanel.add(createInfoRow("Durata:", selectedHackathon.getPeriodOfTime()));
+        contentPanel.add(createInfoRow("Data Inizio:", selectedHackathon.getStartDate().toString()));
+        contentPanel.add(createInfoRow("Data Fine:", selectedHackathon.getEndDate().toString()));
+        contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", selectedHackathon.getStartSubscriptionDate().toString()));
+        contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", selectedHackathon.getEndSubscriptionDate().toString()));
+        contentPanel.add(createInfoRow("Max Iscritti:", selectedHackathon.getMaxPlayers()));
+        contentPanel.add(createInfoRow("Max Dim. Team:", selectedHackathon.getMaxTeamDim()));
         contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // ====== DESCRIZIONE PROBLEMA ======

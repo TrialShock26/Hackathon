@@ -1,9 +1,11 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
+
 
 public class PlayerGUI {
     private JFrame frame;
@@ -35,8 +37,17 @@ public class PlayerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerPlayer controllerPlayer = new ControllerPlayer();
-        controllerPlayer.controllerGetHackathons("andrea.romano", titles, locations, teamNames);
+        try {
+            //prendo teams dal DB e pusho nel controllerPlayer
+            controller.getControllerPlayer().controllerGetHackathons(controller.getUser().getUsername(), titles, locations, teamNames);
+        } catch (SQLException e){
+            String error = e.getMessage();
+            int idx = error.indexOf("D");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
 
         teamGroup = new ButtonGroup();
 

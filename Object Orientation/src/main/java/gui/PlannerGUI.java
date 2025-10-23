@@ -1,21 +1,19 @@
 package gui;
 
 import java.awt.*;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 import dao.PlannerDAO;
+import model.Hackathon;
 
 public class PlannerGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup hackathonGroup;
-
-    //luca è omosessuale
-
-    private ArrayList<String> hackathonList = new ArrayList<>();
-    private ArrayList<String> hlocations = new ArrayList<>();
 
     public PlannerGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Gestisci");
@@ -38,16 +36,25 @@ public class PlannerGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerPlanner planner = new ControllerPlanner();
+        ArrayList<String> titles = new ArrayList<>();
+        ArrayList<String> locations = new ArrayList<>();
+        ArrayList<Date> startDate = new ArrayList<>();
+        ArrayList<Date> endDate = new ArrayList<>();
+        ArrayList<Date> startSubDate = new ArrayList<>();
+        ArrayList<Date> endSubDate = new ArrayList<>();
+        ArrayList<Integer> maxPlayers = new ArrayList<>();
+        ArrayList<Integer> maxTeamDim = new ArrayList<>();
 
-        // Inizializzi le liste (procedura)
-        hackathonList = new ArrayList<>();
-        hlocations = new ArrayList<>();
-        //planner.controllerGetHackathons("luca.bianchi", hackathonList, hlocations);
+        try{
+            controller.getControllerPlanner().controllerGetHackathons(controller.getUser().getUsername(),titles,locations,
+                    startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
 
         hackathonGroup = new ButtonGroup();
 
-        for (String hackathon : hackathonList) {
+        for (String hackathon : titles) {
             JPanel card = createHackathonCard(hackathon);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spazio tra i card
