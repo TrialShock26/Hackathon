@@ -30,14 +30,10 @@ public class PlannerGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBackground(new Color(240, 240, 245));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
-
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> locations = new ArrayList<>();
+        ArrayList<Long> periodOftime = new ArrayList<>();
+        ArrayList<String> problemDescriptions = new ArrayList<>();
         ArrayList<Date> startDate = new ArrayList<>();
         ArrayList<Date> endDate = new ArrayList<>();
         ArrayList<Date> startSubDate = new ArrayList<>();
@@ -46,11 +42,17 @@ public class PlannerGUI {
         ArrayList<Integer> maxTeamDim = new ArrayList<>();
 
         try{
-            controller.getControllerPlanner().controllerGetHackathons(controller.getUser().getUsername(),titles,locations,
-                    startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
+            controller.getControllerPlanner().controllerGetHackathons(controller.getUser().getUsername(),titles,locations,periodOftime,
+                    problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
+
+        // ====== LISTA HACKATHON CON RADIOBUTTON ======
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBackground(new Color(240, 240, 245));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
         hackathonGroup = new ButtonGroup();
 
@@ -110,7 +112,6 @@ public class PlannerGUI {
                 new ResumeGUI(controller, frame, selectedHackathon); // passi PlannerGUI come callerFrame
             }
         });
-
 
         centerPanel.add(openBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);

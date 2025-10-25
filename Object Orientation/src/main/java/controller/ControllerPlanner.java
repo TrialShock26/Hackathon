@@ -5,6 +5,7 @@ import model.Hackathon;
 import model.Planner;
 import postgresImplementationDao.PlannerImplementationDAO;
 
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ControllerPlanner {
     }
 
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
+                                        ArrayList<Long> periodOftime, ArrayList<String> problemDescriptions,
                                          ArrayList<Date> startDate, ArrayList<Date> endDate,
                                         ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
                                         ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
@@ -35,21 +37,29 @@ public class ControllerPlanner {
             if(myHackathons==null){
                 myHackathons = new ArrayList<>();
                 PlannerDAO planner = new PlannerImplementationDAO();
-                planner.getHackathons(username, titles, locations,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
+                planner.getHackathons(username, titles, locations,periodOftime,problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
                 for(int i=0;i<titles.size();i++){
-                    myHackathons.add(new Hackathon(titles.get(i),locations.get(i),0,startDate.get(i),endDate.get(i),startSubDate.get(i),
+                    myHackathons.add(new Hackathon(titles.get(i),locations.get(i),periodOftime.get(i),
+                            startDate.get(i),endDate.get(i),startSubDate.get(i),
                             endSubDate.get(i),maxPlayers.get(i),maxTeamDim.get(i),null));
+                    try{
+                        myHackathons.get(i).setProblemDescription(problemDescriptions.get(i));
+                    } catch(Exception e){
+                        System.out.println(e.getMessage());
+                    }
                 }
             }else{
-                for(int i=0;i<myHackathons.size();i++){
-                    titles.add(myHackathons.get(i).getTitle());
-                    locations.add(myHackathons.get(i).getLocation());
-                    startDate.add(myHackathons.get(i).getStartDate());
-                    endDate.add(myHackathons.get(i).getEndDate());
-                    startSubDate.add(myHackathons.get(i).getStartDate());
-                    endSubDate.add(myHackathons.get(i).getEndDate());
-                    maxPlayers.add(myHackathons.get(i).getMaxPlayers());
-                    maxTeamDim.add(myHackathons.get(i).getMaxTeamDim());
+                for (Hackathon myHackathon : myHackathons) {
+                    titles.add(myHackathon.getTitle());
+                    locations.add(myHackathon.getLocation());
+                    periodOftime.add(myHackathon.getPeriodOfTime());
+                    problemDescriptions.add(myHackathon.getProblemDescription());
+                    startDate.add(myHackathon.getStartDate());
+                    endDate.add(myHackathon.getEndDate());
+                    startSubDate.add(myHackathon.getStartDate());
+                    endSubDate.add(myHackathon.getEndDate());
+                    maxPlayers.add(myHackathon.getMaxPlayers());
+                    maxTeamDim.add(myHackathon.getMaxTeamDim());
                 }
             }
 
@@ -66,6 +76,21 @@ public class ControllerPlanner {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
+
+    public void controllerStartHackathon(String title, String location) throws SQLException {
+
+        PlannerDAO planner = new PlannerImplementationDAO();
+
+        planner.startHackathon(title,location);
+
+    }
+
+    public void controllerEndHackathon(String title, String location) throws  SQLException{
+
+        PlannerDAO planner = new PlannerImplementationDAO();
+
+        planner.endHackathon(title,location);
     }
 
     public ArrayList<Hackathon> getMyHackathons() {

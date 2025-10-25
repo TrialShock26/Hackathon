@@ -3,19 +3,19 @@ package gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
-import model.Hackathon;
+import model.*;
 
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
 
-
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
         frame = new JFrame("Riepilogo");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -41,24 +41,23 @@ public class ResumeGUI {
         contentPanel.add(hackTitle);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        Hackathon selectedHackathon = new Hackathon();
+        Hackathon selectedHackathon =  null;
 
-        for(int i=0;i<controller.getControllerPlanner().getMyHackathons().size();i++){
-            if(controller.getControllerPlanner().getMyHackathons().get(i).getTitle() == hackathonName){
-                selectedHackathon = controller.getControllerPlanner().getMyHackathons().get(i);
+        for (Hackathon h : controller.getControllerPlanner().getMyHackathons()) {
+            if (h.getTitle().equals(hackathonName)) {
+                selectedHackathon = h;
             }
         }
 
-        // Campi informativi
-        contentPanel.add(createInfoRow("Sede:", selectedHackathon.getLocation()));
-        contentPanel.add(createInfoRow("Durata:", selectedHackathon.getPeriodOfTime()));
+        contentPanel.add(createInfoRow("Sede:", String.valueOf(selectedHackathon.getLocation())));
+        contentPanel.add(createInfoRow("Durata:",String.valueOf(selectedHackathon.getPeriodOfTime())));
         contentPanel.add(createInfoRow("Data Inizio:", selectedHackathon.getStartDate().toString()));
         contentPanel.add(createInfoRow("Data Fine:", selectedHackathon.getEndDate().toString()));
         contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", selectedHackathon.getStartSubscriptionDate().toString()));
         contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", selectedHackathon.getEndSubscriptionDate().toString()));
-        contentPanel.add(createInfoRow("Max Iscritti:", selectedHackathon.getMaxPlayers()));
-        contentPanel.add(createInfoRow("Max Dim. Team:", selectedHackathon.getMaxTeamDim()));
-        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        contentPanel.add(createInfoRow("Max Iscritti:", String.valueOf(selectedHackathon.getMaxPlayers())));
+        contentPanel.add(createInfoRow("Max Dim. Team:", String.valueOf(selectedHackathon.getMaxTeamDim())));
+
 
         // ====== DESCRIZIONE PROBLEMA ======
         JLabel problemLabel = new JLabel("Descrizione Problema:");
@@ -68,13 +67,7 @@ public class ResumeGUI {
         contentPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
 
-        JTextArea problemArea = new JTextArea(
-                "Sviluppare soluzioni innovative per la sostenibilità urbana. "
-                        + "L’obiettivo è creare progetti tecnologici che migliorino la qualità della vita nelle città, "
-                        + "riducendo l’impatto ambientale e favorendo la mobilità sostenibile. "
-                        + "Ogni team dovrà presentare un prototipo funzionante, un business plan e un pitch finale. "
-                        + "Le squadre saranno valutate da una giuria di esperti."
-        );
+        JTextArea problemArea = new JTextArea(selectedHackathon.getProblemDescription());
         problemArea.setFont(new Font("Arial", Font.PLAIN, 14));
         problemArea.setLineWrap(true);
         problemArea.setWrapStyleWord(true);
@@ -89,7 +82,7 @@ public class ResumeGUI {
         problemScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         problemScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         problemScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-// Imposta preferenze iniziali ma lascia che cresca
+        // Imposta preferenze iniziali ma lascia che cresca
         problemScroll.setPreferredSize(new Dimension(600, 100));
         problemScroll.setMinimumSize(new Dimension(600, 100));
         problemScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
@@ -136,13 +129,28 @@ public class ResumeGUI {
         startBtn.setForeground(Color.WHITE);
         startBtn.setFocusPainted(false);
         startBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        Hackathon finalSelectedHackathon = selectedHackathon;
         startBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(
-                    frame,
-                    "Hackathon \"" + hackathonName + "\" avviato!",
-                    "Avvio",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+
+            //rivedi, possibile soluzione fare un metodo findHackathonByTitle(String title)
+
+            try{
+                controller.getControllerPlanner().controllerStartHackathon(finalSelectedHackathon.getTitle(), finalSelectedHackathon.getLocation());
+                JOptionPane.showMessageDialog(
+                        frame,
+                        "Hackathon \"" + hackathonName + "\" avviato!",
+                        "Avvio",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                        frame,
+                        ex.getMessage(),
+                        "Errore!",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+
         });
 
         JButton endBtn = new JButton("Termina");
@@ -161,12 +169,71 @@ public class ResumeGUI {
             );
 
             if (response == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(
-                        frame,
-                        "Hackathon \"" + hackathonName + "\" terminato con successo!",
-                        "Conclusione",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
+                try {
+                    controller.getControllerPlanner()
+                            .controllerEndHackathon(finalSelectedHackathon.getTitle(), finalSelectedHackathon.getLocation());
+
+                    // ====== CREA DIALOG PERSONALIZZATO ======
+                    JDialog dialog = new JDialog(frame, "Hackathon concluso", true);
+                    dialog.setSize(420, 200);
+                    dialog.setLocationRelativeTo(frame);
+                    dialog.setLayout(new BorderLayout());
+                    dialog.getContentPane().setBackground(new Color(245, 247, 250));
+
+                    // ICONA + MESSAGGIO
+                    JPanel messagePanel = new JPanel(new BorderLayout());
+                    messagePanel.setOpaque(false);
+                    messagePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+                    JLabel iconLabel = new JLabel(UIManager.getIcon("OptionPane.informationIcon"));
+                    JLabel msgLabel = new JLabel("<html><div style='text-align:center;'>Hackathon <b>\"" + hackathonName + "\"</b><br>terminato con successo!</div></html>");
+                    msgLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+                    msgLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+                    messagePanel.add(iconLabel, BorderLayout.WEST);
+                    messagePanel.add(msgLabel, BorderLayout.CENTER);
+                    dialog.add(messagePanel, BorderLayout.CENTER);
+
+                    // ====== BOTTONI ======
+                    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+                    buttonPanel.setOpaque(false);
+
+                    JButton closeBtn = new JButton("Chiudi");
+                    closeBtn.setPreferredSize(new Dimension(110, 35));
+                    closeBtn.setBackground(new Color(180, 180, 180));
+                    closeBtn.setForeground(Color.WHITE);
+                    closeBtn.setFocusPainted(false);
+                    closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    closeBtn.addActionListener(ev -> dialog.dispose());
+
+                    JButton rankingBtn = new JButton("Classifica");
+                    rankingBtn.setPreferredSize(new Dimension(130, 35));
+                    rankingBtn.setBackground(new Color(30, 144, 255)); // azzurro vivo
+                    rankingBtn.setForeground(Color.WHITE);
+                    rankingBtn.setFocusPainted(false);
+                    rankingBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    rankingBtn.setFont(new Font("Arial", Font.BOLD, 14));
+                    rankingBtn.addActionListener(ev -> {
+                        dialog.dispose();
+                        frame.dispose();
+                        new ScoreboardGUI(controller, callerFrame, hackathonName, finalSelectedHackathon.getLocation());
+                    });
+
+                    buttonPanel.add(closeBtn);
+                    buttonPanel.add(rankingBtn);
+
+                    dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                    dialog.setVisible(true);
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(
+                            frame,
+                            ex.getMessage(),
+                            "Errore!",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }
         });
 

@@ -40,17 +40,6 @@ public class RankingGUI {
 
         controllerHackathon.controllerGetClosedHackathons(hackathons,locations);
 
-        /*
-        String[] hackathons = {
-                "Hack4Future 2025",
-                "TechSprint 2025",
-                "Innovathon Roma",
-                "AI Challenge",
-                "Green Hack 2025",
-                "Design Jam 2025",
-                "HealthTech Hack"
-        };*/
-
         hackathonGroup = new ButtonGroup();
         for (String hackathon : hackathons) {
             JPanel card = createHackathonCard(hackathon);
