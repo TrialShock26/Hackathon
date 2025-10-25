@@ -16,19 +16,7 @@ public class PlannerGUI {
     private ButtonGroup hackathonGroup;
 
     public PlannerGUI(Controller controller, JFrame callerFrame) {
-        frame = new JFrame("Gestisci");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
 
-        mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(240, 240, 245));
-
-        // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Gestisci Hackathon", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
 
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> locations = new ArrayList<>();
@@ -47,6 +35,29 @@ public class PlannerGUI {
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
+
+        if(titles.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Errore: Non sei un Organizzatore!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            callerFrame.setVisible(true);
+            return;// torna alla GUI precedente
+        }
+        frame = new JFrame("Gestisci");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(240, 240, 245));
+
+        // ====== HEADER ======
+        JLabel titleLabel = new JLabel("Gestisci Hackathon", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+
 
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();

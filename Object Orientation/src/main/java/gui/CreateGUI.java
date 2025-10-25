@@ -2,15 +2,17 @@
 
     import javax.swing.*;
     import java.awt.*;
+    import java.sql.SQLException;
+    import java.text.SimpleDateFormat;
     import java.util.ArrayList;
+    import java.sql.Date;
     import java.util.List;
     import controller.Controller;
     import controller.ControllerPlanner;
 
     public class CreateGUI {
         private JFrame frame;
-        private JTextField titoloField, sedeField, durataField, dataInizioField, dataFineField,
-                periodoIscrizioniField, dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
+        private JTextField titoloField, sedeField, durataField, dataInizioField, dataFineField, dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
                 maxIscrittiField, maxDimTeamField;
 
         private ArrayList<String> utenti = new ArrayList<>();
@@ -65,7 +67,6 @@
             durataField = creaCampo(panel, gbc, y++, "Durata:");
             dataInizioField = creaCampo(panel, gbc, y++, "Data Inizio:");
             dataFineField = creaCampo(panel, gbc, y++, "Data Fine:");
-            periodoIscrizioniField = creaCampo(panel, gbc, y++, "Periodo Iscrizioni:");
             dataAperturaIscrizioniField = creaCampo(panel, gbc, y++, "Data Apertura Iscrizioni:");
             dataChiusuraIscrizioniField = creaCampo(panel, gbc, y++, "Data Chiusura Iscrizioni:");
             maxIscrittiField = creaCampo(panel, gbc, y++, "Max Iscritti:");
@@ -107,7 +108,6 @@
                         durataField.getText().isEmpty() ||
                         dataInizioField.getText().isEmpty() ||
                         dataFineField.getText().isEmpty() ||
-                        periodoIscrizioniField.getText().isEmpty() ||
                         dataAperturaIscrizioniField.getText().isEmpty() ||
                         dataChiusuraIscrizioniField.getText().isEmpty() ||
                         maxIscrittiField.getText().isEmpty() ||
@@ -129,28 +129,46 @@
                     return;
                 }
 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
                 String titolo = titoloField.getText().trim();
                 String sede = sedeField.getText().trim();
                 String durata = durataField.getText().trim();
                 String dataInizio = dataInizioField.getText().trim();
                 String dataFine = dataFineField.getText().trim();
-                String periodoIscrizioni = periodoIscrizioniField.getText().trim();
                 String dataApertura = dataAperturaIscrizioniField.getText().trim();
                 String dataChiusura = dataChiusuraIscrizioniField.getText().trim();
                 int maxIscritti = Integer.parseInt(maxIscrittiField.getText().trim());
                 int maxDimTeam = Integer.parseInt(maxDimTeamField.getText().trim());
 
-                ControllerPlanner planner = new ControllerPlanner();
+                Date startDate = Date.valueOf(dataInizio);
+                Date endDate = Date.valueOf(dataFine);
+                Date startSubDate = Date.valueOf(dataApertura);
+                Date endSubDate = Date.valueOf(dataChiusura);
 
-                //planner.controllerOpenHackathon(titolo,sede,dataInizio,dataFine,dataApertura,dataChiusura,maxIscritti,maxDimTeam,"mario.rossi",giudiciSelezionati);
+                StringBuilder sb = new StringBuilder();
+                for (String s : giudiciSelezionati) {
+                    sb.append(s).append(",");
+                }
 
-                // Se tutto ok
-                JOptionPane.showMessageDialog(frame,
-                        "Hackathon creato con successo!",
-                        "Successo",
-                        JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
-                callerFrame.setVisible(true);
+                try{
+                    controller.getControllerPlanner().controllerOpenHackathon(titolo,sede,startDate,endDate
+                            ,startSubDate,endSubDate,maxIscritti,maxDimTeam,controller.getUser().getUsername(),giudiciSelezionati.toString());
+
+                    JOptionPane.showMessageDialog(frame,
+                            "Hackathon creato con successo!",
+                            "Successo",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    frame.dispose();
+                    callerFrame.setVisible(true);
+                }catch (SQLException ex){
+                    JOptionPane.showMessageDialog(frame,
+                            ex.getMessage(),
+                            "Errore",
+                            JOptionPane.ERROR_MESSAGE);
+                    frame.dispose();
+                    callerFrame.setVisible(true);
+                }
             });
 
             bottomPanel.add(salvaButton, BorderLayout.CENTER);

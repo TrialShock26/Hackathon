@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
-
 public class PlayerGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private JPanel listPanel;
+    private JScrollPane scrollPane;
     private ButtonGroup teamGroup;
 
     private ArrayList<String> titles = new ArrayList<>();
@@ -17,6 +18,17 @@ public class PlayerGUI {
     private ArrayList<String> teamNames = new ArrayList<>();
 
     public PlayerGUI(Controller controller, JFrame callerFrame) {
+
+        // --- PRIMO CARICAMENTO DATI ---
+        loadHackathons(controller);
+
+        if (teamNames.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Errore: Non sei un Partecipante!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            callerFrame.setVisible(true);
+            return;
+        }
         frame = new JFrame("Partecipa a Team");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -26,50 +38,42 @@ public class PlayerGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Seleziona Team a cui Partecipare", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        // ====== LISTA TEAM CON RADIOBUTTON ======
-        JPanel listPanel = new JPanel();
+        JLabel titleLabel = new JLabel("Seleziona Team a cui Partecipare", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            refreshHackathons(controller);
+        });
+
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+
+        // ====== LISTA TEAM ======
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        try {
-            //prendo teams dal DB e pusho nel controllerPlayer
-            controller.getControllerPlayer().controllerGetHackathons(controller.getUser().getUsername(), titles, locations, teamNames);
-        } catch (SQLException e){
-            String error = e.getMessage();
-            int idx = error.indexOf("D");
-            error = error.substring(0, idx);
-            JOptionPane.showMessageDialog(frame,
-                    "C'è stato un errore!\n" + error,
-                    "Errore", JOptionPane.ERROR_MESSAGE);
-        }
-
-        teamGroup = new ButtonGroup();
-
-        int n = teamNames.size();
-        for (int i = 0; i < n; i++) {
-            JPanel card = createTeamCard(teamNames.get(i), titles.get(i), i);
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
-
-        int cardHeight = 60;
-        int gap = 10;
-        int totalHeight = n * (cardHeight + gap) + 20;
-        listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
-
-        JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        populateTeamList(controller);
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -147,6 +151,73 @@ public class PlayerGUI {
         frame.setVisible(true);
     }
 
+    // ====== RICARICA I DATI DAL DB ======
+    private void loadHackathons(Controller controller) {
+        titles.clear();
+        locations.clear();
+        teamNames.clear();
+
+        try {
+            controller.getControllerPlayer().controllerGetHackathons(
+                    controller.getUser().getUsername(), titles, locations, teamNames);
+
+            //  DEBUG - Rimuovi dopo il test
+            System.out.println("Dati caricati dal DB:");
+            System.out.println("  Team trovati: " + teamNames.size());
+            for (int i = 0; i < teamNames.size(); i++) {
+                System.out.println("  - Team: " + teamNames.get(i) + " | Hackathon: " + titles.get(i));
+            }
+
+        } catch (SQLException e) {
+            String error = e.getMessage();
+            int idx = error.indexOf("D");
+            if (idx > 0) {
+                error = error.substring(0, idx);
+            }
+            JOptionPane.showMessageDialog(null,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    private void refreshHackathons(Controller controller) {
+        System.out.println("\n=== REFRESH INIZIATO ===");
+
+        // 1. Ricarica i dati dal DB
+        loadHackathons(controller);
+
+        // 2. Rimuovi TUTTI i componenti dalla lista
+        listPanel.removeAll();
+
+        // 3. Ricrea il ButtonGroup da zero
+        teamGroup = new ButtonGroup();
+
+        // 4. Ricostruisci tutte le card con i nuovi dati
+        for (int i = 0; i < teamNames.size(); i++) {
+            JPanel card = createTeamCard(teamNames.get(i), titles.get(i), i);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        // 5. Forza il ridisegno della GUI
+        listPanel.revalidate();
+        listPanel.repaint();
+
+        System.out.println("=== REFRESH COMPLETATO: " + teamNames.size() + " team visualizzati ===\n");
+    }
+
+    // ====== POPOLA LA LISTA TEAM (SOLO PER IL COSTRUTTORE) ======
+    private void populateTeamList(Controller controller) {
+        teamGroup = new ButtonGroup();
+
+        for (int i = 0; i < teamNames.size(); i++) {
+            JPanel card = createTeamCard(teamNames.get(i), titles.get(i), i);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+    }
+
     // ====== CREAZIONE CARD TEAM ======
     private JPanel createTeamCard(String teamName, String hackathonName, int index) {
         JPanel card = new JPanel(new BorderLayout());
@@ -160,7 +231,7 @@ public class PlayerGUI {
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        radio.setActionCommand(String.valueOf(index)); // Salviamo l'indice
+        radio.setActionCommand(String.valueOf(index));
         teamGroup.add(radio);
 
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
@@ -192,7 +263,6 @@ public class PlayerGUI {
 
         return card;
     }
-
     // ====== OTTIENI INDICE TEAM SELEZIONATO ======
     private int getSelectedTeamIndex() {
         ButtonModel selectedModel = teamGroup.getSelection();

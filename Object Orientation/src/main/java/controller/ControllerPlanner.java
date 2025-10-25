@@ -67,15 +67,12 @@ public class ControllerPlanner {
 
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
                                         Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
-                                        String planUsername , String judgesUsernames) {
-        try {
-            PlannerDAO planner = new PlannerImplementationDAO();
+                                        String planUsername , String judgesUsernames) throws SQLException{
 
-            planner.openHackathon(title,location,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim,planUsername,judgesUsernames);
+        PlannerDAO planner = new PlannerImplementationDAO();
 
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+        planner.openHackathon(title,location,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim,planUsername,judgesUsernames);
+
     }
 
     public void controllerStartHackathon(String title, String location) throws SQLException {
@@ -92,6 +89,7 @@ public class ControllerPlanner {
 
         planner.endHackathon(title,location);
     }
+
 
     public ArrayList<Hackathon> getMyHackathons() {
         return myHackathons;

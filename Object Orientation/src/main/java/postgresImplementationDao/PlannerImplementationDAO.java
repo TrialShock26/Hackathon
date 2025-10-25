@@ -38,12 +38,26 @@ public class PlannerImplementationDAO implements PlannerDAO {
     @Override
     public void startHackathon(String title, String location) throws SQLException {
         CallableStatement cs;
-        String query = "CALL start_hackathon((SELECT id_hackathon " +
-                                                "FROM Hackathon " +
-                                                "WHERE titolo = ? AND sede = ?))";
+
+        // Escapare eventuali apostrofi nel titolo o sede
+        title = title.replace("'", "''");
+        location = location.replace("'", "''");
+
+        String query =
+                "DO $$ " +
+                        "DECLARE " +
+                        "    hackId Hackathon.id_hackathon%TYPE;" +
+                        "BEGIN " +
+                        "    SELECT id_hackathon INTO hackId " +
+                        "    FROM Hackathon " +
+                        "    WHERE titolo = '" + title + "' AND sede = '" + location + "'; " +
+                        "    IF hackId IS NULL THEN " +
+                        "        RAISE EXCEPTION 'Hackathon non trovato: " + title + " - " + location + "'; " +
+                        "    END IF; " +
+                        "    CALL start_hackathon(hackId); " +
+                        "END $$;";
+
         cs = connection.prepareCall(query);
-        cs.setString(1, title);
-        cs.setString(2, location);
         cs.execute();
     }
 
