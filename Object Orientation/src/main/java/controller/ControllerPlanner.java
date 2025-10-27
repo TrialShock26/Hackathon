@@ -32,9 +32,9 @@ public class ControllerPlanner {
                                         ArrayList<Long> periodOftime, ArrayList<String> problemDescriptions,
                                          ArrayList<Date> startDate, ArrayList<Date> endDate,
                                         ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
-                                        ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+                                        ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,boolean refreshing) throws SQLException {
 
-            if(myHackathons==null){
+            if(myHackathons==null || refreshing){
                 myHackathons = new ArrayList<>();
                 PlannerDAO planner = new PlannerImplementationDAO();
                 planner.getHackathons(username, titles, locations,periodOftime,problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);

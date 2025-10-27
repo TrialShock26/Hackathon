@@ -15,9 +15,9 @@ public class ControllerPlayer {
     private ArrayList<Player> myTeamMates;
 
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
-                                        ArrayList<String> teamNames) throws SQLException{
+                                        ArrayList<String> teamNames,boolean refreshing) throws SQLException{
 
-            if(myTeams == null || myHackathons == null) {
+            if(myTeams == null || myHackathons == null || refreshing) {
 
                 myTeams = new ArrayList<Team>();
                 myHackathons = new ArrayList<Hackathon>();

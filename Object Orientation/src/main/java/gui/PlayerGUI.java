@@ -20,15 +20,15 @@ public class PlayerGUI {
     public PlayerGUI(Controller controller, JFrame callerFrame) {
 
         // --- PRIMO CARICAMENTO DATI ---
-        loadHackathons(controller);
 
-        if (teamNames.isEmpty()) {
+        if(!loadHackathons(controller, false)){
             JOptionPane.showMessageDialog(null,
-                    "Errore: Non sei un Partecipante!",
-                    "Errore", JOptionPane.ERROR_MESSAGE);
+                "Errore: Non Partecipi ad alcun Team!",
+                "Errore", JOptionPane.ERROR_MESSAGE);
             callerFrame.setVisible(true);
             return;
         }
+
         frame = new JFrame("Partecipa a Team");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -135,7 +135,6 @@ public class PlayerGUI {
                 String selectedTeam = teamNames.get(selectedIndex);
                 String selectedTitle = titles.get(selectedIndex);
                 String selectedLocation = locations.get(selectedIndex);
-
                 frame.setVisible(false);
                 new MyTeamGUI(controller, frame, selectedTeam, selectedTitle, selectedLocation);
             }
@@ -152,40 +151,39 @@ public class PlayerGUI {
     }
 
     // ====== RICARICA I DATI DAL DB ======
-    private void loadHackathons(Controller controller) {
-        titles.clear();
-        locations.clear();
-        teamNames.clear();
+    private boolean loadHackathons(Controller controller, boolean refreshing) {
+
+        boolean isCorrect = true;
 
         try {
             controller.getControllerPlayer().controllerGetHackathons(
-                    controller.getUser().getUsername(), titles, locations, teamNames);
+                    controller.getUser().getUsername(), titles, locations, teamNames,refreshing);
 
-            //  DEBUG - Rimuovi dopo il test
-            System.out.println("Dati caricati dal DB:");
-            System.out.println("  Team trovati: " + teamNames.size());
-            for (int i = 0; i < teamNames.size(); i++) {
-                System.out.println("  - Team: " + teamNames.get(i) + " | Hackathon: " + titles.get(i));
-            }
+            if (teamNames.isEmpty()) {isCorrect = false;}
 
         } catch (SQLException e) {
             String error = e.getMessage();
-            int idx = error.indexOf("D");
-            if (idx > 0) {
-                error = error.substring(0, idx);
-            }
+            if (error.indexOf("\n") > 0) {error = error.substring(0, error.indexOf("\n"));}
             JOptionPane.showMessageDialog(null,
                     "C'è stato un errore!\n" + error,
-                    "Errore", JOptionPane.ERROR_MESSAGE);
+                    "Errore", JOptionPane.ERROR_MESSAGE
+            );
+            isCorrect = false;
         }
+
+        return isCorrect;
     }
 
     // ====== RICREA COMPLETAMENTE LA LISTA ======
     private void refreshHackathons(Controller controller) {
-        System.out.println("\n=== REFRESH INIZIATO ===");
+
+        //svuotamento di tutte le informazioni relative agli hackathon e ai team
+        titles.clear();
+        locations.clear();
+        teamNames.clear();
 
         // 1. Ricarica i dati dal DB
-        loadHackathons(controller);
+        loadHackathons(controller,true);
 
         // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
@@ -200,11 +198,10 @@ public class PlayerGUI {
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // 5. Forza il ridisegno della GUI
+        // ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
 
-        System.out.println("=== REFRESH COMPLETATO: " + teamNames.size() + " team visualizzati ===\n");
     }
 
     // ====== POPOLA LA LISTA TEAM (SOLO PER IL COSTRUTTORE) ======

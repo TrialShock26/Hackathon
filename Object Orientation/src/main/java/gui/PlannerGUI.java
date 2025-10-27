@@ -13,36 +13,32 @@ import model.Hackathon;
 public class PlannerGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private JPanel listPanel;
+    private JScrollPane scrollPane;
     private ButtonGroup hackathonGroup;
+
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
+    private ArrayList<Long> periodOftime = new ArrayList<>();
+    private ArrayList<String> problemDescriptions = new ArrayList<>();
+    private ArrayList<Date> startDate = new ArrayList<>();
+    private ArrayList<Date> endDate = new ArrayList<>();
+    private ArrayList<Date> startSubDate = new ArrayList<>();
+    private ArrayList<Date> endSubDate = new ArrayList<>();
+    private ArrayList<Integer> maxPlayers = new ArrayList<>();
+    private ArrayList<Integer> maxTeamDim = new ArrayList<>();
 
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
-
-        ArrayList<String> titles = new ArrayList<>();
-        ArrayList<String> locations = new ArrayList<>();
-        ArrayList<Long> periodOftime = new ArrayList<>();
-        ArrayList<String> problemDescriptions = new ArrayList<>();
-        ArrayList<Date> startDate = new ArrayList<>();
-        ArrayList<Date> endDate = new ArrayList<>();
-        ArrayList<Date> startSubDate = new ArrayList<>();
-        ArrayList<Date> endSubDate = new ArrayList<>();
-        ArrayList<Integer> maxPlayers = new ArrayList<>();
-        ArrayList<Integer> maxTeamDim = new ArrayList<>();
-
-        try{
-            controller.getControllerPlanner().controllerGetHackathons(controller.getUser().getUsername(),titles,locations,periodOftime,
-                    problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-
-        if(titles.isEmpty()) {
+        // --- PRIMO CARICAMENTO DATI ---
+        if(!loadHackathons(controller, false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non sei un Organizzatore!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
             callerFrame.setVisible(true);
-            return;// torna alla GUI precedente
+            return;
         }
+
         frame = new JFrame("Gestisci");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(800, 600);
@@ -52,35 +48,42 @@ public class PlannerGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Gestisci Hackathon", SwingConstants.CENTER);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+        JLabel titleLabel = new JLabel("Gestisci Hackathon", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(titleLabel, BorderLayout.WEST);
 
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            refreshHackathons(controller);
+        });
 
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        hackathonGroup = new ButtonGroup();
-
-        for (String hackathon : titles) {
-            JPanel card = createHackathonCard(hackathon);
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10))); // spazio tra i card
-        }
-
-        // ScrollPane
-        JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        populateHackathonList();
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -119,8 +122,8 @@ public class PlannerGUI {
             if (selectedHackathon == null) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                frame.setVisible(false); // nascondi PlannerGUI
-                new ResumeGUI(controller, frame, selectedHackathon); // passi PlannerGUI come callerFrame
+                frame.setVisible(false);
+                new ResumeGUI(controller, frame, selectedHackathon);
             }
         });
 
@@ -133,6 +136,83 @@ public class PlannerGUI {
         frame.setVisible(true);
     }
 
+    // ====== RICARICA I DATI DAL DB ======
+    private boolean loadHackathons(Controller controller, boolean refreshing) {
+
+        boolean isCorrect = true;
+
+        try {
+            controller.getControllerPlanner().controllerGetHackathons(
+                    controller.getUser().getUsername(), titles, locations, periodOftime,
+                    problemDescriptions, startDate, endDate, startSubDate, endSubDate,
+                    maxPlayers, maxTeamDim,refreshing);
+
+            if (titles.isEmpty()) {
+                isCorrect = false;
+            }
+
+        } catch (SQLException e) {
+            String error = e.getMessage();
+            if (error.indexOf("\n") > 0) {
+                error = error.substring(0, error.indexOf("\n"));
+            }
+            JOptionPane.showMessageDialog(null,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            isCorrect = false;
+        }
+
+        return isCorrect;
+    }
+
+    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    private void refreshHackathons(Controller controller) {
+
+        // svuotamento di tutte le informazioni relative agli hackathon
+        titles.clear();
+        locations.clear();
+        periodOftime.clear();
+        problemDescriptions.clear();
+        startDate.clear();
+        endDate.clear();
+        startSubDate.clear();
+        endSubDate.clear();
+        maxPlayers.clear();
+        maxTeamDim.clear();
+
+        // 1. Ricarica i dati dal DB
+        loadHackathons(controller, true);
+
+        // 2. Rimuovi TUTTI i componenti dalla lista
+        listPanel.removeAll();
+
+        // 3. Ricrea il ButtonGroup da zero
+        hackathonGroup = new ButtonGroup();
+
+        // 4. Ricostruisci tutte le card con i nuovi dati
+        for (int i = 0; i < titles.size(); i++) {
+            JPanel card = createHackathonCard(titles.get(i));
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+
+        // ridisegno della GUI
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
+
+    // ====== POPOLA LA LISTA HACKATHON (SOLO PER IL COSTRUTTORE) ======
+    private void populateHackathonList() {
+        hackathonGroup = new ButtonGroup();
+
+        for (String hackathon : titles) {
+            JPanel card = createHackathonCard(hackathon);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
+    }
+
+    // ====== CREAZIONE CARD HACKATHON ======
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
@@ -141,21 +221,28 @@ public class PlannerGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Impostazioni layout flessibile
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // larghezza massima illimitata, altezza fissa
-        card.setAlignmentX(Component.LEFT_ALIGNMENT); // evita stretching orizzontale
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Radio button
         JRadioButton radio = new JRadioButton(hackathonName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
+        radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
         hackathonGroup.add(radio);
 
         card.add(radio, BorderLayout.CENTER);
 
+        card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                radio.setSelected(true);
+                radio.requestFocusInWindow();
+            }
+        });
+
         return card;
     }
-
 
     // ====== OTTIENI HACKATHON SELEZIONATO ======
     private String getSelectedHackathon() {
