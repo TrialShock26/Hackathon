@@ -26,17 +26,15 @@ public class ScoreboardGUI {
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
 
+
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
         this.controller = controller;
         this.callerFrame = callerFrame;
         this.hackathonName = hackathonName;
         this.location = location;
 
-        // Caricamento iniziale
-        boolean okay = loadScoreboard(false);
-        System.out.println(okay);
-
-        if(!okay) {
+        // --- PRIMO CARICAMENTO DATI ---
+        if(!loadScoreboard(false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non è possibile generare la classifica!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
@@ -93,7 +91,6 @@ public class ScoreboardGUI {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-
         populateScoreboard();
 
         // ===== PANEL INFERIORE =====
@@ -122,50 +119,37 @@ public class ScoreboardGUI {
     // ====== CARICA I DATI DAL CONTROLLER ======
     private boolean loadScoreboard(boolean refreshing) {
         boolean isCorrect = true;
-        if (hackathonName != null) {
-            // --- Classifica per singolo hackathon ---
-            try {
+
+        teams.clear();
+        scores.clear();
+        titles.clear();
+        locations.clear();
+
+        System.out.println("DEBUG - Carico scoreboard: " + hackathonName + ", refresh=" + refreshing);
+
+        try {
+            if (hackathonName != null) {
                 controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores, refreshing);
-
-                if(teams.isEmpty()){
-                    isCorrect = false;
-                }
-            } catch (SQLException e) {
-                    String error = e.getMessage();
-                    if (error.indexOf("\n") > 0) {
-                        error = error.substring(0, error.indexOf("\n"));
-                    }
-                    JOptionPane.showMessageDialog(null,
-                            "C'è stato un errore!\n" + error,
-                            "Errore", JOptionPane.ERROR_MESSAGE
-                    );
+                isCorrect = !teams.isEmpty();
+            } else {
+                controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations, refreshing);
+                isCorrect = !titles.isEmpty();
             }
-        } else {
-            // --- Classifica globale ---
-            try {
-                controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations,refreshing);
-
-                if(teams.isEmpty()){
-                    isCorrect = false;
-                }
-
-            } catch (SQLException e) {
-                String error = e.getMessage();
-                if (error.indexOf("\n") > 0) {
-                    error = error.substring(0, error.indexOf("\n"));
-                }
-                JOptionPane.showMessageDialog(null,
-                        "C'è stato un errore!\n" + error,
-                        "Errore", JOptionPane.ERROR_MESSAGE
-                );
-            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "C'è stato un errore!\n" + e.getMessage(),
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            isCorrect = false;
         }
+
+        System.out.println("DEBUG - Squadre trovate: " + teams.size());
         return isCorrect;
     }
 
     // ====== AGGIORNA LA CLASSIFICA ======
     private void refreshScoreboard() {
-        // 1. Ricarica i dati dal controller (svuota automaticamente gli ArrayList)
+        // svuotamento di tutte le informazioni relative ai team
+
+        // 1. Ricarica i dati dal controller
         loadScoreboard(true);
 
         // 2. Rimuovi TUTTI i componenti dalla lista
@@ -174,7 +158,7 @@ public class ScoreboardGUI {
         // 3. Ricostruisci tutte le card con i nuovi dati
         populateScoreboard();
 
-        // Ridisegno della GUI
+        // ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
     }
