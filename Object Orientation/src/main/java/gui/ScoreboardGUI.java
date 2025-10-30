@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,9 +18,9 @@ public class ScoreboardGUI {
 
     private Controller controller;
     private JFrame callerFrame;
-
     private String hackathonName;
     private String location;
+
     private ArrayList<String> teams = new ArrayList<>();
     private ArrayList<Double> scores = new ArrayList<>();
     private ArrayList<String> titles = new ArrayList<>();
@@ -32,9 +33,12 @@ public class ScoreboardGUI {
         this.location = location;
 
         // Caricamento iniziale
-        if(!loadScoreboard(false)){
+        boolean okay = loadScoreboard(false);
+        System.out.println(okay);
+
+        if(!okay) {
             JOptionPane.showMessageDialog(null,
-                    "Errore: Non c'è ancora una classifica!",
+                    "Errore: Non è possibile generare la classifica!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
             callerFrame.setVisible(true);
             return;
@@ -89,6 +93,7 @@ public class ScoreboardGUI {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
+
         populateScoreboard();
 
         // ===== PANEL INFERIORE =====
@@ -117,27 +122,34 @@ public class ScoreboardGUI {
     // ====== CARICA I DATI DAL CONTROLLER ======
     private boolean loadScoreboard(boolean refreshing) {
         boolean isCorrect = true;
-
         if (hackathonName != null) {
             // --- Classifica per singolo hackathon ---
-            try{
-                controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores);
-            } catch (Exception e){
-                String error = e.getMessage();
-                if (error.indexOf("\n") > 0) {
-                    error = error.substring(0, error.indexOf("\n"));
+            try {
+                controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores, refreshing);
+
+                if(teams.isEmpty()){
+                    isCorrect = false;
                 }
-                JOptionPane.showMessageDialog(null,
-                        "C'è stato un errore!\n" + error,
-                        "Errore", JOptionPane.ERROR_MESSAGE
-                );
-                isCorrect = false;
+            } catch (SQLException e) {
+                    String error = e.getMessage();
+                    if (error.indexOf("\n") > 0) {
+                        error = error.substring(0, error.indexOf("\n"));
+                    }
+                    JOptionPane.showMessageDialog(null,
+                            "C'è stato un errore!\n" + error,
+                            "Errore", JOptionPane.ERROR_MESSAGE
+                    );
             }
         } else {
             // --- Classifica globale ---
-            try{
-                controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations);
-            }catch (Exception e){
+            try {
+                controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations,refreshing);
+
+                if(teams.isEmpty()){
+                    isCorrect = false;
+                }
+
+            } catch (SQLException e) {
                 String error = e.getMessage();
                 if (error.indexOf("\n") > 0) {
                     error = error.substring(0, error.indexOf("\n"));
@@ -146,22 +158,14 @@ public class ScoreboardGUI {
                         "C'è stato un errore!\n" + error,
                         "Errore", JOptionPane.ERROR_MESSAGE
                 );
-                isCorrect = false;
             }
         }
-
         return isCorrect;
     }
 
     // ====== AGGIORNA LA CLASSIFICA ======
     private void refreshScoreboard() {
-        // Svuotamento di tutte le informazioni
-        teams.clear();
-        scores.clear();
-        titles.clear();
-        locations.clear();
-
-        // 1. Ricarica i dati dal controller
+        // 1. Ricarica i dati dal controller (svuota automaticamente gli ArrayList)
         loadScoreboard(true);
 
         // 2. Rimuovi TUTTI i componenti dalla lista

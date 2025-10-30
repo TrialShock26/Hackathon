@@ -15,25 +15,27 @@ public class ControllerHackathon {
     private ArrayList<Team> myScoreboard;
     private ArrayList<Double> myScores;
 
-    public void controllerOverallRanking(ArrayList<String> teamNames, ArrayList<Double> scores, ArrayList<String> titles, ArrayList<String> locations) {
+    public void controllerOverallRanking(ArrayList<String> teamNames, ArrayList<Double> scores,
+                                         ArrayList<String> titles, ArrayList<String> locations, boolean refreshing) throws SQLException {
 
-        try {
-            HackathonDAO hackathon = new HackathonImplementationDAO();
+            if(myScoreboard == null || refreshing) {
 
-            hackathon.overallRanking(teamNames,scores,titles,locations);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                myScoreboard = new ArrayList<>();
+                myScores = new ArrayList<>();
+                HackathonDAO hackathon = new HackathonImplementationDAO();
+                hackathon.overallRanking(teamNames,scores,titles,locations);
 
-    }
+                for(int i = 0; i < teamNames.size(); i++){
+                    myScoreboard.add(new Team(teamNames.get(i),null,null));
+                    myScores.add(scores.get(i));
+                }
 
-    public void controllerScoreboard(String title, String location,
-                                     ArrayList<String> teamNames, ArrayList<Double> scores) throws SQLException{
-
-            HackathonDAO hackathon = new HackathonImplementationDAO();
-
-            hackathon.scoreboard(title,location,teamNames,scores);
-
+            } else {
+                for (int i = 0; i < teamNames.size(); i++) {
+                    teamNames.add(myScoreboard.get(i).getName());
+                    scores.add(myScores.get(i));
+                }
+            }
     }
 
     public void controllerScoreboard(String title, String location,
@@ -42,13 +44,13 @@ public class ControllerHackathon {
         if(myScoreboard == null || refreshing){
 
             myScoreboard = new ArrayList<>();
+            myScores = new ArrayList<>();
             HackathonDAO hackathon = new HackathonImplementationDAO();
             hackathon.scoreboard(title, location, teamNames, scores);
 
             for(int i = 0; i < teamNames.size(); i++){
                 myScoreboard.add(new Team(teamNames.get(i),null,null));
                 myScores.add(scores.get(i));
-                //myScores.add(new Grade(null,myScoreboard.get(i),scores.get(i)));
             }
         } else {
             for(int i=0;i<teamNames.size();i++){
