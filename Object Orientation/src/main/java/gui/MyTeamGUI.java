@@ -33,8 +33,7 @@ public class MyTeamGUI {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
-        // Username todo, da valorizzare
-        String username = "MarioRossi"; // Esempio
+        String username = controller.getUser().getUsername();
         JLabel userLabel = new JLabel("Utente: " + username);
         userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
@@ -135,16 +134,13 @@ public class MyTeamGUI {
             String title = titleField.getText().trim();
             String text = textArea.getText().trim();
 
-
-
             if (title.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci un titolo per il documento!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else if (text.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
-                ControllerTeam team = new ControllerTeam();
 
-                team.controllerPublishProgress(teamName,hackTitle,location,title,text);
+                controller.getControllerTeam().controllerPublishProgress(teamName,hackTitle,location,title,text);
 
                 JOptionPane.showMessageDialog(frame,
                         "Documento \"" + title + "\" pubblicato con successo!",
