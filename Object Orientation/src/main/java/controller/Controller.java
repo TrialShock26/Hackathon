@@ -15,6 +15,7 @@ public class Controller {
     private ControllerPlanner controllerPlanner;
     private ControllerPlayer controllerPlayer;
     private ControllerTeam controllerTeam;
+    private ControllerJudge controllerJudge;
 
     public Controller() {
         user = null;
@@ -46,11 +47,12 @@ public class Controller {
     }
 
     public boolean newUser(String username, String name, String surname, String password) {
-        UserDAO user = new UserImplementationDAO();
+        UserDAO userDB = new UserImplementationDAO();
         boolean success = true;
 
         try {
-            user.newUser(username, name, surname, password);
+            userDB.newUser(username, name, surname, password);
+            user = new User(username, password, name, surname);
         } catch (SQLException e) {
             e.printStackTrace();
             success = false;
@@ -59,12 +61,28 @@ public class Controller {
     }
 
     public User getUser() {return user;}
+
+    public Player getPlayer() {
+        if (player == null) {
+            player = new Player(user.getUsername(), user.getPassword(), user.getName(), user.getSurname());
+        }
+        return player;
+    }
+
     public Planner getPlanner() {
         if (planner == null) {
             planner = new Planner(user.getUsername(), user.getPassword(), user.getName(), user.getSurname());
         }
         return planner;
     }
+
+    public Judge getJudge() {
+        if (judge == null) {
+            judge = new Judge(user.getUsername(), user.getPassword(), user.getName(), user.getSurname());
+        }
+        return judge;
+    }
+
     public ControllerHackathon getControllerHackathon() {
         if (controllerHackathon == null) {controllerHackathon = new ControllerHackathon();}
         return controllerHackathon;
@@ -74,11 +92,15 @@ public class Controller {
         return controllerPlanner;
     }
     public ControllerPlayer getControllerPlayer() {
-        if (controllerPlayer == null) {controllerPlayer = new ControllerPlayer();}
+        if (controllerPlayer == null) {controllerPlayer = new ControllerPlayer(this);}
         return controllerPlayer;
     }
     public ControllerTeam getControllerTeam() {
         if (controllerTeam == null) {controllerTeam = new ControllerTeam();}
         return controllerTeam;
+    }
+    public ControllerJudge getControllerJudge() {
+        if (controllerJudge == null) {controllerJudge = new ControllerJudge(this);}
+        return controllerJudge;
     }
 }

@@ -1,17 +1,13 @@
 package controller;
 
 import dao.PlannerDAO;
-import model.Hackathon;
-import model.Planner;
+import model.*;
 import postgresImplementationDao.PlannerImplementationDAO;
-
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ControllerPlanner {
-
     ArrayList<Hackathon> myHackathons;
 
     public void controllerGetUsers(String planUser,

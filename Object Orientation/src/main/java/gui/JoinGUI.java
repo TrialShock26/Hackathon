@@ -35,6 +35,8 @@ public class JoinGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
+        ControllerPlayer controllerplayer = new ControllerPlayer(controller);
+
         try{
             controller.getControllerPlayer().controllerGetOtherTeams(controller.getUser().getUsername(),currentTitle,currentLocation,teamList);
         } catch (SQLException ex) {

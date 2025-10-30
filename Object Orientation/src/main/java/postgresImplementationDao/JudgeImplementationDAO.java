@@ -78,9 +78,9 @@ public class JudgeImplementationDAO implements JudgeDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
+    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<String> problemDescriptions) throws SQLException {
         PreparedStatement ps;
-        String query = "SELECT titolo, sede " +
+        String query = "SELECT titolo, sede, descrizione_problema " +
                         "FROM Hackathon NATURAL JOIN Selezione " +
                         "WHERE id_giudice = (SELECT id_giudice " +
                                             "FROM Giudice " +
@@ -92,6 +92,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
         while (rs.next()) {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
+            problemDescriptions.add(rs.getString("descrizione_problema"));
         }
         rs.close();
     }

@@ -1,15 +1,16 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
 public class ProblemGUI {
     private JFrame frame;
 
-    public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName) {
+    public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
         frame = new JFrame("Problema - " + hackathonName);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
         frame.setLocationRelativeTo(null);
 
@@ -37,36 +38,16 @@ public class ProblemGUI {
         problemPanel.add(problemTitle, BorderLayout.NORTH);
 
         // Area di testo per la descrizione del problema
-        JTextArea problemDescription = new JTextArea();
-        problemDescription.setFont(new Font("Arial", Font.PLAIN, 16));
-        problemDescription.setLineWrap(true);
-        problemDescription.setWrapStyleWord(true);
-        problemDescription.setEditable(false);
-        problemDescription.setBackground(Color.WHITE);
+        JTextArea problemDescriptionArea = new JTextArea();
+        problemDescriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        problemDescriptionArea.setLineWrap(true);
+        problemDescriptionArea.setWrapStyleWord(true);
+        problemDescriptionArea.setEditable(false);
+        problemDescriptionArea.setBackground(Color.WHITE);
 
-        // Testo di esempio unico per tutti gli hackathon (per testing)
-        String descriptionText = "DESCRIZIONE DEL PROBLEMA: " + hackathonName + "\n\n" +
-                "CONTESTO:\n" +
-                "Questo hackathon mira a risolvere una delle sfide più pressanti del nostro tempo " +
-                "attraverso l'innovazione tecnologica e la creatività.\n\n" +
-                "PROBLEMA:\n" +
-                "Sviluppare una soluzione innovativa che affronti le principali criticità del settore " +
-                "utilizzando tecnologie all'avanguardia.\n\n" +
-                "REQUISITI TECNICI:\n" +
-                "- Architettura scalabile e robusta\n" +
-                "- Interfaccia utente intuitiva\n" +
-                "- Integrazione con API esistenti\n" +
-                "- Documentazione completa del progetto\n\n" +
-                "CRITERI DI VALUTAZIONE:\n" +
-                "- Innovazione (30%)\n" +
-                "- Fattibilità tecnica (25%)\n" +
-                "- Impatto potenziale (20%)\n" +
-                "- Qualità del codice (15%)\n" +
-                "- Presentazione (10%)";
+        problemDescriptionArea.setText(problemDescription);
 
-        problemDescription.setText(descriptionText);
-
-        JScrollPane scrollPane = new JScrollPane(problemDescription);
+        JScrollPane scrollPane = new JScrollPane(problemDescriptionArea);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -92,6 +73,30 @@ public class ProblemGUI {
         });
 
         bottomPanel.add(backBtn);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        JButton publishBtn = new JButton("Pubblica");
+        publishBtn.setPreferredSize(new Dimension(120, 35));
+        publishBtn.setBackground(new Color(70, 130, 180));
+        publishBtn.setForeground(Color.WHITE);
+        publishBtn.setFocusPainted(false);
+        publishBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        publishBtn.addActionListener(e -> {
+            if (problemDescription.equals("Descrizione assente.")) {
+                try {
+                    controller.getControllerJudge().controllerSetProblemDescription(hackathonName, location, problemDescription);
+                } catch (SQLException | IllegalAccessException ex) {
+                    String error = ex.getMessage();
+                    int idx = error.indexOf("\n");
+                    error = error.substring(0, idx);
+                    JOptionPane.showMessageDialog(frame,
+                            "C'è stato un errore!\n" + error,
+                            "Errore", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });//TODO vero cambiamento
+
+        bottomPanel.add(publishBtn);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setContentPane(mainPanel);
