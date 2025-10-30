@@ -17,11 +17,15 @@ public class PlayerGUI {
     private ArrayList<String> locations = new ArrayList<>();
     private ArrayList<String> teamNames = new ArrayList<>();
 
+    private Controller controller;
+
     public PlayerGUI(Controller controller, JFrame callerFrame) {
+
+        this.controller =  controller;
 
         // --- PRIMO CARICAMENTO DATI ---
 
-        if(!loadHackathons(controller, false)){
+        if(!loadHackathons(false)){
             JOptionPane.showMessageDialog(null,
                 "Errore: Non Partecipi ad alcun Team!",
                 "Errore", JOptionPane.ERROR_MESSAGE);
@@ -53,7 +57,7 @@ public class PlayerGUI {
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         refreshBtn.addActionListener(e -> {
-            refreshHackathons(controller);
+            refreshHackathons();
         });
 
         headerPanel.add(refreshBtn, BorderLayout.EAST);
@@ -73,7 +77,7 @@ public class PlayerGUI {
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        populateTeamList(controller);
+        populateTeamList();
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -151,7 +155,7 @@ public class PlayerGUI {
     }
 
     // ====== RICARICA I DATI DAL DB ======
-    private boolean loadHackathons(Controller controller, boolean refreshing) {
+    private boolean loadHackathons(boolean refreshing) {
 
         boolean isCorrect = true;
 
@@ -175,7 +179,7 @@ public class PlayerGUI {
     }
 
     // ====== RICREA COMPLETAMENTE LA LISTA ======
-    private void refreshHackathons(Controller controller) {
+    private void refreshHackathons() {
 
         //svuotamento di tutte le informazioni relative agli hackathon e ai team
         titles.clear();
@@ -183,7 +187,7 @@ public class PlayerGUI {
         teamNames.clear();
 
         // 1. Ricarica i dati dal DB
-        loadHackathons(controller,true);
+        loadHackathons(true);
 
         // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
@@ -205,7 +209,7 @@ public class PlayerGUI {
     }
 
     // ====== POPOLA LA LISTA TEAM (SOLO PER IL COSTRUTTORE) ======
-    private void populateTeamList(Controller controller) {
+    private void populateTeamList() {
         teamGroup = new ButtonGroup();
 
         for (int i = 0; i < teamNames.size(); i++) {

@@ -28,10 +28,14 @@ public class PlannerGUI {
     private ArrayList<Integer> maxPlayers = new ArrayList<>();
     private ArrayList<Integer> maxTeamDim = new ArrayList<>();
 
+    private Controller controller;
+
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
+        this.controller = controller;
+
         // --- PRIMO CARICAMENTO DATI ---
-        if(!loadHackathons(controller, false)) {
+        if(!loadHackathons( false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non sei un Organizzatore!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
@@ -63,7 +67,7 @@ public class PlannerGUI {
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         refreshBtn.addActionListener(e -> {
-            refreshHackathons(controller);
+            refreshHackathons();
         });
 
         headerPanel.add(refreshBtn, BorderLayout.EAST);
@@ -137,7 +141,7 @@ public class PlannerGUI {
     }
 
     // ====== RICARICA I DATI DAL DB ======
-    private boolean loadHackathons(Controller controller, boolean refreshing) {
+    private boolean loadHackathons(boolean refreshing) {
 
         boolean isCorrect = true;
 
@@ -166,7 +170,7 @@ public class PlannerGUI {
     }
 
     // ====== RICREA COMPLETAMENTE LA LISTA ======
-    private void refreshHackathons(Controller controller) {
+    private void refreshHackathons() {
 
         // svuotamento di tutte le informazioni relative agli hackathon
         titles.clear();
@@ -181,7 +185,7 @@ public class PlannerGUI {
         maxTeamDim.clear();
 
         // 1. Ricarica i dati dal DB
-        loadHackathons(controller, true);
+        loadHackathons(true);
 
         // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();

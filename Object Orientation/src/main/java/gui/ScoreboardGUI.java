@@ -5,22 +5,40 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.stream.IntStream;
 
 import controller.Controller;
-import controller.ControllerHackathon;
 
 public class ScoreboardGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private JPanel listPanel;
+    private JScrollPane scrollPane;
     private final DecimalFormat scoreFormat = new DecimalFormat("#.##");
 
+    private Controller controller;
+    private JFrame callerFrame;
+
+    private String hackathonName;
+    private String location;
     private ArrayList<String> teams = new ArrayList<>();
     private ArrayList<Double> scores = new ArrayList<>();
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
 
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
+        this.controller = controller;
+        this.callerFrame = callerFrame;
+        this.hackathonName = hackathonName;
+        this.location = location;
+
+        // Caricamento iniziale
+        if(!loadScoreboard(false)){
+            JOptionPane.showMessageDialog(null,
+                    "Errore: Non c'è ancora una classifica!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            callerFrame.setVisible(true);
+            return;
+        }
 
         frame = new JFrame(hackathonName != null
                 ? "Classifica - " + hackathonName
@@ -34,6 +52,10 @@ public class ScoreboardGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ===== HEADER =====
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+
         JLabel titleLabel = new JLabel(
                 hackathonName != null
                         ? "Classifica Hackathon: " + hackathonName
@@ -41,47 +63,33 @@ public class ScoreboardGUI {
                 SwingConstants.CENTER
         );
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(titleLabel, BorderLayout.CENTER);
+
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> refreshScoreboard());
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ===== LISTA TEAM =====
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerHackathon controllerHackathon = new ControllerHackathon();
-
-        if (hackathonName != null) {
-            // --- Classifica per singolo hackathon ---
-            controllerHackathon.controllerScoreboard(hackathonName, location, teams, scores);
-        } else {
-            // --- Classifica globale ---
-            controllerHackathon.controllerOverallRanking(teams, scores, titles, locations);
-        }
-
-        // ===== ORDINAMENTO =====
-        ArrayList<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < teams.size(); i++) indices.add(i);
-        indices.sort(Comparator.comparingDouble(i -> -scores.get(i)));
-
-        int rank = 1;
-        for (int i : indices) {
-            JPanel card = (hackathonName != null)
-                    ? createTeamCard(teams.get(i), scores.get(i), rank)
-                    : createGlobalTeamCard(teams.get(i), scores.get(i), titles.get(i), locations.get(i), rank);
-
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-            rank++;
-        }
-
-        JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        populateScoreboard();
 
         // ===== PANEL INFERIORE =====
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -104,6 +112,86 @@ public class ScoreboardGUI {
 
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
+    }
+
+    // ====== CARICA I DATI DAL CONTROLLER ======
+    private boolean loadScoreboard(boolean refreshing) {
+        boolean isCorrect = true;
+
+        if (hackathonName != null) {
+            // --- Classifica per singolo hackathon ---
+            try{
+                controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores);
+            } catch (Exception e){
+                String error = e.getMessage();
+                if (error.indexOf("\n") > 0) {
+                    error = error.substring(0, error.indexOf("\n"));
+                }
+                JOptionPane.showMessageDialog(null,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE
+                );
+                isCorrect = false;
+            }
+        } else {
+            // --- Classifica globale ---
+            try{
+                controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations);
+            }catch (Exception e){
+                String error = e.getMessage();
+                if (error.indexOf("\n") > 0) {
+                    error = error.substring(0, error.indexOf("\n"));
+                }
+                JOptionPane.showMessageDialog(null,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE
+                );
+                isCorrect = false;
+            }
+        }
+
+        return isCorrect;
+    }
+
+    // ====== AGGIORNA LA CLASSIFICA ======
+    private void refreshScoreboard() {
+        // Svuotamento di tutte le informazioni
+        teams.clear();
+        scores.clear();
+        titles.clear();
+        locations.clear();
+
+        // 1. Ricarica i dati dal controller
+        loadScoreboard(true);
+
+        // 2. Rimuovi TUTTI i componenti dalla lista
+        listPanel.removeAll();
+
+        // 3. Ricostruisci tutte le card con i nuovi dati
+        populateScoreboard();
+
+        // Ridisegno della GUI
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
+
+    // ====== POPOLA LA LISTA DELLA CLASSIFICA ======
+    private void populateScoreboard() {
+        // ===== ORDINAMENTO =====
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < teams.size(); i++) indices.add(i);
+        indices.sort(Comparator.comparingDouble(i -> -scores.get(i)));
+
+        int rank = 1;
+        for (int i : indices) {
+            JPanel card = (hackathonName != null)
+                    ? createTeamCard(teams.get(i), scores.get(i), rank)
+                    : createGlobalTeamCard(teams.get(i), scores.get(i), titles.get(i), locations.get(i), rank);
+
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            rank++;
+        }
     }
 
     // ===== CARD per hackathon singolo =====

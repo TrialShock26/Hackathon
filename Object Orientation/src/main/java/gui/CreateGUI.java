@@ -176,7 +176,16 @@ public class CreateGUI {
         gbc.gridx = 0; gbc.gridy = y; gbc.gridwidth = 2;
         panel.add(bottomPanel, gbc);
 
-        gradientPanel.add(panel, BorderLayout.CENTER);
+        // ===== AGGIUNTA SCROLLPANE =====
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        gradientPanel.add(scrollPane, BorderLayout.CENTER);
         frame.setContentPane(gradientPanel);
         frame.setVisible(true);
     }
