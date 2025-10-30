@@ -31,11 +31,13 @@ public class JudgeGUI {
         // ====== DATI HACKATHON ======
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> locations = new ArrayList<>();
+        ArrayList<String> problemDescriptions = new ArrayList<>();
         try {
-            controller.getControllerJudge().controllerGetHackathons(controller.getUser().getUsername(), titles, locations);
-        } catch (SQLException e) {
+            controller.getControllerJudge().controllerGetHackathons(controller.getUser().getUsername(), titles,
+                    locations, problemDescriptions, false);
+        } catch (SQLException | IllegalAccessException e) {
             String error = e.getMessage();
-            int idx = error.indexOf("D");
+            int idx = error.indexOf("\n");
             error = error.substring(0, idx);
             JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
@@ -101,7 +103,8 @@ public class JudgeGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false); // nascondi JudgeGUI
-                new ProblemGUI(controller, frame, selectedHackathon);
+                new ProblemGUI(controller, frame, selectedHackathon, locations.get(titles.indexOf(selectedHackathon)),
+                        problemDescriptions.get(titles.indexOf(selectedHackathon)));
             }
         });
         centerLeftPanel.add(problemBtn);

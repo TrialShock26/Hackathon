@@ -3,7 +3,6 @@ package controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import dao.PlayerDAO;
-import model.*;
 import postgresImplementationDao.PlayerImplementationDAO;
 
 public class ControllerPlayer {
@@ -57,6 +56,6 @@ public class ControllerPlayer {
     public void subscribe(String username, String title, String location) throws SQLException {
         PlayerDAO player = new PlayerImplementationDAO();
         player.subscribe(username, title, location);
-        controller.getPlayer().signUpHackathon(controller.getControllerHackathon().getHackathon(title, location));
+        controller.getPlayer().signUpHackathon(controller.getControllerHackathon().getAvailableHackathon(title, location));
     }
 }

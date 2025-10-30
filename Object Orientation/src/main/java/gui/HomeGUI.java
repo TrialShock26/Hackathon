@@ -53,7 +53,7 @@ public class HomeGUI {
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(subtitle);
 
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // ====== PANEL BOTTONI ======
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 0));
@@ -63,14 +63,14 @@ public class HomeGUI {
         loginButton = createStyledButton("Login", new Color(65, 105, 225), new Color(40, 75, 190));
         loginButton.addActionListener(e -> {
             frame.setVisible(false);
-            new LoginGUI(controller, frame);
+            new LoginGUI(frame);
         });
 
         // Pulsante Registrati
         subscribeButton = createStyledButton("Registrati", new Color(220, 20, 60), new Color(180, 0, 50));
         subscribeButton.addActionListener(e -> {
             frame.setVisible(false);
-            new SubscribeGUI(controller, frame);
+            new SubscribeGUI(frame);
         });
 
         buttonPanel.add(loginButton);
@@ -78,6 +78,18 @@ public class HomeGUI {
         centerPanel.add(buttonPanel);
 
         gradientPanel.add(centerPanel, BorderLayout.CENTER);
+
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+
+        // ====== IMMAGINE ======
+//      ImageIcon imageIcon = new ImageIcon("C:\\Users\\TrialCock\\IdeaProjects\\Hackathon\\Object Orientation\\src\\main\\java\\gui\\unina-logo.jpg");
+//      Image image = imageIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
+//      imageIcon = new ImageIcon(image);
+//
+//      JLabel imageLabel = new JLabel(imageIcon);
+//      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//      centerPanel.add(imageLabel);
+//      TODO choosing image
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -93,7 +105,7 @@ public class HomeGUI {
         closeButton.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(
                     frame,
-                    "Sei sicurə di voler chiudere l'applicazione?",
+                    "Sei sicur3 di voler chiudere l'applicazione?",
                     "Conferma chiusura",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE

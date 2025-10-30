@@ -40,10 +40,10 @@ public class RegistrationGUI {
         ArrayList<Integer> maxTeamDims = new ArrayList<>();
         try {
             controller.getControllerHackathon().controllerGetAvailableHackathons(titles, locations, periodsOfTime, startDates, endDates,
-                    startSubDates, endSubDates, maxPlayers, maxTeamDims);
+                    startSubDates, endSubDates, maxPlayers, maxTeamDims, false);
         } catch (SQLException e) {
             String error = e.getMessage();
-            int idx = error.indexOf("D");
+            int idx = error.indexOf("\n");
             error = error.substring(0, idx);
             JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
@@ -130,7 +130,7 @@ public class RegistrationGUI {
                         callerFrame.setVisible(true);
                     } catch (SQLException ex) {
                         String error = ex.getMessage();
-                        int idx = error.indexOf("D");
+                        int idx = error.indexOf("\n");
                         error = error.substring(0, idx);
                         JOptionPane.showMessageDialog(frame,
                                 "C'è stato un errore!\n" + error,

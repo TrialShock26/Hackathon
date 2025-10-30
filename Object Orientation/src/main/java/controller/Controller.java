@@ -100,7 +100,7 @@ public class Controller {
         return controllerTeam;
     }
     public ControllerJudge getControllerJudge() {
-        if (controllerJudge == null) {controllerJudge = new ControllerJudge();}
+        if (controllerJudge == null) {controllerJudge = new ControllerJudge(this);}
         return controllerJudge;
     }
 }

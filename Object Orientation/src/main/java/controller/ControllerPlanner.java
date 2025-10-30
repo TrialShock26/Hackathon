@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 public class ControllerPlanner {
-
     ArrayList<Hackathon> hackathons;
 
     public void controllerGetUsers(String planUser,

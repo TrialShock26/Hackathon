@@ -36,8 +36,9 @@ public class ControllerHackathon {
 
     public void controllerGetAvailableHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
                                                    ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates,
-                                                   ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
-        if (availableHackathons == null) {
+                                                   ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,
+                                                   boolean refreshing) throws SQLException {
+        if (availableHackathons == null || refreshing) {
             UserDAO user = new UserImplementationDAO();
             user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
             availableHackathons = new ArrayList<Hackathon>();
@@ -71,7 +72,7 @@ public class ControllerHackathon {
         }
     }
 
-    public Hackathon getHackathon(String title, String location) {
+    public Hackathon getAvailableHackathon(String title, String location) {
         for (Hackathon h : availableHackathons) {
             if (h.getTitle().equals(title) && h.getLocation().equals(location)) {return h;}
         }

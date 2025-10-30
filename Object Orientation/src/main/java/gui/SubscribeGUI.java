@@ -7,11 +7,10 @@ import controller.Controller;
 public class SubscribeGUI {
     private JFrame homeFrame;
     private JFrame frame;
-    private Controller controller;
 
-    public SubscribeGUI(Controller controller, JFrame homeFrame) {
-        this.controller = controller;
+    public SubscribeGUI(JFrame homeFrame) {
         this.homeFrame = homeFrame;
+        Controller controller = new Controller();
 
         frame = new JFrame("Registrazione Utente - HackathON");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

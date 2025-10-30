@@ -9,7 +9,9 @@ public class LoginGUI {
     private JPanel mainPanel;
     private JFrame frame;
 
-    public LoginGUI(Controller controller, JFrame callerFrame) {
+    public LoginGUI(JFrame callerFrame) {
+        Controller controller = new Controller();
+
         frame = new JFrame("Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
