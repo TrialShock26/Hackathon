@@ -9,8 +9,11 @@ public interface PlannerDAO {
                        Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
                        String planUsername, String judgesUsernames) throws SQLException;
     void startHackathon(String title, String location) throws SQLException;
-    void endHackathon(String title, String location, ArrayList<String> teamNames, ArrayList<Double> finalScores) throws SQLException;
-    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations) throws SQLException;
+    void endHackathon(String title, String location) throws SQLException;
+    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<Long> periodOftime,
+                       ArrayList<String> problemDescriptions,ArrayList<Date> startDate, ArrayList<Date> endDate,
+                       ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
+                       ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException;
     void getUsers(String planUser,
                   ArrayList<String> allUsernames,
                   ArrayList<String> allNames,

@@ -132,7 +132,7 @@ public class HubGUI {
             );
             if (response == JOptionPane.YES_OPTION) {
                 frame.dispose();
-                new LoginGUI(controller, frame);
+                new LoginGUI(frame);
             }
         });
         bottomPanel.add(indietroButton);

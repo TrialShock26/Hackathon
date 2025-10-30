@@ -26,7 +26,7 @@ public class Planner extends User {
     public void openHackathon (String title, String location, Date startDate, Date endDate,
                                Date startSubscriptionDate, Date endSubscriptionDate,
                                int maxPlayers, int maxTeamDim) {
-        Hackathon h = new Hackathon(title, location, ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate()),
+        Hackathon h = new Hackathon(title, location, ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate())+1,
                 startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
         myHackathons.add(h);
     }

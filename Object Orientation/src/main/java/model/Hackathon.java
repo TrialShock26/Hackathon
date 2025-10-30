@@ -50,6 +50,7 @@ public class Hackathon {
     public int getMaxTeamDim () {return maxTeamDim;}
 
     public String getProblemDescription () {return problemDescription;}
+
     public void setProblemDescription(String text) throws IllegalAccessException {
         if (problemDescription != "Descrizione assente.") {
             throw new IllegalAccessException();

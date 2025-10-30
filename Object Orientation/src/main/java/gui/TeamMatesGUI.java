@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
@@ -32,8 +33,11 @@ public class TeamMatesGUI {
         headerPanel.add(titleLabel);
 
         // ====== RECUPERA I PARTECIPANTI ======
-        ControllerPlayer player = new ControllerPlayer();
-        player.controllerGetTeammates("andrea.romano", teamName, hackTitle, location, names, surnames);
+        try{
+            controller.getControllerPlayer().controllerGetTeammates(controller.getUser().getUsername(), teamName, hackTitle, location, names, surnames);
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
 
         int size = Math.min(names.size(), surnames.size());
         String[][] participants = new String[size][2];
