@@ -23,15 +23,6 @@ public class PlayerGUI {
 
         this.controller =  controller;
 
-        // --- PRIMO CARICAMENTO DATI ---
-
-        if(!loadHackathons(false)){
-            JOptionPane.showMessageDialog(null,
-                "Errore: Non Partecipi ad alcun Team!",
-                "Errore", JOptionPane.ERROR_MESSAGE);
-            callerFrame.setVisible(true);
-            return;
-        }
 
         frame = new JFrame("Partecipa a Team");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +40,8 @@ public class PlayerGUI {
         JLabel titleLabel = new JLabel("Seleziona Team a cui Partecipare", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.WEST);
+
+
 
         JButton refreshBtn = new JButton("Aggiorna");
         refreshBtn.setPreferredSize(new Dimension(120, 35));
@@ -152,6 +145,14 @@ public class PlayerGUI {
 
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
+
+        if(!loadHackathons(false)){
+            JOptionPane.showMessageDialog(null,
+                    "Errore: Non Partecipi ad alcun Team!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            callerFrame.setVisible(true);
+            frame.dispose();
+        }
     }
 
     // ====== RICARICA I DATI DAL DB ======

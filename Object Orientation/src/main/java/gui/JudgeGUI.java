@@ -23,10 +23,28 @@ public class JudgeGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Valuta Hackathon", SwingConstants.CENTER);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+        JLabel titleLabel = new JLabel("Valuta Hackathon", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        // ====== BOTTONE AGGIORNA ======
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            // TODO: qui puoi aggiungere il metodo refreshHackathons() se lo implementi
+            JOptionPane.showMessageDialog(frame, "Funzione di aggiornamento non ancora implementata.");
+        });
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ====== DATI HACKATHON ======
         ArrayList<String> titles = new ArrayList<>();
@@ -49,6 +67,9 @@ public class JudgeGUI {
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
+
+        listPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        listPanel.setMaximumSize(new Dimension(700, listPanel.getPreferredSize().height));
 
         hackathonGroup = new ButtonGroup();
         for (String hackathon : titles) {
@@ -110,7 +131,7 @@ public class JudgeGUI {
         centerLeftPanel.add(problemBtn);
         bottomPanel.add(centerLeftPanel, BorderLayout.CENTER);
 
-        // Bottone "Apri" al centro destra
+        // Bottone "Apri" a destra
         JPanel centerRightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerRightPanel.setBackground(new Color(240, 240, 245));
 
@@ -125,8 +146,8 @@ public class JudgeGUI {
             if (selectedHackathon == null) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                frame.setVisible(false); // nascondi JudgeGUI
-                new TeamGUI(controller, frame, selectedHackathon); // passi JudgeGUI come callerFrame
+                frame.setVisible(false);
+                new TeamGUI(controller, frame, selectedHackathon);
             }
         });
 
@@ -157,13 +178,14 @@ public class JudgeGUI {
                 BorderFactory.createEmptyBorder(10, 20, 10, 20)
         ));
 
-        // Radio button + testo
         JRadioButton radio = new JRadioButton(hackathonName);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
         hackathonGroup.add(radio);
 
         card.add(radio, BorderLayout.CENTER);
+        card.setMaximumSize(new Dimension(700, 60));
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return card;
     }
