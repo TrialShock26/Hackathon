@@ -23,10 +23,27 @@ public class RegistrationGUI {
         mainPanel.setBackground(new Color(240, 240, 245));
 
         // ====== HEADER ======
-        JLabel titleLabel = new JLabel("Registrati ad un Hackathon", SwingConstants.CENTER);
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(240, 240, 245));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+        JLabel titleLabel = new JLabel("Registrati ad un Hackathon", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            // Qui potrai aggiungere la logica per ricaricare la lista
+            // (ad esempio refreshHackathons(); se lo implementi)
+        });
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ====== DATI HACKATHON ======
         ArrayList<String> titles = new ArrayList<>();
@@ -50,17 +67,19 @@ public class RegistrationGUI {
                     "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
+        listPanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        listPanel.setMaximumSize(new Dimension(700, listPanel.getPreferredSize().height));
+
         hackathonGroup = new ButtonGroup();
         for (int i = 0; i < titles.size(); i++) {
             JPanel card = createHackathonCard(titles.get(i), locations.get(i), periodsOfTime.get(i),
-                                                startDates.get(i), endDates.get(i), startSubDates.get(i), endSubDates.get(i),
-                                                maxPlayers.get(i), maxTeamDims.get(i));
+                    startDates.get(i), endDates.get(i), startSubDates.get(i), endSubDates.get(i),
+                    maxPlayers.get(i), maxTeamDims.get(i));
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -166,10 +185,13 @@ public class RegistrationGUI {
 
         // Quando si seleziona, apre un popup con le info riepilogative
         radio.addActionListener(e -> showHackathonInfoPopup(titolo, sede, durata, dataInizio, dataFine, dataAperturaIscrizioni,
-                                                                        dataChiusuraIscrizioni, maxIscritti, maxDimTeam));
+                dataChiusuraIscrizioni, maxIscritti, maxDimTeam));
 
         hackathonGroup.add(radio);
         card.add(radio, BorderLayout.CENTER);
+
+        card.setMaximumSize(new Dimension(700, 60));
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return card;
     }
@@ -185,7 +207,6 @@ public class RegistrationGUI {
         panel.setBackground(new Color(245, 245, 250));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Tabella di informazioni
         String[][] data = {
                 {"Titolo", titolo},
                 {"Sede", sede},
@@ -209,7 +230,6 @@ public class RegistrationGUI {
         tableScroll.setBorder(BorderFactory.createTitledBorder("Riepilogo Hackathon"));
         panel.add(tableScroll, BorderLayout.CENTER);
 
-        // Bottone chiudi
         JButton closeBtn = new JButton("Chiudi");
         closeBtn.setBackground(new Color(150, 150, 150));
         closeBtn.setForeground(Color.WHITE);

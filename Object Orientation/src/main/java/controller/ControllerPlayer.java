@@ -1,12 +1,12 @@
 package controller;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import dao.PlayerDAO;
+import postgresImplementationDao.PlayerImplementationDAO;
 import model.Hackathon;
 import model.Player;
 import model.Team;
-import postgresImplementationDao.PlayerImplementationDAO;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ControllerPlayer {
     private Controller controller;
@@ -36,7 +36,7 @@ public class ControllerPlayer {
 
                 }
 
-            }else{
+            } else{
                 for(int i = 0; i < myHackathons.size(); i++){
                     titles.add(myHackathons.get(i).getTitle());
                     locations.add(myHackathons.get(i).getLocation());
