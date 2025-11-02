@@ -63,7 +63,7 @@ public class HomeGUI {
         loginButton = createStyledButton("Login", new Color(65, 105, 225), new Color(40, 75, 190));
         loginButton.addActionListener(e -> {
             frame.setVisible(false);
-            new LoginGUI(frame);
+            new LoginGUI();
         });
 
         // Pulsante Registrati

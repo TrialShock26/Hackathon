@@ -9,8 +9,8 @@ public class Player extends User {
 
     public Player(String username, String password, String name, String surname) {
         super(username, password, name, surname);
-        myTeams = new ArrayList<Team>();
-        mySubscriptions = new ArrayList<Registration>();
+        myTeams = new ArrayList<>();
+        mySubscriptions = new ArrayList<>();
     }
 
     public int signUpHackathon(Hackathon h) {
@@ -54,14 +54,13 @@ public class Player extends User {
                 old = temp;
             }
         }
+        if (old == null) {return 4;}
         old.playerLeaving(this);
         if (old.getMembersNumber() == 0) {h.teamLeaving(old);}
         t.setPlayer(this);
         myTeams.add(t);
         return 0;
     }
-
-    public void changeTeamName() {} //TODO correctly
 
     public ArrayList<Team> getTeams() {return myTeams;}
     public ArrayList<Registration> getSubscriptions() {return mySubscriptions;}

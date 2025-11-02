@@ -1,7 +1,6 @@
 package model;
 
 import java.sql.Date;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Hackathon {
@@ -33,8 +32,8 @@ public class Hackathon {
         this.maxPlayers = maxPlayers;
         this.maxTeamDim = maxTeamDim;
         problemDescription = "Descrizione assente.";
-        registeredPlayers = new ArrayList<Registration>();
-        teams = new ArrayList<Team>();
+        registeredPlayers = new ArrayList<>();
+        teams = new ArrayList<>();
         this.planner = planner;
         this.selection = null;
     }
@@ -52,7 +51,7 @@ public class Hackathon {
     public String getProblemDescription () {return problemDescription;}
 
     public void setProblemDescription(String text) throws IllegalAccessException {
-        if (problemDescription != "Descrizione assente.") {
+        if (!problemDescription.equals("Descrizione assente.")) {
             throw new IllegalAccessException();
         }
         this.problemDescription = text;

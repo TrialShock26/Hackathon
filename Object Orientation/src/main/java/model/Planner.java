@@ -10,16 +10,16 @@ public class Planner extends User {
 
     public Planner(String username, String password, String nome, String cognome) {
         super(username, password, nome, cognome);
-        myHackathons = new ArrayList<Hackathon>();
-        mySelections = new ArrayList<Selection>();
+        myHackathons = new ArrayList<>();
+        mySelections = new ArrayList<>();
     }
 
     public void inviteJudge (Hackathon h, Judge j) {
         if (h.getSelection() == null) {
             h.setSelection(new Selection(this, h));
-            h.getSelection().setJudges(j);
+            h.getSelection().setJudge(j);
         } else {
-            h.getSelection().setJudges(j);
+            h.getSelection().setJudge(j);
         }
     }
 

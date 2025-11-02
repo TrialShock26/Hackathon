@@ -9,7 +9,7 @@ public class LoginGUI {
     private JPanel mainPanel;
     private JFrame frame;
 
-    public LoginGUI(JFrame callerFrame) {
+    public LoginGUI() {
         Controller controller = new Controller();
 
         frame = new JFrame("Login");
@@ -88,7 +88,7 @@ public class LoginGUI {
                                     controller.getUser().getName() + " " + controller.getUser().getSurname(),
                                     "Ciao!", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
-                    new HubGUI(controller, callerFrame);
+                    new HubGUI(controller);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Credenziali errate!", "Errore", JOptionPane.ERROR_MESSAGE);
                 }

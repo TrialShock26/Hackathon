@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-
 import controller.Controller;
 
 public class ScoreboardGUI {
@@ -17,7 +16,6 @@ public class ScoreboardGUI {
     private final DecimalFormat scoreFormat = new DecimalFormat("#.##");
 
     private Controller controller;
-    private JFrame callerFrame;
     private String hackathonName;
     private String location;
 
@@ -29,7 +27,6 @@ public class ScoreboardGUI {
 
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
         this.controller = controller;
-        this.callerFrame = callerFrame;
         this.hackathonName = hackathonName;
         this.location = location;
 
@@ -125,8 +122,6 @@ public class ScoreboardGUI {
         titles.clear();
         locations.clear();
 
-        System.out.println("DEBUG - Carico scoreboard: " + hackathonName + ", refresh=" + refreshing);
-
         try {
             if (hackathonName != null) {
                 controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores, refreshing);
@@ -140,8 +135,6 @@ public class ScoreboardGUI {
                     "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;
         }
-
-        System.out.println("DEBUG - Squadre trovate: " + teams.size());
         return isCorrect;
     }
 

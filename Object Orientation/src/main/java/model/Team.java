@@ -14,10 +14,10 @@ public class Team {
         name = teamName;
         membersNumber = 1;
         hackathonMember = hack;
-        playerList = new ArrayList<Player>();
+        playerList = new ArrayList<>();
         playerList.add(p);
-        progressList = new ArrayList<Document>();
-        grades = new ArrayList<Grade>();
+        progressList = new ArrayList<>();
+        grades = new ArrayList<>();
     }
 
     public void publishProgress (String title, String content) {
@@ -26,7 +26,6 @@ public class Team {
     }
 
     public String getName () {return name;}
-    public void setName (String name) {this.name = name;} //TODO correctly
 
     public Hackathon getHackathon() {return hackathonMember;}
     public int getMembersNumber() {return membersNumber;}

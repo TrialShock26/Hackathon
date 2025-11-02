@@ -36,7 +36,12 @@ public class TeamMatesGUI {
         try{
             controller.getControllerPlayer().controllerGetTeammates(controller.getUser().getUsername(), teamName, hackTitle, location, names, surnames);
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            String error = e.getMessage();
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
         int size = Math.min(names.size(), surnames.size());

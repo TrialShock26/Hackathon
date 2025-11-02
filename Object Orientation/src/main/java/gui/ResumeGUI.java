@@ -1,10 +1,7 @@
 package gui;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 import model.*;

@@ -15,7 +15,7 @@ public class Document {
         this.content = content;
         comment = "Commento assente.";
         this.team = team;
-        commentators = new ArrayList<Judge>();
+        commentators = new ArrayList<>();
     }
 
     public String getTitle() {return title;}
@@ -23,7 +23,7 @@ public class Document {
 
     public String getComment() {return comment;}
     public void setComment(String inComm) {
-        if (comment == "Commento assente.") {comment = inComm;}
+        if (comment.equals("Commento assente.")) {comment = inComm;}
         else {comment = comment + "\n" + inComm;}
     }
 

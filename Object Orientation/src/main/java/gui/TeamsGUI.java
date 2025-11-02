@@ -31,7 +31,7 @@ public class TeamsGUI {
         ArrayList<String> teamNames = new ArrayList<>();
         try {
             controller.getControllerJudge().controllerGetTeams(selectedHackathon, location, teamNames, false);
-        } catch (SQLException | IllegalAccessException e) {
+        } catch (SQLException e) {
             String error = e.getMessage();
             int idx = error.indexOf("\n");
             error = error.substring(0, idx);

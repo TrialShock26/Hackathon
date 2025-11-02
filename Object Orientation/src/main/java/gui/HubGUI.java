@@ -17,7 +17,7 @@ public class HubGUI {
     private JLabel title;
     private JLabel subtitle;
 
-    public HubGUI(Controller controller, JFrame callerFrame) {
+    public HubGUI(Controller controller) {
 
         frame = new JFrame("HackathON - HUB");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,7 +132,7 @@ public class HubGUI {
             );
             if (response == JOptionPane.YES_OPTION) {
                 frame.dispose();
-                new LoginGUI(frame);
+                new LoginGUI();
             }
         });
         bottomPanel.add(indietroButton);

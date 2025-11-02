@@ -5,11 +5,9 @@ import java.awt.*;
 import controller.Controller;
 
 public class SubscribeGUI {
-    private JFrame homeFrame;
     private JFrame frame;
 
     public SubscribeGUI(JFrame homeFrame) {
-        this.homeFrame = homeFrame;
         Controller controller = new Controller();
 
         frame = new JFrame("Registrazione Utente - HackathON");
@@ -66,7 +64,7 @@ public class SubscribeGUI {
             if (success) {
                 JOptionPane.showMessageDialog(frame, "Registrazione completata!\nBenvenut3 "+ nome +" "+ cognome);
                 frame.dispose();
-                new HubGUI(controller, frame);
+                new HubGUI(controller);
             } else {
                 JOptionPane.showMessageDialog(frame, "Errore!", "Errore", JOptionPane.ERROR_MESSAGE);
             }

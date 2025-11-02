@@ -10,11 +10,11 @@ public class Selection {
     public Selection(Planner inPlanner, Hackathon inHackathon) {
         planner = inPlanner;
         hackathon = inHackathon;
-        judges = new ArrayList<Judge>();
+        judges = new ArrayList<>();
     }
 
     public Planner getPlanner() {return planner;}
     public Hackathon getHackathon() {return hackathon;}
     public ArrayList<Judge> getJudges() {return judges;}
-    public void setJudges(Judge inJudge) {judges.add(inJudge);}
+    public void setJudge(Judge inJudge) {judges.add(inJudge);}
 }

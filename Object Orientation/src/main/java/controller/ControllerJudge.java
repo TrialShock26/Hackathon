@@ -21,7 +21,7 @@ public class ControllerJudge {
                 Hackathon h = new Hackathon(titles.get(i), locations.get(i), 0, null, null, null, null, 0, 0, null);
                 h.setProblemDescription(problemDescriptions.get(i));
                 Selection s = new Selection(null, h);
-                s.setJudges(controller.getJudge());
+                s.setJudge(controller.getJudge());
                 controller.getJudge().getSelections().add(s);
             }
         } else {
@@ -43,25 +43,31 @@ public class ControllerJudge {
         }
     }
 
-    public void controllerGetTeams(String title, String location, ArrayList<String> teamNames, boolean refreshing) throws SQLException, IllegalAccessException {
+    public void controllerGetTeams(String title, String location, ArrayList<String> teamNames, boolean refreshing) throws SQLException {
+        Hackathon h = findHackathon(title, location);
+        if (h == null) {return;}
+        if (refreshing || h.getTeams().isEmpty()) {
+            JudgeDAO judgeDB = new JudgeImplementationDAO();
+            judgeDB.getTeams(title, location, teamNames);
+            h.getTeams().clear();
+            for (String teamName : teamNames) {
+                h.getTeams().add(new Team(teamName, null, h));
+            }
+        } else {
+            for (Team t : h.getTeams()) {
+                teamNames.add(t.getName());
+            }
+        }
+    }
+
+    private Hackathon findHackathon(String title, String location) {
         for (Selection s : controller.getJudge().getSelections()) {
             Hackathon h = s.getHackathon();
             if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
-                if (refreshing || h.getTeams().isEmpty()) {
-                    JudgeDAO judgeDB = new JudgeImplementationDAO();
-                    judgeDB.getTeams(title, location, teamNames);
-                    h.getTeams().clear();
-                    for (int i = 0; i < teamNames.size(); i++) {
-                        h.getTeams().add(new Team(teamNames.get(i), null, h));
-                    }
-                } else {
-                    for (Team t : h.getTeams()) {
-                        teamNames.add(t.getName());
-                    }
-                }
-                return;
+                return h;
             }
         }
+        return null;
     }
 
     public void controllerExamineDocument(String username, String docTitle, String content, String oldComment,

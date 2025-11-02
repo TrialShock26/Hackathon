@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
@@ -138,14 +139,21 @@ public class MyTeamGUI {
             } else if (text.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
-
-                controller.getControllerTeam().controllerPublishProgress(teamName,hackTitle,location,title,text);
-
-                JOptionPane.showMessageDialog(frame,
-                        "Documento \"" + title + "\" pubblicato con successo!",
-                        "Successo", JOptionPane.INFORMATION_MESSAGE);
-                titleField.setText("");
-                textArea.setText("");
+                try {
+                    controller.getControllerTeam().controllerPublishProgress(teamName,hackTitle,location,title,text);
+                    JOptionPane.showMessageDialog(frame,
+                            "Documento \"" + title + "\" pubblicato con successo!",
+                            "Successo", JOptionPane.INFORMATION_MESSAGE);
+                    titleField.setText("");
+                    textArea.setText("");
+                } catch (SQLException ex) {
+                    String error = ex.getMessage();
+                    int idx = error.indexOf("\n");
+                    error = error.substring(0, idx);
+                    JOptionPane.showMessageDialog(frame,
+                            "C'è stato un errore!\n" + error,
+                            "Errore", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 

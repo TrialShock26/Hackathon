@@ -51,29 +51,20 @@ public class ControllerHackathon {
     public void controllerScoreboard(String title, String location,
                                   ArrayList<String> teamNames, ArrayList<Double> scores,
                                   boolean refreshing) throws SQLException {
-
-        // se non ho mai caricato ranking oppure sto aggiornando manualmente
-        // oppure sto cambiando hackathon → ricarico dal DB
-        if (myRanking == null || refreshing ||
-                !title.equals(lastRankingTitle)) {
-
-            System.out.println("DEBUG - Carico ranking da DB: " + title + ", refresh=" + refreshing);
-
+        if (myRanking == null || refreshing || !title.equals(lastRankingTitle)) {
             myRanking = new ArrayList<>();
             myRankingScores = new ArrayList<>();
             lastRankingTitle = title;
 
             HackathonDAO hackathonDAO = new HackathonImplementationDAO();
-            hackathonDAO.scoreboard(title, location, teamNames, scores); // chiama la query
+            hackathonDAO.scoreboard(title, location, teamNames, scores);
 
             for (int i = 0; i < teamNames.size(); i++) {
-                myRanking.add(new Team(teamNames.get(i), null, null)); // o con membri se servono
+                myRanking.add(new Team(teamNames.get(i), null, null));
                 myRankingScores.add(scores.get(i));
             }
 
         } else {
-            System.out.println("DEBUG - Uso ranking da cache: " + lastRankingTitle);
-            // svuoto le liste di output prima di riempirle
             teamNames.clear();
             scores.clear();
 
@@ -90,7 +81,7 @@ public class ControllerHackathon {
         if (availableHackathons == null || refreshing) {
             UserDAO user = new UserImplementationDAO();
             user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
-            availableHackathons = new ArrayList<Hackathon>();
+            availableHackathons = new ArrayList<>();
             for (int i = 0; i < titles.size(); i++) {
                 availableHackathons.add(new Hackathon(titles.get(i), locations.get(i), periodsOfTime.get(i).longValue(), startDates.get(i),
                         endDates.get(i), startSubDates.get(i), endSubDates.get(i), maxPlayers.get(i), maxTeamDim.get(i), null));

@@ -28,13 +28,13 @@ public class Controller {
     }
 
     public boolean login(String username, String password) {
-        String nameSurname = null;
+        String nameSurname;
         UserDAO userDB = new UserImplementationDAO();
 
         try {
             nameSurname = userDB.login(username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
 
         if (nameSurname != null) {
@@ -47,16 +47,14 @@ public class Controller {
 
     public boolean newUser(String username, String name, String surname, String password) {
         UserDAO userDB = new UserImplementationDAO();
-        boolean success = true;
 
         try {
             userDB.newUser(username, name, surname, password);
             user = new User(username, password, name, surname);
         } catch (SQLException e) {
-            e.printStackTrace();
-            success = false;
+            return false;
         }
-        return success;
+        return true;
     }
 
     public User getUser() {return user;}
