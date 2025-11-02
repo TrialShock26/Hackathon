@@ -24,7 +24,7 @@ public class PlayerGUI {
         this.controller =  controller;
 
 
-        frame = new JFrame("Partecipa a Team");
+        frame = new JFrame("Gioca");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
@@ -37,7 +37,7 @@ public class PlayerGUI {
         headerPanel.setBackground(new Color(240, 240, 245));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JLabel titleLabel = new JLabel("Seleziona Team a cui Partecipare", SwingConstants.LEFT);
+        JLabel titleLabel = new JLabel("Seleziona Team", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
