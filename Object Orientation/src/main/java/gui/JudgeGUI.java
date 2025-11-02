@@ -39,7 +39,6 @@ public class JudgeGUI {
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         refreshBtn.addActionListener(e -> {
-            // TODO: qui puoi aggiungere il metodo refreshHackathons() se lo implementi
             JOptionPane.showMessageDialog(frame, "Funzione di aggiornamento non ancora implementata.");
         });
         headerPanel.add(refreshBtn, BorderLayout.EAST);
