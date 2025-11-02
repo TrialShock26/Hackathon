@@ -50,7 +50,7 @@ public class ResumeGUI {
         }
 
         contentPanel.add(createInfoRow("Sede:", String.valueOf(selectedHackathon.getLocation())));
-        contentPanel.add(createInfoRow("Durata:",String.valueOf(selectedHackathon.getPeriodOfTime())));
+        contentPanel.add(createInfoRow("Durata:", String.valueOf(selectedHackathon.getPeriodOfTime()) + " giorni"));
         contentPanel.add(createInfoRow("Data Inizio:", selectedHackathon.getStartDate().toString()));
         contentPanel.add(createInfoRow("Data Fine:", selectedHackathon.getEndDate().toString()));
         contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", selectedHackathon.getStartSubscriptionDate().toString()));

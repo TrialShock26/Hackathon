@@ -33,8 +33,7 @@ public class MyTeamGUI {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
-        String username = controller.getUser().getUsername();
-        JLabel userLabel = new JLabel("Utente: " + username);
+        JLabel userLabel = new JLabel("Utente: " + controller.getUser().getName() + " " + controller.getUser().getSurname());
         userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         infoPanel.add(userLabel);
