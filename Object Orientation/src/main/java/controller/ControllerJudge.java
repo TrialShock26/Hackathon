@@ -8,25 +8,24 @@ import java.util.ArrayList;
 
 public class ControllerJudge {
     private Controller controller;
-    private ArrayList<Selection> selections;
 
     public ControllerJudge(Controller controller) {this.controller = controller;}
 
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
                                             ArrayList<String> problemDescriptions, boolean refreshing) throws SQLException, IllegalAccessException{
-        if (selections == null || refreshing) {
+        if (controller.getJudge().getSelections().isEmpty() || refreshing) {
             JudgeDAO judgeDB = new JudgeImplementationDAO();
             judgeDB.getHackathons(username, titles, locations, problemDescriptions);
-            selections = new ArrayList<Selection>();
+            controller.getJudge().getSelections().clear();
             for (int i = 0; i < titles.size(); i++) {
                 Hackathon h = new Hackathon(titles.get(i), locations.get(i), 0, null, null, null, null, 0, 0, null);
                 h.setProblemDescription(problemDescriptions.get(i));
                 Selection s = new Selection(null, h);
                 s.setJudges(controller.getJudge());
-                selections.add(s);
+                controller.getJudge().getSelections().add(s);
             }
         } else {
-            for (Selection myS : selections) {
+            for (Selection myS : controller.getJudge().getSelections()) {
                 titles.add(myS.getHackathon().getTitle());
                 locations.add(myS.getHackathon().getLocation());
                 problemDescriptions.add(myS.getHackathon().getProblemDescription());
@@ -37,7 +36,7 @@ public class ControllerJudge {
     public void controllerPublishProblem(String title, String location, String problemDescription) throws SQLException, IllegalAccessException {
         JudgeDAO judgeDB = new JudgeImplementationDAO();
         judgeDB.publishProblem(problemDescription, title, location);
-        for (Selection myS : selections) {
+        for (Selection myS : controller.getJudge().getSelections()) {
             if(myS.getHackathon().getTitle().equals(title) && myS.getHackathon().getLocation().equals(location)) {
                 controller.getJudge().publishProblem(myS.getHackathon(), problemDescription);
             }
@@ -45,7 +44,7 @@ public class ControllerJudge {
     }
 
     public void controllerGetTeams(String title, String location, ArrayList<String> teamNames, boolean refreshing) throws SQLException, IllegalAccessException {
-        for (Selection s : selections) {
+        for (Selection s : controller.getJudge().getSelections()) {
             Hackathon h = s.getHackathon();
             if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
                 if (refreshing || h.getTeams().isEmpty()) {

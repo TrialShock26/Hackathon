@@ -9,8 +9,9 @@ public class Judge extends User {
 
     public Judge(String username, String password, String name, String surname) {
         super(username, password, name, surname);
-        myGradings = new ArrayList<Grade>();
-        commentDone = new ArrayList<Document>();
+        mySelections = new ArrayList<>();
+        myGradings = new ArrayList<>();
+        commentDone = new ArrayList<>();
     }
 
     public void publishProblem (Hackathon h, String problem) throws IllegalAccessException {
@@ -29,7 +30,7 @@ public class Judge extends User {
         t.setGrades(g);
     }
 
-    public ArrayList<Selection> geSelections() {return mySelections;}
+    public ArrayList<Selection> getSelections() {return mySelections;}
     public void setSelections(Selection inSel) {mySelections.add(inSel);}
 
     public ArrayList<Grade> getGradings() {return myGradings;}
