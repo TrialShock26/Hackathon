@@ -12,6 +12,10 @@ public class JudgeGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup hackathonGroup;
+    private JPanel listPanel;
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
+    private ArrayList<String> problemDescriptions = new ArrayList<>();
 
     public JudgeGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Valuta");
@@ -31,25 +35,7 @@ public class JudgeGUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
-        // ====== BOTTONE AGGIORNA ======
-        JButton refreshBtn = new JButton("Aggiorna");
-        refreshBtn.setPreferredSize(new Dimension(120, 35));
-        refreshBtn.setBackground(new Color(70, 130, 180));
-        refreshBtn.setForeground(Color.WHITE);
-        refreshBtn.setFocusPainted(false);
-        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            // TODO: qui puoi aggiungere il metodo refreshHackathons() se lo implementi
-            JOptionPane.showMessageDialog(frame, "Funzione di aggiornamento non ancora implementata.");
-        });
-        headerPanel.add(refreshBtn, BorderLayout.EAST);
-
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-
         // ====== DATI HACKATHON ======
-        ArrayList<String> titles = new ArrayList<>();
-        ArrayList<String> locations = new ArrayList<>();
-        ArrayList<String> problemDescriptions = new ArrayList<>();
         try {
             controller.getControllerJudge().controllerGetHackathons(controller.getUser().getUsername(), titles,
                     locations, problemDescriptions, false);
@@ -63,7 +49,7 @@ public class JudgeGUI {
         }
 
         // ====== LISTA HACKATHON CON RADIOBUTTON ======
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
@@ -72,11 +58,7 @@ public class JudgeGUI {
         listPanel.setMaximumSize(new Dimension(700, listPanel.getPreferredSize().height));
 
         hackathonGroup = new ButtonGroup();
-        for (String hackathon : titles) {
-            JPanel card = createHackathonCard(hackathon);
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        createPanel();
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -154,6 +136,34 @@ public class JudgeGUI {
         centerRightPanel.add(openBtn);
         bottomPanel.add(centerRightPanel, BorderLayout.EAST);
 
+        // ====== BOTTONE AGGIORNA ======
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            preparePanel();
+            try {
+                controller.getControllerJudge().controllerGetHackathons(controller.getUser().getUsername(), titles,
+                        locations, problemDescriptions, true);
+            } catch (SQLException | IllegalAccessException ex) {
+                String error = ex.getMessage();
+                int idx = error.indexOf("\n");
+                error = error.substring(0, idx);
+                JOptionPane.showMessageDialog(frame,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
+            createPanel();
+            listPanel.revalidate();
+            listPanel.repaint();
+        });
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         try {
@@ -197,5 +207,20 @@ public class JudgeGUI {
             if (button.isSelected()) return button.getText();
         }
         return null;
+    }
+
+    private void preparePanel() {
+        listPanel.removeAll();
+        titles.clear();
+        locations.clear();
+        problemDescriptions.clear();
+    }
+
+    private void createPanel() {
+        for (String hackathon : titles) {
+            JPanel card = createHackathonCard(hackathon);
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
     }
 }
