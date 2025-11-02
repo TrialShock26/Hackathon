@@ -84,7 +84,7 @@ public class ProblemGUI {
         publishBtn.addActionListener(e -> {
             if (problemDescription.equals("Descrizione assente.")) {
                 try {
-                    controller.getControllerJudge().controllerSetProblemDescription(hackathonName, location, problemDescription);
+                    controller.getControllerJudge().controllerPublishProblem(hackathonName, location, problemDescription);
                 } catch (SQLException | IllegalAccessException ex) {
                     String error = ex.getMessage();
                     int idx = error.indexOf("\n");
@@ -93,6 +93,10 @@ public class ProblemGUI {
                             "C'è stato un errore!\n" + error,
                             "Errore", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        "Non è più possibile cambiare la descrizione",
+                        "Errore", JOptionPane.ERROR_MESSAGE);
             }
         });//TODO vero cambiamento
 

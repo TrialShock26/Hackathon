@@ -1,9 +1,8 @@
 package controller;
 
 import dao.JudgeDAO;
-import model.*;
 import postgresImplementationDao.JudgeImplementationDAO;
-
+import model.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -35,12 +34,61 @@ public class ControllerJudge {
         }
     }
 
-    public void controllerSetProblemDescription(String title, String location, String problemDescription) throws SQLException, IllegalAccessException {
+    public void controllerPublishProblem(String title, String location, String problemDescription) throws SQLException, IllegalAccessException {
         JudgeDAO judgeDB = new JudgeImplementationDAO();
         judgeDB.publishProblem(problemDescription, title, location);
         for (Selection myS : selections) {
             if(myS.getHackathon().getTitle().equals(title) && myS.getHackathon().getLocation().equals(location)) {
-                myS.getHackathon().setProblemDescription(problemDescription);
+                controller.getJudge().publishProblem(myS.getHackathon(), problemDescription);
+            }
+        }
+    }
+
+    public void controllerGetTeams(String title, String location, ArrayList<String> teamNames, boolean refreshing) throws SQLException, IllegalAccessException {
+        for (Selection s : selections) {
+            Hackathon h = s.getHackathon();
+            if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
+                if (refreshing || h.getTeams().isEmpty()) {
+                    JudgeDAO judgeDB = new JudgeImplementationDAO();
+                    judgeDB.getTeams(title, location, teamNames);
+                    h.getTeams().clear();
+                    for (int i = 0; i < teamNames.size(); i++) {
+                        h.getTeams().add(new Team(teamNames.get(i), null, h));
+                    }
+                } else {
+                    for (Team t : h.getTeams()) {
+                        teamNames.add(t.getName());
+                    }
+                }
+                return;
+            }
+        }
+    }
+
+    public void controllerExamineDocument(String username, String docTitle, String content, String oldComment,
+                                          String teamName, String hackTitle, String location, String text) throws SQLException {
+        JudgeDAO judgeDB = new JudgeImplementationDAO();
+        judgeDB.examineDocument(username, docTitle, content, teamName, hackTitle, location, text);
+        for (Team t : controller.getControllerTeam().getTeams()) {
+            if (t.getName().equals(teamName) && t.getHackathon().getTitle().equals(hackTitle) &&
+                    t.getHackathon().getLocation().equals(location)) {
+                for (Document d : t.getProgress()) {
+                    if (d.getTitle().equals(docTitle) && d.getComment().equals(oldComment)) {
+                        controller.getJudge().commentDocument(d, text);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void controllerGradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
+        JudgeDAO judgeDB = new JudgeImplementationDAO();
+        judgeDB.gradeTeam(username, teamName, title, location, value);
+        for (Team t : controller.getControllerTeam().getTeams()) {
+            if (t.getName().equals(teamName) && t.getHackathon().getTitle().equals(title) &&
+                    t.getHackathon().getLocation().equals(location)) {
+                controller.getJudge().gradeTeam(t, value);
             }
         }
     }

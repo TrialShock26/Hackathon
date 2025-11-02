@@ -1,17 +1,18 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
-public class TeamGUI {
+public class TeamsGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup teamGroup;
 
-    public TeamGUI(Controller controller, JFrame callerFrame, String selected_Hackathon) {
-
+    public TeamsGUI(Controller controller, JFrame callerFrame, String selectedHackathon, String location) {
         frame = new JFrame("Seleziona Team");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -26,25 +27,27 @@ public class TeamGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
+        // ====== DATI TEAM ======
+        ArrayList<String> teamNames = new ArrayList<>();
+        try {
+            controller.getControllerJudge().controllerGetTeams(selectedHackathon, location, teamNames, false);
+        } catch (SQLException | IllegalAccessException e) {
+            String error = e.getMessage();
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+
         // ====== LISTA TEAM CON RADIOBUTTON ======
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Lista di team (esempio, in futuro prendi la lista dal controller)
-        String[] teamList = {
-                "Team Alpha",
-                "Team Beta",
-                "Team Gamma",
-                "Team Delta",
-                "Team Epsilon",
-                "Team Diocane",
-                "Team LucaisCoglione"
-        };
-
         teamGroup = new ButtonGroup();
-        for (String team : teamList) {
+        for (String team : teamNames) {
             JPanel card = createTeamCard(team);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -53,7 +56,7 @@ public class TeamGUI {
         // --- Forzo il preferred size del listPanel in base al numero di elementi così la scrollbar compare ---
         int cardHeight = 50; // altezza di ciascuna "card" (coerente con createTeamCard)
         int gap = 10;
-        int totalHeight = teamList.length * (cardHeight + gap) + 20;
+        int totalHeight = teamNames.size() * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
@@ -102,7 +105,7 @@ public class TeamGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                new ExnVoteGUI(controller, frame, selectedTeam);
+                new ExAndVoteGUI(controller, frame, selectedTeam, selectedHackathon, location);
             }
         });
 
