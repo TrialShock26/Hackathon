@@ -3,7 +3,6 @@ package controller;
 import dao.*;
 import postgresImplementationDao.*;
 import model.*;
-
 import java.sql.SQLException;
 
 public class Controller {
@@ -96,7 +95,7 @@ public class Controller {
         return controllerPlayer;
     }
     public ControllerTeam getControllerTeam() {
-        if (controllerTeam == null) {controllerTeam = new ControllerTeam();}
+        if (controllerTeam == null) {controllerTeam = new ControllerTeam(this);}
         return controllerTeam;
     }
     public ControllerJudge getControllerJudge() {

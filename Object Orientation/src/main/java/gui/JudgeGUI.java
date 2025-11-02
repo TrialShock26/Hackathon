@@ -147,7 +147,7 @@ public class JudgeGUI {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                new TeamGUI(controller, frame, selectedHackathon);
+                new TeamsGUI(controller, frame, selectedHackathon, locations.get(titles.indexOf(selectedHackathon)));
             }
         });
 

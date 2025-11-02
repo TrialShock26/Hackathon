@@ -1,30 +1,30 @@
 package gui;
 
 import java.awt.*;
-import java.util.Enumeration;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 
-public class ExnVoteGUI {
+public class ExAndVoteGUI {
     private JFrame frame;
+    private Controller controller;
     private String teamName;
+    private String title;
+    private String location;
     private ButtonGroup documentGroup;
     private JRadioButton[] documentButtons;
-    private String[] documentNames = {
-            "Progetto_Sostenibilità.pdf",
-            "Analisi_Tecnica.docx",
-            "Presentazione.pptx",
-            "Business_Plan.pdf"
-    };
-    private String[] documentPreviews = {
-            "Soluzione IoT per monitorare consumi energetici urbani...",
-            "Analisi architetturale del sistema con tecnologie open source...",
-            "Slide riepilogative del progetto e risultati attesi...",
-            "Business model e piano economico per la realizzazione..."
-    };
+    private ArrayList<String> documentTitles;
+    private ArrayList<String> documentContents;
+    private ArrayList<String> documentComments;
+    private ArrayList<String> documentPreviews;
 
-    public ExnVoteGUI(Controller controller, JFrame callerFrame, String teamName) {
+    public ExAndVoteGUI(Controller controller, JFrame callerFrame, String teamName, String title, String location) {
         this.teamName = teamName;
+        this.title = title;
+        this.location = location;
+        this.controller = controller;
 
         frame = new JFrame("Esamina Team - " + teamName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,16 +40,39 @@ public class ExnVoteGUI {
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
+        // ===== DATI =====
+        documentTitles = new ArrayList<>();
+        documentContents = new ArrayList<>();
+        documentComments = new ArrayList<>();
+        try {
+            controller.getControllerTeam().controllerGetDocuments(teamName, title, location, documentTitles, documentContents, documentComments, false);
+        } catch (SQLException e) {
+            String error = e.getMessage();
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+        documentPreviews = new ArrayList<>();
+        for (String documentContent : documentContents) {
+            if (documentContent.length() >= 50) {
+                documentPreviews.add(documentContent.substring(0, 50) + "...");
+            } else {
+                documentPreviews.add(documentContent);
+            }
+        }
+
         // ===== LISTA DOCUMENTI =====
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
 
         documentGroup = new ButtonGroup();
-        documentButtons = new JRadioButton[documentNames.length];
+        documentButtons = new JRadioButton[documentTitles.size()];
 
-        for (int i = 0; i < documentNames.length; i++) {
-            JPanel card = createDocumentCard(documentNames[i], documentPreviews[i], i);
+        for (int i = 0; i < documentTitles.size(); i++) {
+            JPanel card = createDocumentCard(documentTitles.get(i), documentPreviews.get(i), i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -105,8 +128,17 @@ public class ExnVoteGUI {
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        frame.setContentPane(mainPanel);
-        frame.setVisible(true);
+        try {
+            frame.setContentPane(mainPanel);
+            frame.setVisible(true);
+            documentTitles.getFirst();
+        } catch (NoSuchElementException e) {
+            JOptionPane.showMessageDialog(frame,
+                    "Non ci sono documenti da esaminare!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            frame.dispose();
+            callerFrame.setVisible(true);
+        }
     }
 
     // ===== CREA CARD DOCUMENTO =====
@@ -157,14 +189,11 @@ public class ExnVoteGUI {
         return card;
     }
 
-
-
-
     // ===== APRE DOCUMENTO SELEZIONATO =====
     private void openSelectedDocument() {
         for (int i = 0; i < documentButtons.length; i++) {
             if (documentButtons[i].isSelected()) {
-                openDocumentPopup(documentNames[i], documentPreviews[i]);
+                openDocumentPopup(documentTitles.get(i), documentContents.get(i), documentComments.get(i));
                 return;
             }
         }
@@ -175,7 +204,7 @@ public class ExnVoteGUI {
     }
 
     // ===== POPUP DOCUMENTO =====
-    private void openDocumentPopup(String docName, String contentPreview) {
+    private void openDocumentPopup(String docName, String content, String comment) {
         JDialog dialog = new JDialog(frame, "Documento - " + docName, true);
         dialog.setSize(800, 500);
         dialog.setLocationRelativeTo(frame);
@@ -189,12 +218,7 @@ public class ExnVoteGUI {
 
         // --- Sezione documento ---
         JTextArea contentArea = new JTextArea();
-        contentArea.setText(
-                "Contenuto completo del documento \"" + docName + "\".\n\n"
-                        + contentPreview + "\n\n"
-                        + "[Questo è un esempio: qui verrebbe mostrato il testo vero e proprio "
-                        + "del file selezionato o una sua anteprima dettagliata.]"
-        );
+        contentArea.setText(content);
         contentArea.setFont(new Font("Arial", Font.PLAIN, 15));
         contentArea.setLineWrap(true);
         contentArea.setWrapStyleWord(true);
@@ -202,17 +226,18 @@ public class ExnVoteGUI {
         contentArea.setCaretPosition(0);
 
         JScrollPane contentScroll = new JScrollPane(contentArea);
-        contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto Documento"));
+        contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto documento"));
         contentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // --- Sezione commenti ---
         JTextArea commentArea = new JTextArea();
+        commentArea.setText(comment + "\n" + controller.getUser().getName() + " " + controller.getUser().getSurname() + ":\n");
         commentArea.setFont(new Font("Arial", Font.PLAIN, 15));
         commentArea.setLineWrap(true);
         commentArea.setWrapStyleWord(true);
 
         JScrollPane commentScroll = new JScrollPane(commentArea);
-        commentScroll.setBorder(BorderFactory.createTitledBorder("Il tuo commento"));
+        commentScroll.setBorder(BorderFactory.createTitledBorder("Commento attuale"));
         commentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         mainContent.add(contentScroll);
@@ -230,9 +255,22 @@ public class ExnVoteGUI {
         commentBtn.setPreferredSize(new Dimension(120, 35));
         commentBtn.setFocusPainted(false);
         commentBtn.addActionListener(e -> {
-            String comment = commentArea.getText();
-            // Logica di invio commento non implementata
-            dialog.dispose();
+            String newComment = commentArea.getText();
+            try {
+                controller.getControllerJudge().controllerExamineDocument(controller.getUser().getUsername(),
+                        docName, content, comment, teamName, title, location, newComment);
+                JOptionPane.showMessageDialog(frame,
+                        "Commento inserito correttamente!\n",
+                        "Successo", JOptionPane.INFORMATION_MESSAGE);
+                dialog.dispose();
+            } catch (SQLException ex) {
+                String error = ex.getMessage();
+                int idx = error.indexOf("\n");
+                error = error.substring(0, idx);
+                JOptionPane.showMessageDialog(frame,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         JButton closeBtn = new JButton("Chiudi");
@@ -283,13 +321,23 @@ public class ExnVoteGUI {
         okBtn.setPreferredSize(new Dimension(120, 35));
         okBtn.setFocusPainted(false);
         okBtn.addActionListener(e -> {
-            int selectedVote = (int) voteCombo.getSelectedItem();
-            dialog.dispose();
-
-            JOptionPane.showMessageDialog(frame,
-                    "Hai assegnato il voto " + selectedVote + " al team \"" + teamName + "\".",
-                    "Voto assegnato",
-                    JOptionPane.INFORMATION_MESSAGE);
+            try {
+                int selectedVote = (int) voteCombo.getSelectedItem();
+                controller.getControllerJudge().controllerGradeTeam(controller.getUser().getUsername(),
+                        teamName, title, location, selectedVote);
+                JOptionPane.showMessageDialog(frame,
+                        "Hai assegnato il voto " + selectedVote + " al team \"" + teamName + "\".",
+                        "Voto assegnato",
+                        JOptionPane.INFORMATION_MESSAGE);
+                dialog.dispose();
+            } catch (SQLException ex) {
+                String error = ex.getMessage();
+                int idx = error.indexOf("\n");
+                error = error.substring(0, idx);
+                JOptionPane.showMessageDialog(frame,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         JButton cancelBtn = new JButton("Annulla");

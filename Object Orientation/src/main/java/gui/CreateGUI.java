@@ -25,7 +25,7 @@ public class CreateGUI {
 
     public CreateGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Crea Hackathon");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 

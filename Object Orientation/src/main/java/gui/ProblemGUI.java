@@ -11,8 +11,6 @@ public class ProblemGUI {
     private String newDescription;
 
     public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
-
-
         frame = new JFrame("Problema - " + hackathonName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
@@ -103,7 +101,7 @@ public class ProblemGUI {
                         "Non è più possibile cambiare la descrizione",
                         "Errore", JOptionPane.ERROR_MESSAGE);
             }
-        });//TODO vero cambiamento
+        });
 
         bottomPanel.add(publishBtn);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);

@@ -84,7 +84,9 @@ public class JudgeImplementationDAO implements JudgeDAO {
                         "FROM Hackathon NATURAL JOIN Selezione " +
                         "WHERE id_giudice = (SELECT id_giudice " +
                                             "FROM Giudice " +
-                                            "WHERE username = ?);";
+                                            "WHERE username = ?) "/* +
+                            "AND data_inizio <= CURRENT_DATE " +
+                            "AND data_fine >= CURRENT_DATE;"*/;
         ps = connection.prepareStatement(query);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();
@@ -100,7 +102,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
     @Override
     public void getTeams(String title, String location, ArrayList<String> teamNames) throws SQLException {
         PreparedStatement ps;
-        String query = "SELECT nome " +
+        String query = "SELECT nome, numero_membri " +
                         "FROM Team NATURAL JOIN Hackathon " +
                         "WHERE titolo = ? AND sede = ?;";
         ps = connection.prepareStatement(query);
@@ -110,27 +112,6 @@ public class JudgeImplementationDAO implements JudgeDAO {
 
         while (rs.next()) {
             teamNames.add(rs.getString("nome"));
-        }
-        rs.close();
-    }
-
-    @Override
-    public void getDocuments(String teamName, String hackTitle, String location,
-                             ArrayList<String> docTitles, ArrayList<String> contents, ArrayList<String> comments) throws SQLException {
-        PreparedStatement ps;
-        String query = "SELECT d.titolo, d.contenuto, d.commento " +
-                        "FROM Documento d NATURAL JOIN Team t JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +
-                        "WHERE t.nome = ? AND h.titolo = ? AND h.sede = ?; ";
-        ps = connection.prepareStatement(query);
-        ps.setString(1, teamName);
-        ps.setString(2, hackTitle);
-        ps.setString(3, location);
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            docTitles.add(rs.getString("titolo"));
-            contents.add(rs.getString("contenuto"));
-            comments.add(rs.getString("commento"));
         }
         rs.close();
     }

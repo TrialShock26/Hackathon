@@ -21,7 +21,7 @@ public class Document {
     public String getTitle() {return title;}
     public String getContent() {return content;}
 
-    public String getComments() {return comment;}
+    public String getComment() {return comment;}
     public void setComment(String inComm) {
         if (comment == "Commento assente.") {comment = inComm;}
         else {comment = comment + "\n" + inComm;}
