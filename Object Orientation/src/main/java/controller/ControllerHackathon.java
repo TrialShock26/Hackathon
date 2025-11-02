@@ -14,6 +14,10 @@ public class ControllerHackathon {
     private ArrayList<Hackathon> closedHackathons;
     private ArrayList<Team> myScoreboard;
     private ArrayList<Double> myScores;
+    private ArrayList<Team> myRanking;
+    private ArrayList<Double> myRankingScores;
+    private String lastRankingTitle;
+    private ArrayList<Hackathon> overallHackathons;
 
     public void controllerOverallRanking(ArrayList<String> teamNames, ArrayList<Double> scores,
                                          ArrayList<String> titles, ArrayList<String> locations, boolean refreshing) throws SQLException {
@@ -22,44 +26,63 @@ public class ControllerHackathon {
 
                 myScoreboard = new ArrayList<>();
                 myScores = new ArrayList<>();
+                overallHackathons = new ArrayList<>();
                 HackathonDAO hackathon = new HackathonImplementationDAO();
                 hackathon.overallRanking(teamNames,scores,titles,locations);
 
                 for(int i = 0; i < teamNames.size(); i++){
                     myScoreboard.add(new Team(teamNames.get(i),null,null));
                     myScores.add(scores.get(i));
+                    overallHackathons.add(new Hackathon(titles.get(i),locations.get(i),0,null,null,
+                            null,null,0,0,null));
                 }
 
             } else {
-                for (int i = 0; i < teamNames.size(); i++) {
+                for (int i = 0; i < myScoreboard.size(); i++) {
                     teamNames.add(myScoreboard.get(i).getName());
                     scores.add(myScores.get(i));
+                    titles.add(overallHackathons.get(i).getTitle());
+                    locations.add(overallHackathons.get(i).getLocation());
+
                 }
             }
     }
 
     public void controllerScoreboard(String title, String location,
-                                     ArrayList<String> teamNames, ArrayList<Double> scores, boolean refreshing) throws SQLException{
+                                  ArrayList<String> teamNames, ArrayList<Double> scores,
+                                  boolean refreshing) throws SQLException {
 
-        if(myScoreboard == null || refreshing){
+        // se non ho mai caricato ranking oppure sto aggiornando manualmente
+        // oppure sto cambiando hackathon → ricarico dal DB
+        if (myRanking == null || refreshing ||
+                !title.equals(lastRankingTitle)) {
 
-            myScoreboard = new ArrayList<>();
-            myScores = new ArrayList<>();
-            HackathonDAO hackathon = new HackathonImplementationDAO();
-            hackathon.scoreboard(title, location, teamNames, scores);
+            System.out.println("DEBUG - Carico ranking da DB: " + title + ", refresh=" + refreshing);
 
-            for(int i = 0; i < teamNames.size(); i++){
-                myScoreboard.add(new Team(teamNames.get(i),null,null));
-                myScores.add(scores.get(i));
+            myRanking = new ArrayList<>();
+            myRankingScores = new ArrayList<>();
+            lastRankingTitle = title;
+
+            HackathonDAO hackathonDAO = new HackathonImplementationDAO();
+            hackathonDAO.scoreboard(title, location, teamNames, scores); // chiama la query
+
+            for (int i = 0; i < teamNames.size(); i++) {
+                myRanking.add(new Team(teamNames.get(i), null, null)); // o con membri se servono
+                myRankingScores.add(scores.get(i));
             }
+
         } else {
-            for(int i=0;i<teamNames.size();i++){
-                teamNames.add(myScoreboard.get(i).getName());
-                scores.add(myScores.get(i));
+            System.out.println("DEBUG - Uso ranking da cache: " + lastRankingTitle);
+            // svuoto le liste di output prima di riempirle
+            teamNames.clear();
+            scores.clear();
+
+            for (int i = 0; i < myRanking.size(); i++) {
+                teamNames.add(myRanking.get(i).getName());
+                scores.add(myRankingScores.get(i));
             }
         }
     }
-
     public void controllerGetAvailableHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
                                                    ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates,
                                                    ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,

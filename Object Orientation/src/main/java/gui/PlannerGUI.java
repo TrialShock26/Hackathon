@@ -34,15 +34,6 @@ public class PlannerGUI {
 
         this.controller = controller;
 
-        // --- PRIMO CARICAMENTO DATI ---
-        if(!loadHackathons( false)) {
-            JOptionPane.showMessageDialog(null,
-                    "Errore: Non sei un Organizzatore!",
-                    "Errore", JOptionPane.ERROR_MESSAGE);
-            callerFrame.setVisible(true);
-            return;
-        }
-
         frame = new JFrame("Gestisci");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -138,6 +129,14 @@ public class PlannerGUI {
 
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
+
+        if(!loadHackathons( false)) {
+            JOptionPane.showMessageDialog(null,
+                    "Errore: Non sei un Organizzatore!",
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+            callerFrame.setVisible(true);
+            frame.dispose();
+        }
     }
 
     // ====== RICARICA I DATI DAL DB ======

@@ -7,6 +7,8 @@ import controller.*;
 
 public class ProblemGUI {
     private JFrame frame;
+    private String oldDescription;
+    private String newDescription;
 
     public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
         frame = new JFrame("Problema - " + hackathonName);
@@ -42,10 +44,10 @@ public class ProblemGUI {
         problemDescriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
         problemDescriptionArea.setLineWrap(true);
         problemDescriptionArea.setWrapStyleWord(true);
-        problemDescriptionArea.setEditable(false);
+        problemDescriptionArea.setEditable(true);
         problemDescriptionArea.setBackground(Color.WHITE);
-
-        problemDescriptionArea.setText(problemDescription);
+        oldDescription = problemDescription;
+        problemDescriptionArea.setText(oldDescription);
 
         JScrollPane scrollPane = new JScrollPane(problemDescriptionArea);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
@@ -82,9 +84,10 @@ public class ProblemGUI {
         publishBtn.setFocusPainted(false);
         publishBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         publishBtn.addActionListener(e -> {
+            newDescription = problemDescriptionArea.getText().trim();
             if (problemDescription.equals("Descrizione assente.")) {
                 try {
-                    controller.getControllerJudge().controllerPublishProblem(hackathonName, location, problemDescription);
+                    controller.getControllerJudge().controllerSetProblemDescription(hackathonName, location, newDescription);
                 } catch (SQLException | IllegalAccessException ex) {
                     String error = ex.getMessage();
                     int idx = error.indexOf("\n");
@@ -98,7 +101,7 @@ public class ProblemGUI {
                         "Non è più possibile cambiare la descrizione",
                         "Errore", JOptionPane.ERROR_MESSAGE);
             }
-        });//TODO vero cambiamento
+        });
 
         bottomPanel.add(publishBtn);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
