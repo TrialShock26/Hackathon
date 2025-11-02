@@ -78,8 +78,6 @@ public class PlannerGUI {
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        populateHackathonList();
-
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(new Color(240, 240, 245));
@@ -137,6 +135,8 @@ public class PlannerGUI {
             callerFrame.setVisible(true);
             frame.dispose();
         }
+
+        populateHackathonList();
     }
 
     // ====== RICARICA I DATI DAL DB ======

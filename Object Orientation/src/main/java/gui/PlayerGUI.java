@@ -41,8 +41,6 @@ public class PlayerGUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
-
-
         JButton refreshBtn = new JButton("Aggiorna");
         refreshBtn.setPreferredSize(new Dimension(120, 35));
         refreshBtn.setBackground(new Color(70, 130, 180));
@@ -69,8 +67,6 @@ public class PlayerGUI {
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-        populateTeamList();
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -153,6 +149,9 @@ public class PlayerGUI {
             callerFrame.setVisible(true);
             frame.dispose();
         }
+
+        populateTeamList();
+
     }
 
     // ====== RICARICA I DATI DAL DB ======
