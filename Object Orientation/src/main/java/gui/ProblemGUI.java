@@ -87,7 +87,7 @@ public class ProblemGUI {
             newDescription = problemDescriptionArea.getText().trim();
             if (problemDescription.equals("Descrizione assente.")) {
                 try {
-                    controller.getControllerJudge().controllerSetProblemDescription(hackathonName, location, newDescription);
+                    controller.getControllerJudge().controllerPublishProblem(hackathonName, location, newDescription);
                 } catch (SQLException | IllegalAccessException ex) {
                     String error = ex.getMessage();
                     int idx = error.indexOf("\n");
