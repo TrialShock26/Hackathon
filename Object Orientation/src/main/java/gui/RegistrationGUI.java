@@ -25,7 +25,7 @@ public class RegistrationGUI {
 
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 

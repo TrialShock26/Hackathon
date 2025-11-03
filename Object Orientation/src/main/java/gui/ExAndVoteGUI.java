@@ -27,7 +27,7 @@ public class ExAndVoteGUI {
         this.controller = controller;
 
         frame = new JFrame("Esamina Team - " + teamName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -227,7 +227,7 @@ public class ExAndVoteGUI {
 
         JScrollPane contentScroll = new JScrollPane(contentArea);
         contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto documento"));
-        contentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        contentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // --- Sezione commenti ---
         JTextArea commentArea = new JTextArea();
@@ -238,7 +238,7 @@ public class ExAndVoteGUI {
 
         JScrollPane commentScroll = new JScrollPane(commentArea);
         commentScroll.setBorder(BorderFactory.createTitledBorder("Commento attuale"));
-        commentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        commentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         mainContent.add(contentScroll);
         mainContent.add(commentScroll);

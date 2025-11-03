@@ -10,10 +10,15 @@ import controller.ControllerPlanner;
 
 public class CreateGUI {
     private JFrame frame;
-    private JTextField titoloField, sedeField, durataField,
-            dataInizioField, dataFineField,
-            dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
-            maxIscrittiField, maxDimTeamField;
+    private JTextField titoloField;
+    private JTextField sedeField;
+    private JTextField durataField;
+    private JTextField dataInizioField;
+    private JTextField dataFineField;
+    private JTextField dataAperturaIscrizioniField;
+    private JTextField dataChiusuraIscrizioniField;
+    private JTextField maxIscrittiField;
+    private JTextField maxDimTeamField;
 
     private ArrayList<String> utenti = new ArrayList<>();
     private ArrayList<String> giudiciSelezionati = new ArrayList<>();
@@ -24,7 +29,7 @@ public class CreateGUI {
 
     public CreateGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Crea Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -78,7 +83,7 @@ public class CreateGUI {
         // ===== SCROLL =====
         JScrollPane scrollPane = new JScrollPane(formPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== BOTTOM =====

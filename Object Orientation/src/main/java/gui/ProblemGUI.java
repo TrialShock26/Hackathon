@@ -12,7 +12,7 @@ public class ProblemGUI {
 
     public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
         frame = new JFrame("Problema - " + hackathonName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
         frame.setLocationRelativeTo(null);
 

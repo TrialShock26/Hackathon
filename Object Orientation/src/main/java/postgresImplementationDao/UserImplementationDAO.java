@@ -20,7 +20,7 @@ public class UserImplementationDAO implements UserDAO {
     public String login(String username, String password) throws SQLException {
         String credentials = null;
         PreparedStatement query;
-        query = connection.prepareStatement("SELECT * FROM Utente WHERE username = ? AND password = ?");
+        query = connection.prepareStatement("SELECT nome, cognome FROM Utente WHERE username = ? AND password = ?");
         query.setString(1, username);
         query.setString(2, password);
         ResultSet rs = query.executeQuery();
