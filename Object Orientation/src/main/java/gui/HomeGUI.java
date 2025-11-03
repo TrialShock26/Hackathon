@@ -82,14 +82,14 @@ public class HomeGUI {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // ====== IMMAGINE ======
-//      ImageIcon imageIcon = new ImageIcon("C:\\Users\\TrialCock\\IdeaProjects\\Hackathon\\Object Orientation\\src\\main\\java\\gui\\unina-logo.jpg");
-//      Image image = imageIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
-//      imageIcon = new ImageIcon(image);
-//
-//      JLabel imageLabel = new JLabel(imageIcon);
-//      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//      centerPanel.add(imageLabel);
-//      TODO choosing image
+      ImageIcon imageIcon = new ImageIcon("Object Orientation/src/main/java/gui/logo.png");
+      Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+      imageIcon = new ImageIcon(image);
+
+      JLabel imageLabel = new JLabel(imageIcon);
+      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+      imageLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+      centerPanel.add(imageLabel);
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
