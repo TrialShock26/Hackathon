@@ -77,8 +77,8 @@ public class ResumeGUI {
 
         JScrollPane problemScroll = new JScrollPane(problemArea);
         problemScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        problemScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        problemScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        problemScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        problemScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         // Imposta preferenze iniziali ma lascia che cresca
         problemScroll.setPreferredSize(new Dimension(600, 100));
         problemScroll.setMinimumSize(new Dimension(600, 100));

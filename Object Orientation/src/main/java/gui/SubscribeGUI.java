@@ -11,7 +11,7 @@ public class SubscribeGUI {
         Controller controller = new Controller();
 
         frame = new JFrame("Registrazione Utente - HackathON");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
 

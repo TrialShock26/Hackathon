@@ -14,7 +14,7 @@ public class TeamMatesGUI {
 
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame("Partecipanti del Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 500);
         frame.setLocationRelativeTo(null);
 

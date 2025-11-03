@@ -43,7 +43,7 @@ public class ScoreboardGUI {
                 ? "Classifica - " + hackathonName
                 : "Classifica Globale");
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(750, 500);
         frame.setLocationRelativeTo(null);
 

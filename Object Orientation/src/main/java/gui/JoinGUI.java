@@ -16,7 +16,7 @@ public class JoinGUI {
 
     public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam, String currentTitle,String currentLocation) {
         frame = new JFrame("Cambia Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 

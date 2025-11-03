@@ -14,7 +14,7 @@ public class HomeGUI {
         Controller controller = new Controller();
 
         frame = new JFrame("Benvenut3 in HackathON!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(900, 600);
         frame.setLocationRelativeTo(null);
 
