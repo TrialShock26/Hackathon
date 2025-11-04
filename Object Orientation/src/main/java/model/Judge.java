@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un giudice che partecipa a un hackathon con il compito
@@ -72,7 +73,7 @@ public class Judge extends User {
      *
      * @return la lista delle selezioni
      */
-    public ArrayList<Selection> getSelections() {return mySelections;}
+    public List<Selection> getSelections() {return mySelections;}
 
     /**
      * Aggiunge una selezione alla lista di quelle assegnate al giudice.
@@ -86,5 +87,5 @@ public class Judge extends User {
      *
      * @return la lista delle valutazioni
      */
-    public ArrayList<Grade> getGradings() {return myGradings;}
+    public List<Grade> getGradings() {return myGradings;}
 }

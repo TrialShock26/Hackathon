@@ -7,6 +7,7 @@ import model.Hackathon;
 import model.Team;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Controller team.
@@ -52,8 +53,8 @@ public class ControllerTeam {
      * @throws SQLException the sql exception
      */
     public void controllerGetDocuments(String teamName, String title, String location,
-                                       ArrayList<String> documentTitles, ArrayList<String> documentContents,
-                                       ArrayList<String> documentComments, boolean refreshing) throws SQLException {
+                                       List<String> documentTitles, List<String> documentContents,
+                                       List<String> documentComments, boolean refreshing) throws SQLException {
         if (teams == null || refreshing) {
             TeamDAO teamDB = new TeamImplementationDAO();
             teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
@@ -102,5 +103,5 @@ public class ControllerTeam {
      *
      * @return the teams
      */
-    public ArrayList<Team> getTeams() {return teams;}
+    public List<Team> getTeams() {return teams;}
 }

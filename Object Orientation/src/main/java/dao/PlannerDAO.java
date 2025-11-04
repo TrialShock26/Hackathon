@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interfaccia Data Access Object per la gestione delle operazioni relative agli organizzatori.
@@ -70,10 +70,10 @@ public interface PlannerDAO {
      * @param maxTeamDim          lista da popolare con le dimensioni massime dei team
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<Long> periodsOfTime,
-                       ArrayList<String> problemDescriptions,ArrayList<Date> startDate, ArrayList<Date> endDate,
-                       ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
-                       ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException;
+    void getHackathons(String username, List<String> titles, List<String> locations, List<Long> periodsOfTime,
+                       List<String> problemDescriptions,List<Date> startDate, List<Date> endDate,
+                       List<Date> startSubDate, List<Date> endSubDate,
+                       List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException;
 
     /**
      * Recupera la lista di tutti gli utenti registrati nel sistema per procedere all'invito come giudice.
@@ -88,8 +88,8 @@ public interface PlannerDAO {
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     void getUsers(String planUser,
-                  ArrayList<String> allUsernames,
-                  ArrayList<String> allNames,
-                  ArrayList<String> allSurnames,
-                  ArrayList<String> allPasswords) throws SQLException;
+                  List<String> allUsernames,
+                  List<String> allNames,
+                  List<String> allSurnames,
+                  List<String> allPasswords) throws SQLException;
 }

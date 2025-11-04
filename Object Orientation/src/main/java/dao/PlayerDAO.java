@@ -1,7 +1,7 @@
 package dao;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interfaccia Data Access Object per la gestione delle operazioni relative ai giocatori.
@@ -46,7 +46,7 @@ public interface PlayerDAO {
      * @param teamNames lista da popolare con i nomi dei team del giocatore
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<String> teamNames) throws SQLException;
+    void getHackathons(String username, List<String> titles, List<String> locations, List<String> teamNames) throws SQLException;
 
     /**
      * Recupera la lista degli altri team partecipanti a un hackathon.
@@ -59,7 +59,7 @@ public interface PlayerDAO {
      * @param teamNames lista da popolare con i nomi degli altri team
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getOtherTeams(String username, String title, String location, ArrayList<String> teamNames) throws SQLException;
+    void getOtherTeams(String username, String title, String location, List<String> teamNames) throws SQLException;
 
     /**
      * Recupera la lista dei compagni di squadra di un giocatore.
@@ -74,5 +74,5 @@ public interface PlayerDAO {
      * @param surnames lista da popolare con i cognomi dei compagni di squadra
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getTeammates(String username, String teamName, String title, String location, ArrayList<String> names, ArrayList<String> surnames) throws SQLException;
+    void getTeammates(String username, String teamName, String title, String location, List<String> names, List<String> surnames) throws SQLException;
 }

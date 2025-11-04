@@ -7,6 +7,7 @@ import model.Player;
 import model.Team;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Controller player.
@@ -34,13 +35,13 @@ public class ControllerPlayer {
      * @param refreshing the refreshing
      * @throws SQLException the sql exception
      */
-    public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
-                                        ArrayList<String> teamNames,boolean refreshing) throws SQLException{
+    public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
+                                        List<String> teamNames,boolean refreshing) throws SQLException{
 
             if(myTeams == null || myHackathons == null || refreshing) {
 
-                myTeams = new ArrayList<Team>();
-                myHackathons = new ArrayList<Hackathon>();
+                myTeams = new ArrayList<>();
+                myHackathons = new ArrayList<>();
 
                 PlayerDAO player = new PlayerImplementationDAO();
 
@@ -74,7 +75,7 @@ public class ControllerPlayer {
      * @throws SQLException the sql exception
      */
     public void controllerGetOtherTeams(String username, String title, String location,
-                                        ArrayList<String> teamNames) throws SQLException {
+                                        List<String> teamNames) throws SQLException {
             PlayerDAO player = new PlayerImplementationDAO();
             player.getOtherTeams(username,title,location,teamNames);
     }
@@ -105,7 +106,7 @@ public class ControllerPlayer {
      * @throws SQLException the sql exception
      */
     public void controllerGetTeammates(String username, String teamName, String title, String location,
-                                   ArrayList<String> names, ArrayList<String> surnames) throws SQLException{
+                                       List<String> names, List<String> surnames) throws SQLException{
 
         if(myTeamMates == null) {
 

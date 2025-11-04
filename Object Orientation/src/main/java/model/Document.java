@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un documento generico all'interno del sistema.
@@ -74,7 +75,7 @@ public class Document {
      *
      * @return la lista di Judge.
      */
-    public ArrayList<Judge> getCommentators() {return commentators;}
+    public List<Judge> getCommentators() {return commentators;}
 
     /**
      * Aggiunge un giudice alla lista dei commentatori del documento.

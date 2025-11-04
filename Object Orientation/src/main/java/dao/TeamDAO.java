@@ -1,7 +1,7 @@
 package dao;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interfaccia Data Access Object per la gestione delle operazioni relative ai team.
@@ -37,5 +37,5 @@ public interface TeamDAO {
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     void getDocuments(String teamName, String hackTitle, String location,
-                      ArrayList<String> docTitles, ArrayList<String> contents, ArrayList<String> comments) throws SQLException;
+                      List<String> docTitles, List<String> contents, List<String> comments) throws SQLException;
 }

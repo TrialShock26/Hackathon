@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.JudgeDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link JudgeDAO} per la gestione dei dati
@@ -128,7 +128,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<String> problemDescriptions) throws SQLException {
+    public void getHackathons(String username, List<String> titles, List<String> locations, List<String> problemDescriptions) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede, descrizione_problema " +
                         "FROM Hackathon NATURAL JOIN Selezione " +
@@ -150,9 +150,9 @@ public class JudgeImplementationDAO implements JudgeDAO {
     }
 
     @Override
-    public void getTeams(String title, String location, ArrayList<String> teamNames) throws SQLException {
+    public void getTeams(String title, String location, List<String> teamNames) throws SQLException {
         PreparedStatement ps;
-        String query = "SELECT nome, numero_membri " +
+        String query = "SELECT nome " +
                         "FROM Team NATURAL JOIN Hackathon " +
                         "WHERE titolo = ? AND sede = ?;";
         ps = connection.prepareStatement(query);

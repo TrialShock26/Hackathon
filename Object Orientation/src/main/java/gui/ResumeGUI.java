@@ -22,7 +22,7 @@ public class ResumeGUI {
      */
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
         frame = new JFrame("Riepilogo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 

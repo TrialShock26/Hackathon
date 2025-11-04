@@ -93,7 +93,7 @@ public class Controller {
 
     /**
      * Ritorna l'oggetto User riferito alle credenziali di login.
-     *
+     * <p>
      * Questo riferimento non può essere mai nullo poiché l'accesso alla piattaforma garantisce l'esistenza di un oggetto.
      *
      * @return l'oggetto User dell'utente loggato.

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un gruppo di {@link Player} che partecipa a un {@link Hackathon}.
@@ -76,7 +77,7 @@ public class Team {
      *
      * @return la lista dei giocatori
      */
-    public ArrayList<Player> getPlayers() {return playerList;}
+    public List<Player> getPlayers() {return playerList;}
 
     /**
      * Aggiunge un nuovo {@link Player} al team e aggiorna il numero dei membri.
@@ -103,14 +104,14 @@ public class Team {
      *
      * @return la lista dei progressi
      */
-    public ArrayList<Document> getProgress () {return progressList;}
+    public List<Document> getProgress () {return progressList;}
 
     /**
      * Restituisce la lista delle {@link Grade} ricevute dal team.
      *
      * @return la lista delle valutazioni
      */
-    public ArrayList<Grade> getGrades() {return grades;}
+    public List<Grade> getGrades() {return grades;}
 
     /**
      * Aggiunge una nuova {@link Grade} alla lista delle valutazioni del team.

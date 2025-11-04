@@ -1,7 +1,6 @@
 package main;
 
 import gui.HomeGUI;
-
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 

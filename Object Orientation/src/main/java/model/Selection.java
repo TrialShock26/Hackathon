@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta il processo di selezione dei {@link Judge} da parte di un {@link Planner} per un determinato {@link Hackathon}.
@@ -45,7 +46,7 @@ public class Selection {
      *
      * @return la lista dei giudici
      */
-    public ArrayList<Judge> getJudges() {return judges;}
+    public List<Judge> getJudges() {return judges;}
 
     /**
      * Aggiunge un nuovo {@link Judge} alla lista dei giudici selezionati.

@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.PlayerDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link PlayerDAO} per la gestione dei dati
@@ -82,7 +82,7 @@ public class PlayerImplementationDAO implements PlayerDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations, ArrayList<String> teamNames) throws SQLException {
+    public void getHackathons(String username, List<String> titles, List<String> locations, List<String> teamNames) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede, nome " +
                        "FROM Hackathon NATURAL JOIN Team NATURAL JOIN Partecipazione " +
@@ -102,7 +102,7 @@ public class PlayerImplementationDAO implements PlayerDAO {
     }
 
     @Override
-    public void getOtherTeams(String username, String title, String location, ArrayList<String> teamNames) throws SQLException {
+    public void getOtherTeams(String username, String title, String location, List<String> teamNames) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT nome " +
                 "FROM Team NATURAL JOIN Hackathon " +
@@ -124,7 +124,7 @@ public class PlayerImplementationDAO implements PlayerDAO {
     }
 
     @Override
-    public void getTeammates(String username, String teamName, String title, String location, ArrayList<String> names, ArrayList<String> surnames) throws SQLException {
+    public void getTeammates(String username, String teamName, String title, String location, List<String> names, List<String> surnames) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT u.nome, cognome " +
                 "FROM Partecipante p NATURAL JOIN Partecipazione NATURAL JOIN Team t NATURAL JOIN Hackathon " +

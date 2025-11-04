@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interfaccia Data Access Object per la gestione delle operazioni comuni a tutti gli utenti.
@@ -51,7 +51,7 @@ public interface UserDAO {
      * @param maxTeamDim    lista da popolare con le dimensioni massime dei team
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
-                       ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates, ArrayList<Date> endSubDates,
-                       ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException;
+    void getHackathons(List<String> titles, List<String> locations, List<Integer> periodsOfTime,
+                       List<Date> startDates, List<Date> endDates, List<Date> startSubDates, List<Date> endSubDates,
+                       List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException;
 }

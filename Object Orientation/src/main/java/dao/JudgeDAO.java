@@ -1,7 +1,7 @@
 package dao;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interfaccia Data Access Object per la gestione delle operazioni relative ai giudici.
@@ -63,8 +63,8 @@ public interface JudgeDAO {
      * @param problemDescriptions lista da popolare con le descrizioni dei problemi
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
-                       ArrayList<String> problemDescriptions) throws SQLException;
+    void getHackathons(String username, List<String> titles, List<String> locations,
+                       List<String> problemDescriptions) throws SQLException;
 
     /**
      * Recupera la lista dei team partecipanti a uno specifico hackathon.
@@ -76,5 +76,5 @@ public interface JudgeDAO {
      * @param teamNames lista da popolare con i nomi dei team partecipanti
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getTeams(String title, String location, ArrayList<String> teamNames) throws SQLException;
+    void getTeams(String title, String location, List<String> teamNames) throws SQLException;
 }

@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.TeamDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link TeamDAO} per la gestione dei dati
@@ -55,7 +55,7 @@ public class TeamImplementationDAO implements TeamDAO {
 
     @Override
     public void getDocuments(String teamName, String hackTitle, String location,
-                             ArrayList<String> docTitles, ArrayList<String> contents, ArrayList<String> comments) throws SQLException {
+                             List<String> docTitles, List<String> contents, List<String> comments) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT d.titolo, d.contenuto, d.commento " +
                 "FROM Documento d NATURAL JOIN Team t JOIN Hackathon h ON t.id_hackathon = h.id_hackathon " +

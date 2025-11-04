@@ -4,7 +4,7 @@ import dao.JudgeDAO;
 import postgresImplementationDao.JudgeImplementationDAO;
 import model.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller per la gestione delle operazioni relative ai giudici.
@@ -35,8 +35,8 @@ public class ControllerJudge {
      * @throws SQLException           se si verifica un errore durante l'accesso al database
      * @throws IllegalAccessException se si verifica un errore di accesso illegale
      */
-    public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
-                                        ArrayList<String> problemDescriptions, boolean refreshing) throws SQLException, IllegalAccessException {
+    public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
+                                        List<String> problemDescriptions, boolean refreshing) throws SQLException, IllegalAccessException {
         if (controller.getJudge().getSelections().isEmpty() || refreshing) {
             JudgeDAO judgeDB = new JudgeImplementationDAO();
             judgeDB.getHackathons(username, titles, locations, problemDescriptions);
@@ -88,7 +88,7 @@ public class ControllerJudge {
      * @param refreshing true per forzare l'aggiornamento dal database, false per usare i dati in cache
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    public void controllerGetTeams(String title, String location, ArrayList<String> teamNames, boolean refreshing) throws SQLException {
+    public void controllerGetTeams(String title, String location, List<String> teamNames, boolean refreshing) throws SQLException {
         Hackathon h = findHackathon(title, location);
         if (h == null) {return;}
         if (refreshing || h.getTeams().isEmpty()) {

@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.UserDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link UserDAO} per la gestione dei dati
@@ -51,9 +51,9 @@ public class UserImplementationDAO implements UserDAO {
     }
 
     @Override
-    public void getHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
-                              ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates, ArrayList<Date> endSubDates,
-                              ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+    public void getHackathons(List<String> titles, List<String> locations, List<Integer> periodsOfTime,
+                              List<Date> startDates, List<Date> endDates, List<Date> startSubDates, List<Date> endSubDates,
+                              List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede, durata, data_inizio, data_fine, " +
                             "data_apertura_iscrizioni, data_chiusura_iscrizioni, " +

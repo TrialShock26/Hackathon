@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.HackathonDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link HackathonDAO} per la gestione dei dati
@@ -25,7 +25,7 @@ public class HackathonImplementationDAO implements HackathonDAO {
     }
 
     @Override
-    public void overallRanking(ArrayList<String> teamNames, ArrayList<Double> scores, ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
+    public void overallRanking(List<String> teamNames, List<Double> scores, List<String> titles, List<String> locations) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT nome_team, voto_finale, titolo, sede " +
                        "FROM overall_ranking NATURAL JOIN Hackathon;";
@@ -42,7 +42,7 @@ public class HackathonImplementationDAO implements HackathonDAO {
     }
 
     @Override
-    public void scoreboard(String title, String location, ArrayList<String> teamNames, ArrayList<Double> scores) throws SQLException {
+    public void scoreboard(String title, String location, List<String> teamNames, List<Double> scores) throws SQLException {
         connection.setAutoCommit(false);
         CallableStatement cs;
         String query = "{ ? = CALL scoreboard((SELECT id_hackathon " +
@@ -65,7 +65,7 @@ public class HackathonImplementationDAO implements HackathonDAO {
     }
 
     @Override
-    public void getClosedHackathons(ArrayList<String> titles, ArrayList<String> locations) throws SQLException {
+    public void getClosedHackathons(List<String> titles, List<String> locations) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede " +
                         "FROM Hackathon " +

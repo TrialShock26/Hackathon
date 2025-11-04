@@ -3,7 +3,7 @@ package postgresImplementationDao;
 import dao.PlannerDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementazione dell'interfaccia {@link PlannerDAO} per la gestione dei dati
@@ -100,9 +100,9 @@ public class PlannerImplementationDAO implements PlannerDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,ArrayList<Long> periodsOfTime
-                              ,ArrayList<String> problemDescriptions, ArrayList<Date> startDates, ArrayList<Date> endDates,ArrayList<Date> startSubDate,ArrayList<Date> endSubDate,
-                              ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+    public void getHackathons(String username, List<String> titles, List<String> locations, List<Long> periodsOfTime,
+                              List<String> problemDescriptions, List<Date> startDates, List<Date> endDates,List<Date> startSubDate,List<Date> endSubDate,
+                              List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede , durata, data_inizio, data_fine, descrizione_problema, " +
                 "data_apertura_iscrizioni, data_chiusura_iscrizioni, max_iscritti, max_dim_team " +
@@ -131,10 +131,10 @@ public class PlannerImplementationDAO implements PlannerDAO {
 
     @Override
     public void getUsers(String planUser,
-                         ArrayList<String> allUsernames,
-                         ArrayList<String> allNames,
-                         ArrayList<String> allSurnames,
-                         ArrayList<String> allPasswords) throws SQLException {
+                         List<String> allUsernames,
+                         List<String> allNames,
+                         List<String> allSurnames,
+                         List<String> allPasswords) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT * " +
                        "FROM Utente " +

@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un hackathon organizzato da un organizzatore.
@@ -173,7 +174,7 @@ public class Hackathon {
      *
      * @return l'elenco delle registrazioni
      */
-    public ArrayList<Registration> getRegisteredPlayers() {return registeredPlayers;}
+    public List<Registration> getRegisteredPlayers() {return registeredPlayers;}
 
     /**
      * Aggiunge una registrazione di un partecipante all'elenco
@@ -187,7 +188,7 @@ public class Hackathon {
      *
      * @return la lista dei {@code Team}
      */
-    public ArrayList<Team> getTeams() {return teams;}
+    public List<Team> getTeams() {return teams;}
 
     /**
      * Aggiunge una squadra alla lista delle squadre partecipanti.

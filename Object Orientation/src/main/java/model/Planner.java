@@ -3,6 +3,7 @@ package model;
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un organizzatore di hackathon.
@@ -77,12 +78,12 @@ public class Planner extends User {
      *
      * @return la lista degli hackathon creati
      */
-    public ArrayList<Hackathon> getHackathons() {return myHackathons;}
+    public List<Hackathon> getHackathons() {return myHackathons;}
 
     /**
      * Restituisce la lista delle selezioni gestite dall'organizzatore.
      *
      * @return la lista delle selezioni
      */
-    public ArrayList<Selection> getSelections() {return mySelections;}
+    public List<Selection> getSelections() {return mySelections;}
 }

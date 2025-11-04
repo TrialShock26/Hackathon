@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.sql.Date;
 
 /**
@@ -116,12 +117,12 @@ public class Player extends User {
      *
      * @return una lista di oggetti {@code Team}
      */
-    public ArrayList<Team> getTeams() {return myTeams;}
+    public List<Team> getTeams() {return myTeams;}
 
     /**
      * Restituisce la lista delle iscrizioni del partecipante agli hackathon.
      *
      * @return una lista di oggetti {@code Registration}
      */
-    public ArrayList<Registration> getSubscriptions() {return mySubscriptions;}
+    public List<Registration> getSubscriptions() {return mySubscriptions;}
 }

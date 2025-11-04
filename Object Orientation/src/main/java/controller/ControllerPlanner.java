@@ -6,6 +6,7 @@ import model.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Controller planner.
@@ -26,10 +27,10 @@ public class ControllerPlanner {
      * @param allPasswords the all passwords
      */
     public void controllerGetUsers(String planUser,
-                                   ArrayList<String> allUsernames,
-                                   ArrayList<String> allNames,
-                                   ArrayList<String> allSurnames,
-                                   ArrayList<String> allPasswords){
+                                   List<String> allUsernames,
+                                   List<String> allNames,
+                                   List<String> allSurnames,
+                                   List<String> allPasswords){
 
         try {
             PlannerDAO planner = new PlannerImplementationDAO();
@@ -56,11 +57,11 @@ public class ControllerPlanner {
      * @param refreshing          the refreshing
      * @throws SQLException the sql exception
      */
-    public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
-                                        ArrayList<Long> periodOftime, ArrayList<String> problemDescriptions,
-                                         ArrayList<Date> startDate, ArrayList<Date> endDate,
-                                        ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
-                                        ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,boolean refreshing) throws SQLException {
+    public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
+                                        List<Long> periodOftime, List<String> problemDescriptions,
+                                         List<Date> startDate, List<Date> endDate,
+                                        List<Date> startSubDate, List<Date> endSubDate,
+                                        List<Integer> maxPlayers, List<Integer> maxTeamDim,boolean refreshing) throws SQLException {
 
             if(myHackathons==null || refreshing){
                 myHackathons = new ArrayList<>();
@@ -153,7 +154,7 @@ public class ControllerPlanner {
      *
      * @return the my hackathons
      */
-    public ArrayList<Hackathon> getMyHackathons() {
+    public List<Hackathon> getMyHackathons() {
         return myHackathons;
     }
 }
