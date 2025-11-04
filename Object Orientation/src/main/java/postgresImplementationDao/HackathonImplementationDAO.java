@@ -5,10 +5,18 @@ import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione dell'interfaccia {@link HackathonDAO} per la gestione dei dati
+ * relativi agli hackathon nel database PostgreSQL.
+ */
 public class HackathonImplementationDAO implements HackathonDAO {
     private Connection connection;
 
-    public HackathonImplementationDAO() throws SQLException {
+    /**
+     * Costruisce un nuovo oggetto {@code HackathonImplementationDAO} e
+     * inizializza la connessione al database.
+     */
+    public HackathonImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
         } catch (SQLException e) {

@@ -7,11 +7,22 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Teams gui.
+ */
 public class TeamsGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup teamGroup;
 
+    /**
+     * Instantiates a new Teams gui.
+     *
+     * @param controller        the controller
+     * @param callerFrame       the caller frame
+     * @param selectedHackathon the selected hackathon
+     * @param location          the location
+     */
     public TeamsGUI(Controller controller, JFrame callerFrame, String selectedHackathon, String location) {
         frame = new JFrame("Seleziona Team");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

@@ -5,9 +5,17 @@ import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione dell'interfaccia {@link PlayerDAO} per la gestione dei dati
+ * relativi ai partecipanti nel database PostgreSQL.
+ */
 public class PlayerImplementationDAO implements PlayerDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code PlayerImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public PlayerImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
@@ -16,6 +24,18 @@ public class PlayerImplementationDAO implements PlayerDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param username il nome utente del giocatore da iscrivere
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void subscribe(String username, String title, String location) throws SQLException {
         CallableStatement cs;
@@ -32,6 +52,19 @@ public class PlayerImplementationDAO implements PlayerDAO {
         cs.execute();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param username il nome utente del giocatore che si unisce al team
+     * @param teamName il nome del team a cui unirsi
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void joinTeam(String username, String teamName, String title, String location) throws SQLException {
         CallableStatement cs;

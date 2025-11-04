@@ -7,6 +7,9 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Join gui.
+ */
 public class JoinGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -14,6 +17,15 @@ public class JoinGUI {
 
     private ArrayList<String> teamList = new ArrayList<>();
 
+    /**
+     * Instantiates a new Join gui.
+     *
+     * @param controller      the controller
+     * @param callerFrame     the caller frame
+     * @param currentTeam     the current team
+     * @param currentTitle    the current title
+     * @param currentLocation the current location
+     */
     public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam, String currentTitle,String currentLocation) {
         frame = new JFrame("Cambia Team");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

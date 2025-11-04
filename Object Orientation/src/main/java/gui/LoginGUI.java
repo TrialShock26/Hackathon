@@ -5,10 +5,16 @@ import java.awt.event.*;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Login gui.
+ */
 public class LoginGUI {
     private JPanel mainPanel;
     private JFrame frame;
 
+    /**
+     * Instantiates a new Login gui.
+     */
     public LoginGUI() {
         Controller controller = new Controller();
 

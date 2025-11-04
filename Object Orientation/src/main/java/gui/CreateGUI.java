@@ -8,6 +8,9 @@ import java.sql.Date;
 import controller.Controller;
 import controller.ControllerPlanner;
 
+/**
+ * The type Create gui.
+ */
 public class CreateGUI {
     private JFrame frame;
     private JTextField titoloField;
@@ -27,6 +30,12 @@ public class CreateGUI {
     private ArrayList<String> surnames = new ArrayList<>();
     private ArrayList<String> passwords = new ArrayList<>();
 
+    /**
+     * Instantiates a new Create gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public CreateGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Crea Hackathon");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

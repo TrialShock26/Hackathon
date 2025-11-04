@@ -5,11 +5,17 @@ import java.awt.*;
 import java.awt.event.*;
 import controller.*;
 
+/**
+ * The type Home gui.
+ */
 public class HomeGUI {
     private JFrame frame;
     private JButton loginButton;
     private JButton subscribeButton;
 
+    /**
+     * Instantiates a new Home gui.
+     */
     public HomeGUI() {
         Controller controller = new Controller();
 

@@ -8,6 +8,9 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Planner gui.
+ */
 public class PlannerGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -28,6 +31,12 @@ public class PlannerGUI {
 
     private Controller controller;
 
+    /**
+     * Instantiates a new Planner gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
         this.controller = controller;
