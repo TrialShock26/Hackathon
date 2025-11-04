@@ -4,9 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import controller.Controller;
 
+/**
+ * The type Subscribe gui.
+ */
 public class SubscribeGUI {
     private JFrame frame;
 
+    /**
+     * Instantiates a new Subscribe gui.
+     *
+     * @param homeFrame the home frame
+     */
     public SubscribeGUI(JFrame homeFrame) {
         Controller controller = new Controller();
 

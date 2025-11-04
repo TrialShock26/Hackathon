@@ -6,10 +6,20 @@ import javax.swing.*;
 import controller.*;
 import model.*;
 
+/**
+ * The type Resume gui.
+ */
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
 
+    /**
+     * Instantiates a new Resume gui.
+     *
+     * @param controller    the controller
+     * @param callerFrame   the caller frame
+     * @param hackathonName the hackathon name
+     */
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
         frame = new JFrame("Riepilogo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

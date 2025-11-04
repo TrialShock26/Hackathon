@@ -7,6 +7,9 @@ import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Ex and vote gui.
+ */
 public class ExAndVoteGUI {
     private JFrame frame;
     private Controller controller;
@@ -20,6 +23,15 @@ public class ExAndVoteGUI {
     private ArrayList<String> documentComments;
     private ArrayList<String> documentPreviews;
 
+    /**
+     * Instantiates a new Ex and vote gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     * @param teamName    the team name
+     * @param title       the title
+     * @param location    the location
+     */
     public ExAndVoteGUI(Controller controller, JFrame callerFrame, String teamName, String title, String location) {
         this.teamName = teamName;
         this.title = title;

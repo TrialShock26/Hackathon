@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import controller.Controller;
 
+/**
+ * The type Ranking gui.
+ */
 public class RankingGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -16,6 +19,12 @@ public class RankingGUI {
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
 
+    /**
+     * Instantiates a new Ranking gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public RankingGUI(Controller controller, JFrame callerFrame) {
 
         // --- PRIMO CARICAMENTO DATI ---

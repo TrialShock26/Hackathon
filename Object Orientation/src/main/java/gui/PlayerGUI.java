@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Player gui.
+ */
 public class PlayerGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -19,6 +22,12 @@ public class PlayerGUI {
 
     private Controller controller;
 
+    /**
+     * Instantiates a new Player gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public PlayerGUI(Controller controller, JFrame callerFrame) {
 
         this.controller =  controller;

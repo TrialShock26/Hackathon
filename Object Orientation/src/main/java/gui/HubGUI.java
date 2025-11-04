@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import controller.*;
 
+/**
+ * The type Hub gui.
+ */
 public class HubGUI {
     private JFrame frame;
     private JPanel hubPanel;
@@ -17,6 +20,11 @@ public class HubGUI {
     private JLabel title;
     private JLabel subtitle;
 
+    /**
+     * Instantiates a new Hub gui.
+     *
+     * @param controller the controller
+     */
     public HubGUI(Controller controller) {
 
         frame = new JFrame("HackathON - HUB");

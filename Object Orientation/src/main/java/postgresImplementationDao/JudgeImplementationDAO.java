@@ -5,9 +5,17 @@ import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione dell'interfaccia {@link JudgeDAO} per la gestione dei dati
+ * relativi ai giudici nel database PostgreSQL.
+ */
 public class JudgeImplementationDAO implements JudgeDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code JudgeImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public JudgeImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
@@ -16,6 +24,18 @@ public class JudgeImplementationDAO implements JudgeDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param text     il testo della descrizione del problema da pubblicare
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void publishProblem(String text, String title, String location) throws SQLException {
         CallableStatement cs;
@@ -32,6 +52,22 @@ public class JudgeImplementationDAO implements JudgeDAO {
         cs.execute();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param username  il nome utente del giudice che esamina il documento
+     * @param docTitle  il titolo del documento da esaminare
+     * @param content   il contenuto del documento
+     * @param teamName  il nome del team proprietario del documento
+     * @param hackTitle il titolo dell'hackathon
+     * @param location  la sede dell'hackathon
+     * @param text      il commento del giudice sul documento
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void examineDocument(String username, String docTitle, String content,
                                 String teamName, String hackTitle, String location, String text) throws SQLException {
@@ -57,6 +93,20 @@ public class JudgeImplementationDAO implements JudgeDAO {
         ps.executeUpdate();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param username il nome utente del giudice che assegna la valutazione
+     * @param teamName il nome del team da valutare
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @param value    il punteggio da assegnare al team
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void gradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
         CallableStatement cs;

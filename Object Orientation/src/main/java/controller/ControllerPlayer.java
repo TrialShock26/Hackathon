@@ -1,4 +1,4 @@
-package controller;
+package controller; //TODO javadoc
 
 import dao.PlayerDAO;
 import postgresImplementationDao.PlayerImplementationDAO;
@@ -8,14 +8,32 @@ import model.Team;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * The type Controller player.
+ */
 public class ControllerPlayer {
     private Controller controller;
     private ArrayList<Hackathon> myHackathons;
     private ArrayList<Team> myTeams;
     private ArrayList<Player> myTeamMates;
 
+    /**
+     * Instantiates a new Controller player.
+     *
+     * @param controller the controller
+     */
     public ControllerPlayer(Controller controller) {this.controller = controller;}
 
+    /**
+     * Controller get hackathons.
+     *
+     * @param username   the username
+     * @param titles     the titles
+     * @param locations  the locations
+     * @param teamNames  the team names
+     * @param refreshing the refreshing
+     * @throws SQLException the sql exception
+     */
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
                                         ArrayList<String> teamNames,boolean refreshing) throws SQLException{
 
@@ -46,17 +64,46 @@ public class ControllerPlayer {
 
     }
 
+    /**
+     * Controller get other teams.
+     *
+     * @param username  the username
+     * @param title     the title
+     * @param location  the location
+     * @param teamNames the team names
+     * @throws SQLException the sql exception
+     */
     public void controllerGetOtherTeams(String username, String title, String location,
                                         ArrayList<String> teamNames) throws SQLException {
             PlayerDAO player = new PlayerImplementationDAO();
             player.getOtherTeams(username,title,location,teamNames);
     }
 
+    /**
+     * Controller join team.
+     *
+     * @param username the username
+     * @param teamName the team name
+     * @param title    the title
+     * @param location the location
+     * @throws SQLException the sql exception
+     */
     public void controllerJoinTeam(String username, String teamName, String title, String location) throws SQLException {
             PlayerDAO player = new PlayerImplementationDAO();
             player.joinTeam(username,teamName,title,location);
     }
 
+    /**
+     * Controller get teammates.
+     *
+     * @param username the username
+     * @param teamName the team name
+     * @param title    the title
+     * @param location the location
+     * @param names    the names
+     * @param surnames the surnames
+     * @throws SQLException the sql exception
+     */
     public void controllerGetTeammates(String username, String teamName, String title, String location,
                                    ArrayList<String> names, ArrayList<String> surnames) throws SQLException{
 
@@ -79,6 +126,14 @@ public class ControllerPlayer {
         }
     }
 
+    /**
+     * Subscribe.
+     *
+     * @param username the username
+     * @param title    the title
+     * @param location the location
+     * @throws SQLException the sql exception
+     */
     public void subscribe(String username, String title, String location) throws SQLException {
         PlayerDAO player = new PlayerImplementationDAO();
         player.subscribe(username, title, location);

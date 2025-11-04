@@ -5,9 +5,17 @@ import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione dell'interfaccia {@link UserDAO} per la gestione dei dati
+ * relativi ai giudici nel database PostgreSQL.
+ */
 public class UserImplementationDAO implements UserDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code TeamImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public UserImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();

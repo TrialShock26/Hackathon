@@ -5,9 +5,17 @@ import database.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Implementazione dell'interfaccia {@link TeamDAO} per la gestione dei dati
+ * relativi ai giudici nel database PostgreSQL.
+ */
 public class TeamImplementationDAO implements TeamDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code TeamImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public TeamImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
@@ -16,6 +24,20 @@ public class TeamImplementationDAO implements TeamDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati.
+     *
+     * @param teamName  il nome del team che pubblica il documento
+     * @param hackTitle il titolo dell'hackathon
+     * @param location  la sede dell'hackathon
+     * @param docTitle  il titolo del documento da pubblicare
+     * @param content   il contenuto del documento
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void publishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
         CallableStatement cs;

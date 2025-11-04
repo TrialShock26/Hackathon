@@ -5,11 +5,23 @@ import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type My team gui.
+ */
 public class MyTeamGUI {
     private JFrame frame;
     private JTextArea textArea;
     private JTextField titleField;
 
+    /**
+     * Instantiates a new My team gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     * @param teamName    the team name
+     * @param hackTitle   the hack title
+     * @param location    the location
+     */
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

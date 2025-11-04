@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import controller.Controller;
 
+/**
+ * The type Scoreboard gui.
+ */
 public class ScoreboardGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -25,6 +28,14 @@ public class ScoreboardGUI {
     private ArrayList<String> locations = new ArrayList<>();
 
 
+    /**
+     * Instantiates a new Scoreboard gui.
+     *
+     * @param controller    the controller
+     * @param callerFrame   the caller frame
+     * @param hackathonName the hackathon name
+     * @param location      the location
+     */
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
         this.controller = controller;
         this.hackathonName = hackathonName;
