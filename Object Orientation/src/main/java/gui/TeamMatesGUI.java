@@ -12,6 +12,7 @@ public class TeamMatesGUI {
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> surnames = new ArrayList<>();
 
+
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame("Partecipanti del Team");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,21 +35,15 @@ public class TeamMatesGUI {
 
         // ====== RECUPERA I PARTECIPANTI ======
         try{
-            controller.getControllerPlayer().controllerGetTeammates(controller.getUser().getUsername(), teamName, hackTitle, location, names, surnames);
+            controller.getControllerPlayer().controllerGetTeammates(controller.getUser().getUsername(),
+                    teamName, hackTitle, location, names, surnames);
         } catch (SQLException e){
             System.out.println(e.getMessage());
         }
 
-        int size = Math.min(names.size(), surnames.size());
-        String[][] participants = new String[size][2];
-
-        for (int i = 0; i < size; i++) {
-            participants[i][0] = names.get(i);
-            participants[i][1] = surnames.get(i);
-        }
-
         // ====== LABEL NUMERO MEMBRI ======
-        JLabel countLabel = new JLabel("Membri totali: " + size);
+        //numero di nomi = di partecipanti + 1 (myself)
+        JLabel countLabel = new JLabel("Membri totali: " + (names.size()+1), SwingConstants.CENTER);
         countLabel.setFont(new Font("Arial", Font.BOLD, 16));
         countLabel.setForeground(new Color(60, 100, 170));
         countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -63,17 +58,24 @@ public class TeamMatesGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        for (String[] participant : participants) {
-            String fullName = participant[0] + " " + participant[1];
-            JPanel card = createParticipantCard(fullName);
+        JPanel card_myself = createParticipantCard(controller.getUser().getName() + " " +
+                controller.getUser().getSurname() + " (Tu)");
+
+        for (int i = 0;i < names.size();i++) {
+            JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i));
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         }
 
+        //aggiunta dell'utente stesso tra i partecipanti del team
+        //solo a livello di presentazione, non è stato quindi aggiunto all'insieme di partecipanti nel controller
+
+        listPanel.add(card_myself);
+
         // Calcola altezza dinamica
         int cardHeight = 50;
         int gap = 8;
-        int totalHeight = size * (cardHeight + gap) + 20;
+        int totalHeight = names.size() * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(500, Math.max(totalHeight, 300)));
 
         JScrollPane scrollPane = new JScrollPane(listPanel);

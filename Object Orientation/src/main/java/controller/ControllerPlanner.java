@@ -8,20 +8,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ControllerPlanner {
-    ArrayList<Hackathon> myHackathons;
+
+    private Controller controller;
+
+    public ControllerPlanner(Controller controller) {this.controller = controller;}
 
     public void controllerGetUsers(String planUser,
                                    ArrayList<String> allUsernames,
                                    ArrayList<String> allNames,
                                    ArrayList<String> allSurnames,
-                                   ArrayList<String> allPasswords){
+                                   ArrayList<String> allPasswords) throws SQLException {
 
-        try {
-            PlannerDAO planner = new PlannerImplementationDAO();
-            planner.getUsers(planUser, allUsernames, allNames, allSurnames, allPasswords);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        PlannerDAO planner = new PlannerImplementationDAO();
+
+        planner.getUsers(planUser, allUsernames, allNames, allSurnames, allPasswords);
+
     }
 
     public void controllerGetHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,
@@ -30,22 +31,22 @@ public class ControllerPlanner {
                                         ArrayList<Date> startSubDate, ArrayList<Date> endSubDate,
                                         ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,boolean refreshing) throws SQLException {
 
-            if(myHackathons==null || refreshing){
-                myHackathons = new ArrayList<>();
+
+            if(controller.getPlanner().getHackathons().isEmpty() || refreshing){
                 PlannerDAO planner = new PlannerImplementationDAO();
                 planner.getHackathons(username, titles, locations,periodOftime,problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
                 for(int i=0;i<titles.size();i++){
-                    myHackathons.add(new Hackathon(titles.get(i),locations.get(i),periodOftime.get(i),
+                    controller.getPlanner().getHackathons().add(new Hackathon(titles.get(i),locations.get(i),periodOftime.get(i),
                             startDate.get(i),endDate.get(i),startSubDate.get(i),
                             endSubDate.get(i),maxPlayers.get(i),maxTeamDim.get(i),null));
                     try{
-                        myHackathons.get(i).setProblemDescription(problemDescriptions.get(i));
+                        controller.getPlanner().getHackathons().get(i).setProblemDescription(problemDescriptions.get(i));
                     } catch(Exception e){
                         System.out.println(e.getMessage());
                     }
                 }
             }else{
-                for (Hackathon myHackathon : myHackathons) {
+                for (Hackathon myHackathon : controller.getPlanner().getHackathons()) {
                     titles.add(myHackathon.getTitle());
                     locations.add(myHackathon.getLocation());
                     periodOftime.add(myHackathon.getPeriodOfTime());
@@ -58,7 +59,6 @@ public class ControllerPlanner {
                     maxTeamDim.add(myHackathon.getMaxTeamDim());
                 }
             }
-
     }
 
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
@@ -87,7 +87,4 @@ public class ControllerPlanner {
     }
 
 
-    public ArrayList<Hackathon> getMyHackathons() {
-        return myHackathons;
-    }
 }

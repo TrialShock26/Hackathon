@@ -87,7 +87,7 @@ public class Controller {
         return controllerHackathon;
     }
     public ControllerPlanner getControllerPlanner() {
-        if (controllerPlanner == null) {controllerPlanner = new ControllerPlanner();}
+        if (controllerPlanner == null) {controllerPlanner = new ControllerPlanner(this);}
         return controllerPlanner;
     }
     public ControllerPlayer getControllerPlayer() {

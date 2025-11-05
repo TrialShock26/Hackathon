@@ -15,16 +15,12 @@ public class ControllerTeam {
 
     public ControllerTeam(Controller controller) {this.controller = controller;}
 
-    public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) {
-        try{
+    public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException{
 
-            TeamDAO teamController = new TeamImplementationDAO();
+        TeamDAO teamController = new TeamImplementationDAO();
 
-            teamController.publishProgress(teamName,hackTitle,location,docTitle,content);
+        teamController.publishProgress(teamName,hackTitle,location,docTitle,content);
 
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
     }
 
     public void controllerGetDocuments(String teamName, String title, String location,

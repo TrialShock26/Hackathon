@@ -11,7 +11,8 @@ import controller.ControllerPlanner;
 
 public class CreateGUI {
     private JFrame frame;
-    private JTextField titoloField, sedeField, durataField,
+    private Controller controller;
+    private JTextField titoloField, sedeField,
             dataInizioField, dataFineField,
             dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
             maxIscrittiField, maxDimTeamField;
@@ -24,6 +25,7 @@ public class CreateGUI {
     private ArrayList<String> passwords = new ArrayList<>();
 
     public CreateGUI(Controller controller, JFrame callerFrame) {
+        this.controller = controller;
         frame = new JFrame("Crea Hackathon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -55,7 +57,6 @@ public class CreateGUI {
 
         titoloField = creaCampo(formPanel, gbc, y++, "Titolo:");
         sedeField = creaCampo(formPanel, gbc, y++, "Sede:");
-        durataField = creaCampo(formPanel, gbc, y++, "Durata:");
         dataInizioField = creaCampo(formPanel, gbc, y++, "Data Inizio (YYYY-MM-DD):");
         dataFineField = creaCampo(formPanel, gbc, y++, "Data Fine (YYYY-MM-DD):");
         dataAperturaIscrizioniField = creaCampo(formPanel, gbc, y++, "Apertura Iscrizioni (YYYY-MM-DD):");
@@ -104,7 +105,7 @@ public class CreateGUI {
         centerPanel.setBackground(new Color(240, 240, 245));
 
         JButton salvaButton = creaPulsante("Salva", new Color(34, 139, 34));
-        salvaButton.addActionListener(e -> salvaHackathon(controller, callerFrame));
+        salvaButton.addActionListener(e -> salvaHackathon(callerFrame));
         centerPanel.add(salvaButton);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
@@ -138,10 +139,9 @@ public class CreateGUI {
         return btn;
     }
 
-    private void salvaHackathon(Controller controller, JFrame callerFrame) {
+    private void salvaHackathon(JFrame callerFrame) {
         if (titoloField.getText().isEmpty() ||
                 sedeField.getText().isEmpty() ||
-                durataField.getText().isEmpty() ||
                 dataInizioField.getText().isEmpty() ||
                 dataFineField.getText().isEmpty() ||
                 dataAperturaIscrizioniField.getText().isEmpty() ||
@@ -187,8 +187,12 @@ public class CreateGUI {
     }
 
     private void mostraDialogSelezioneGiudici() {
-        ControllerPlanner planner = new ControllerPlanner();
-        planner.controllerGetUsers("mario.rossi", utenti, names, surnames, passwords);
+
+        try{
+            controller.getControllerPlanner().controllerGetUsers(controller.getUser().getUsername(),utenti,names,surnames,passwords);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+        }
 
         JDialog dialog = new JDialog(frame, "Seleziona Giudici", true);
         dialog.setSize(300, 250);

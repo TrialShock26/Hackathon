@@ -60,7 +60,7 @@ public class ScoreboardGUI {
 
         JLabel titleLabel = new JLabel(
                 hackathonName != null
-                        ? "Classifica Hackathon: " + hackathonName
+                        ? "Classifica: " + hackathonName
                         : "Classifica Globale",
                 SwingConstants.CENTER
         );
@@ -125,7 +125,6 @@ public class ScoreboardGUI {
         titles.clear();
         locations.clear();
 
-        System.out.println("DEBUG - Carico scoreboard: " + hackathonName + ", refresh=" + refreshing);
 
         try {
             if (hackathonName != null) {
@@ -141,7 +140,6 @@ public class ScoreboardGUI {
             isCorrect = false;
         }
 
-        System.out.println("DEBUG - Squadre trovate: " + teams.size());
         return isCorrect;
     }
 

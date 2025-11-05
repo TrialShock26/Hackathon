@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.*;
+import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
@@ -140,7 +141,11 @@ public class MyTeamGUI {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
 
-                controller.getControllerTeam().controllerPublishProgress(teamName,hackTitle,location,title,text);
+                try {
+                    controller.getControllerTeam().controllerPublishProgress(teamName, hackTitle, location, title, text);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.WARNING_MESSAGE);
+                }
 
                 JOptionPane.showMessageDialog(frame,
                         "Documento \"" + title + "\" pubblicato con successo!",
