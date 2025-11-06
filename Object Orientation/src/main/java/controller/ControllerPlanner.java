@@ -5,7 +5,6 @@ import postgresImplementationDao.PlannerImplementationDAO;
 import model.*;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,12 +29,9 @@ public class ControllerPlanner {
                                    List<String> allUsernames,
                                    List<String> allNames,
                                    List<String> allSurnames,
-                                   List<String> allPasswords){
-
+                                   List<String> allPasswords) throws SQLException{
         PlannerDAO planner = new PlannerImplementationDAO();
-
         planner.getUsers(planUser, allUsernames, allNames, allSurnames, allPasswords);
-
     }
 
     /**
@@ -109,11 +105,8 @@ public class ControllerPlanner {
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
                                         Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
                                         String planUsername , String judgesUsernames) throws SQLException{
-
         PlannerDAO planner = new PlannerImplementationDAO();
-
         planner.openHackathon(title,location,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim,planUsername,judgesUsernames);
-
     }
 
     /**
@@ -124,11 +117,8 @@ public class ControllerPlanner {
      * @throws SQLException the sql exception
      */
     public void controllerStartHackathon(String title, String location) throws SQLException {
-
         PlannerDAO planner = new PlannerImplementationDAO();
-
         planner.startHackathon(title,location);
-
     }
 
     /**
@@ -139,19 +129,7 @@ public class ControllerPlanner {
      * @throws SQLException the sql exception
      */
     public void controllerEndHackathon(String title, String location) throws  SQLException{
-
         PlannerDAO planner = new PlannerImplementationDAO();
-
         planner.endHackathon(title,location);
-    }
-
-
-    /**
-     * Gets my hackathons.
-     *
-     * @return the my hackathons
-     */
-    public List<Hackathon> getMyHackathons() {
-        return myHackathons;
     }
 }
