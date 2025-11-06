@@ -7,6 +7,9 @@ import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Ex and vote gui.
+ */
 public class ExAndVoteGUI {
     private JFrame frame;
     private Controller controller;
@@ -20,6 +23,15 @@ public class ExAndVoteGUI {
     private ArrayList<String> documentComments;
     private ArrayList<String> documentPreviews;
 
+    /**
+     * Instantiates a new Ex and vote gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     * @param teamName    the team name
+     * @param title       the title
+     * @param location    the location
+     */
     public ExAndVoteGUI(Controller controller, JFrame callerFrame, String teamName, String title, String location) {
         this.teamName = teamName;
         this.title = title;
@@ -27,7 +39,7 @@ public class ExAndVoteGUI {
         this.controller = controller;
 
         frame = new JFrame("Esamina Team - " + teamName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -227,7 +239,7 @@ public class ExAndVoteGUI {
 
         JScrollPane contentScroll = new JScrollPane(contentArea);
         contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto documento"));
-        contentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        contentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         // --- Sezione commenti ---
         JTextArea commentArea = new JTextArea();
@@ -238,7 +250,7 @@ public class ExAndVoteGUI {
 
         JScrollPane commentScroll = new JScrollPane(commentArea);
         commentScroll.setBorder(BorderFactory.createTitledBorder("Commento attuale"));
-        commentScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        commentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         mainContent.add(contentScroll);
         mainContent.add(commentScroll);

@@ -1,21 +1,28 @@
 package gui;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
-import model.*;
+import model.Hackathon;
 
+/**
+ * The type Resume gui.
+ */
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
 
+    /**
+     * Instantiates a new Resume gui.
+     *
+     * @param controller    the controller
+     * @param callerFrame   the caller frame
+     * @param hackathonName the hackathon name
+     */
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
         frame = new JFrame("Riepilogo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -43,7 +50,8 @@ public class ResumeGUI {
 
         Hackathon selectedHackathon =  null;
 
-        for (Hackathon h : controller.getControllerPlanner().getMyHackathons()) {
+
+        for (Hackathon h : controller.getPlanner().getHackathons()) {
             if (h.getTitle().equals(hackathonName)) {
                 selectedHackathon = h;
             }
@@ -66,7 +74,6 @@ public class ResumeGUI {
         contentPanel.add(problemLabel);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-
         JTextArea problemArea = new JTextArea(selectedHackathon.getProblemDescription());
         problemArea.setFont(new Font("Arial", Font.PLAIN, 14));
         problemArea.setLineWrap(true);
@@ -80,8 +87,8 @@ public class ResumeGUI {
 
         JScrollPane problemScroll = new JScrollPane(problemArea);
         problemScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
-        problemScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        problemScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        problemScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        problemScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         // Imposta preferenze iniziali ma lascia che cresca
         problemScroll.setPreferredSize(new Dimension(600, 100));
         problemScroll.setMinimumSize(new Dimension(600, 100));

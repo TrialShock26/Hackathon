@@ -5,16 +5,22 @@ import java.awt.*;
 import java.awt.event.*;
 import controller.*;
 
+/**
+ * The type Home gui.
+ */
 public class HomeGUI {
     private JFrame frame;
     private JButton loginButton;
     private JButton subscribeButton;
 
+    /**
+     * Instantiates a new Home gui.
+     */
     public HomeGUI() {
         Controller controller = new Controller();
 
         frame = new JFrame("Benvenut3 in HackathON!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(900, 600);
         frame.setLocationRelativeTo(null);
 
@@ -63,7 +69,7 @@ public class HomeGUI {
         loginButton = createStyledButton("Login", new Color(65, 105, 225), new Color(40, 75, 190));
         loginButton.addActionListener(e -> {
             frame.setVisible(false);
-            new LoginGUI(frame);
+            new LoginGUI();
         });
 
         // Pulsante Registrati
@@ -82,14 +88,14 @@ public class HomeGUI {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // ====== IMMAGINE ======
-//      ImageIcon imageIcon = new ImageIcon("C:\\Users\\TrialCock\\IdeaProjects\\Hackathon\\Object Orientation\\src\\main\\java\\gui\\unina-logo.jpg");
-//      Image image = imageIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
-//      imageIcon = new ImageIcon(image);
-//
-//      JLabel imageLabel = new JLabel(imageIcon);
-//      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//      centerPanel.add(imageLabel);
-//      TODO choosing image
+      ImageIcon imageIcon = new ImageIcon("Object Orientation/src/main/java/gui/logo.png");
+      Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+      imageIcon = new ImageIcon(image);
+
+      JLabel imageLabel = new JLabel(imageIcon);
+      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+      imageLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+      centerPanel.add(imageLabel);
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));

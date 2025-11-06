@@ -3,18 +3,26 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.sql.Date;
 import controller.Controller;
 import controller.ControllerPlanner;
 
+/**
+ * The type Create gui.
+ */
 public class CreateGUI {
     private JFrame frame;
-    private JTextField titoloField, sedeField, durataField,
-            dataInizioField, dataFineField,
-            dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
-            maxIscrittiField, maxDimTeamField;
+    private Controller controller;
+    private JTextField titoloField;
+    private JTextField sedeField;
+    private JTextField durataField;
+    private JTextField dataInizioField;
+    private JTextField dataFineField;
+    private JTextField dataAperturaIscrizioniField;
+    private JTextField dataChiusuraIscrizioniField;
+    private JTextField maxIscrittiField;
+    private JTextField maxDimTeamField;
 
     private ArrayList<String> utenti = new ArrayList<>();
     private ArrayList<String> giudiciSelezionati = new ArrayList<>();
@@ -23,9 +31,16 @@ public class CreateGUI {
     private ArrayList<String> surnames = new ArrayList<>();
     private ArrayList<String> passwords = new ArrayList<>();
 
+    /**
+     * Instantiates a new Create gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public CreateGUI(Controller controller, JFrame callerFrame) {
+        this.controller = controller;
         frame = new JFrame("Crea Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -55,7 +70,6 @@ public class CreateGUI {
 
         titoloField = creaCampo(formPanel, gbc, y++, "Titolo:");
         sedeField = creaCampo(formPanel, gbc, y++, "Sede:");
-        durataField = creaCampo(formPanel, gbc, y++, "Durata:");
         dataInizioField = creaCampo(formPanel, gbc, y++, "Data Inizio (YYYY-MM-DD):");
         dataFineField = creaCampo(formPanel, gbc, y++, "Data Fine (YYYY-MM-DD):");
         dataAperturaIscrizioniField = creaCampo(formPanel, gbc, y++, "Apertura Iscrizioni (YYYY-MM-DD):");
@@ -79,7 +93,7 @@ public class CreateGUI {
         // ===== SCROLL =====
         JScrollPane scrollPane = new JScrollPane(formPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== BOTTOM =====
@@ -104,7 +118,7 @@ public class CreateGUI {
         centerPanel.setBackground(new Color(240, 240, 245));
 
         JButton salvaButton = creaPulsante("Salva", new Color(34, 139, 34));
-        salvaButton.addActionListener(e -> salvaHackathon(controller, callerFrame));
+        salvaButton.addActionListener(e -> salvaHackathon(callerFrame));
         centerPanel.add(salvaButton);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
@@ -138,10 +152,9 @@ public class CreateGUI {
         return btn;
     }
 
-    private void salvaHackathon(Controller controller, JFrame callerFrame) {
+    private void salvaHackathon(JFrame callerFrame) {
         if (titoloField.getText().isEmpty() ||
                 sedeField.getText().isEmpty() ||
-                durataField.getText().isEmpty() ||
                 dataInizioField.getText().isEmpty() ||
                 dataFineField.getText().isEmpty() ||
                 dataAperturaIscrizioniField.getText().isEmpty() ||
@@ -187,8 +200,12 @@ public class CreateGUI {
     }
 
     private void mostraDialogSelezioneGiudici() {
-        ControllerPlanner planner = new ControllerPlanner();
-        planner.controllerGetUsers("mario.rossi", utenti, names, surnames, passwords);
+
+        try{
+            controller.getControllerPlanner().controllerGetUsers(controller.getUser().getUsername(),utenti,names,surnames,passwords);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+        }
 
         JDialog dialog = new JDialog(frame, "Seleziona Giudici", true);
         dialog.setSize(300, 250);

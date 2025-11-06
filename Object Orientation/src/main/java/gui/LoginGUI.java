@@ -5,15 +5,21 @@ import java.awt.event.*;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Login gui.
+ */
 public class LoginGUI {
     private JPanel mainPanel;
     private JFrame frame;
 
-    public LoginGUI(JFrame callerFrame) {
+    /**
+     * Instantiates a new Login gui.
+     */
+    public LoginGUI() {
         Controller controller = new Controller();
 
         frame = new JFrame("Login");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
 
@@ -88,7 +94,7 @@ public class LoginGUI {
                                     controller.getUser().getName() + " " + controller.getUser().getSurname(),
                                     "Ciao!", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
-                    new HubGUI(controller, callerFrame);
+                    new HubGUI(controller);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Credenziali errate!", "Errore", JOptionPane.ERROR_MESSAGE);
                 }

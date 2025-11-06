@@ -8,6 +8,9 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Registration gui.
+ */
 public class RegistrationGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -23,9 +26,15 @@ public class RegistrationGUI {
     private ArrayList<Integer> maxPlayers = new ArrayList<>();
     private ArrayList<Integer> maxTeamDims = new ArrayList<>();
 
+    /**
+     * Instantiates a new Registration gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 

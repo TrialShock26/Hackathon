@@ -8,6 +8,9 @@ import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Judge gui.
+ */
 public class JudgeGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -17,9 +20,15 @@ public class JudgeGUI {
     private ArrayList<String> locations = new ArrayList<>();
     private ArrayList<String> problemDescriptions = new ArrayList<>();
 
+    /**
+     * Instantiates a new Judge gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public JudgeGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Valuta");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 

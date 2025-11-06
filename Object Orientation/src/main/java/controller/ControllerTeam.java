@@ -1,35 +1,60 @@
-package controller;
+package controller; //TODO javadoc
 
 import dao.TeamDAO;
 import postgresImplementationDao.TeamImplementationDAO;
 import model.Document;
 import model.Hackathon;
 import model.Team;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * The type Controller team.
+ */
 public class ControllerTeam {
     private Controller controller;
     private ArrayList<Team> teams;
 
-    public ControllerTeam(Controller controller) {this.controller = controller;}
-
-    public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) {
-        try{
-
-            TeamDAO teamController = new TeamImplementationDAO();
-
-            teamController.publishProgress(teamName,hackTitle,location,docTitle,content);
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+    /**
+     * Instantiates a new Controller team.
+     *
+     * @param controller the controller
+     */
+    public ControllerTeam(Controller controller) {
+        this.controller = controller;
     }
 
+    /**
+     * Controller publish progress.
+     *
+     * @param teamName  the team name
+     * @param hackTitle the hack title
+     * @param location  the location
+     * @param docTitle  the doc title
+     * @param content   the content
+     * @throws SQLException the sql exception
+     */
+    public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
+        TeamDAO teamController = new TeamImplementationDAO();
+        teamController.publishProgress(teamName, hackTitle, location, docTitle, content);
+    }
+
+    /**
+     * Controller get documents.
+     *
+     * @param teamName         the team name
+     * @param title            the title
+     * @param location         the location
+     * @param documentTitles   the document titles
+     * @param documentContents the document contents
+     * @param documentComments the document comments
+     * @param refreshing       the refreshing
+     * @throws SQLException the sql exception
+     */
     public void controllerGetDocuments(String teamName, String title, String location,
-                                       ArrayList<String> documentTitles, ArrayList<String> documentContents,
-                                       ArrayList<String> documentComments, boolean refreshing) throws SQLException {
+                                       List<String> documentTitles, List<String> documentContents,
+                                       List<String> documentComments, boolean refreshing) throws SQLException {
         if (teams == null || refreshing) {
             TeamDAO teamDB = new TeamImplementationDAO();
             teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
@@ -42,22 +67,17 @@ public class ControllerTeam {
             }
             teams.add(t);
         } else {
-            int counter = 0;
-            for (Team t : teams) {
-                if (t.getName().equals(teamName) && t.getHackathon().getTitle().equals(title) &&
-                        t.getHackathon().getLocation().equals(location)) {
-                    for (Document d : t.getProgress()) {
-                        documentTitles.add(d.getTitle());
-                        documentContents.add(d.getContent());
-                        documentComments.add(d.getComment());
-                    }
-                    return;
-                } else {counter++;}
-            }
-            if (counter == teams.size()) {
+            Team t = findTeam(teamName, title, location);
+            if (t != null) {
+                for (Document d : t.getProgress()) {
+                    documentTitles.add(d.getTitle());
+                    documentContents.add(d.getContent());
+                    documentComments.add(d.getComment());
+                }
+            } else {
                 TeamDAO teamDB = new TeamImplementationDAO();
                 teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
-                Team t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
+                t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
                 for (int i = 0; i < documentTitles.size(); i++) {
                     Document d = new Document(documentTitles.get(i), documentContents.get(i), t);
                     d.setComment(documentComments.get(i));
@@ -68,5 +88,20 @@ public class ControllerTeam {
         }
     }
 
-    public ArrayList<Team> getTeams() {return teams;}
+    private Team findTeam(String teamName, String title, String location) {
+        for (Team t : teams) {
+            if (t.getName().equals(teamName) && t.getHackathon().getTitle().equals(title) &&
+                    t.getHackathon().getLocation().equals(location)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets teams.
+     *
+     * @return the teams
+     */
+    public List<Team> getTeams() {return teams;}
 }
