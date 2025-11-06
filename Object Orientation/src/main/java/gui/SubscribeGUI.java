@@ -4,16 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import controller.Controller;
 
+/**
+ * The type Subscribe gui.
+ */
 public class SubscribeGUI {
-    private JFrame homeFrame;
     private JFrame frame;
 
+    /**
+     * Instantiates a new Subscribe gui.
+     *
+     * @param homeFrame the home frame
+     */
     public SubscribeGUI(JFrame homeFrame) {
-        this.homeFrame = homeFrame;
         Controller controller = new Controller();
 
         frame = new JFrame("Registrazione Utente - HackathON");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
 
@@ -66,7 +72,7 @@ public class SubscribeGUI {
             if (success) {
                 JOptionPane.showMessageDialog(frame, "Registrazione completata!\nBenvenut3 "+ nome +" "+ cognome);
                 frame.dispose();
-                new HubGUI(controller, frame);
+                new HubGUI(controller);
             } else {
                 JOptionPane.showMessageDialog(frame, "Errore!", "Errore", JOptionPane.ERROR_MESSAGE);
             }

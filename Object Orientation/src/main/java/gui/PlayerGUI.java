@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Player gui.
+ */
 public class PlayerGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -19,13 +22,19 @@ public class PlayerGUI {
 
     private Controller controller;
 
+    /**
+     * Instantiates a new Player gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public PlayerGUI(Controller controller, JFrame callerFrame) {
 
         this.controller =  controller;
 
 
-        frame = new JFrame("Partecipa a Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame = new JFrame("Gioca");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -37,7 +46,7 @@ public class PlayerGUI {
         headerPanel.setBackground(new Color(240, 240, 245));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JLabel titleLabel = new JLabel("Seleziona Team a cui Partecipare", SwingConstants.LEFT);
+        JLabel titleLabel = new JLabel("Seleziona Team", SwingConstants.LEFT);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
@@ -47,9 +56,7 @@ public class PlayerGUI {
         refreshBtn.setForeground(Color.WHITE);
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            refreshHackathons();
-        });
+        refreshBtn.addActionListener(e -> refreshHackathons());
 
         headerPanel.add(refreshBtn, BorderLayout.EAST);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
@@ -167,11 +174,11 @@ public class PlayerGUI {
 
         } catch (SQLException e) {
             String error = e.getMessage();
-            if (error.indexOf("\n") > 0) {error = error.substring(0, error.indexOf("\n"));}
-            JOptionPane.showMessageDialog(null,
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
-                    "Errore", JOptionPane.ERROR_MESSAGE
-            );
+                    "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;
         }
 

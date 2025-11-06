@@ -5,14 +5,26 @@ import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type My team gui.
+ */
 public class MyTeamGUI {
     private JFrame frame;
     private JTextArea textArea;
     private JTextField titleField;
 
+    /**
+     * Instantiates a new My team gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     * @param teamName    the team name
+     * @param hackTitle   the hack title
+     * @param location    the location
+     */
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -34,8 +46,7 @@ public class MyTeamGUI {
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
-        String username = controller.getUser().getUsername();
-        JLabel userLabel = new JLabel("Utente: " + username);
+        JLabel userLabel = new JLabel("Utente: " + controller.getUser().getName() + " " + controller.getUser().getSurname());
         userLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         infoPanel.add(userLabel);
@@ -140,18 +151,21 @@ public class MyTeamGUI {
             } else if (text.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Inserisci del testo prima di pubblicare!", "Errore", JOptionPane.WARNING_MESSAGE);
             } else {
-
                 try {
-                    controller.getControllerTeam().controllerPublishProgress(teamName, hackTitle, location, title, text);
+                    controller.getControllerTeam().controllerPublishProgress(teamName,hackTitle,location,title,text);
+                    JOptionPane.showMessageDialog(frame,
+                            "Documento \"" + title + "\" pubblicato con successo!",
+                            "Successo", JOptionPane.INFORMATION_MESSAGE);
+                    titleField.setText("");
+                    textArea.setText("");
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.WARNING_MESSAGE);
+                    String error = ex.getMessage();
+                    int idx = error.indexOf("\n");
+                    error = error.substring(0, idx);
+                    JOptionPane.showMessageDialog(frame,
+                            "C'è stato un errore!\n" + error,
+                            "Errore", JOptionPane.ERROR_MESSAGE);
                 }
-
-                JOptionPane.showMessageDialog(frame,
-                        "Documento \"" + title + "\" pubblicato con successo!",
-                        "Successo", JOptionPane.INFORMATION_MESSAGE);
-                titleField.setText("");
-                textArea.setText("");
             }
         });
 

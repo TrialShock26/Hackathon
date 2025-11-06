@@ -3,11 +3,19 @@ package postgresImplementationDao;
 import dao.PlannerDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia {@link PlannerDAO} per la gestione dei dati
+ * relativi agli organizzatori nel database PostgreSQL.
+ */
 public class PlannerImplementationDAO implements PlannerDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code PlannerImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public PlannerImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
@@ -35,11 +43,22 @@ public class PlannerImplementationDAO implements PlannerDAO {
         query.execute();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Viene adoperato un blocco anonimo per estrarre gli {@code id} in base ai dati e chiamare
+     * correttamente le procedure sul database, preservando l'indipendenza del codice dal
+     * tipo di implementazione scelta per la base di dati. Inoltre, le stringhe in input sono rese
+     * sicure per PostgreSQL sostituendo i caratteri non ammessi.
+     *
+     * @param title    il titolo dell'hackathon da avviare
+     * @param location la sede dell'hackathon da avviare
+     * @throws SQLException se si verifica un errore durante l'accesso al database
+     */
     @Override
     public void startHackathon(String title, String location) throws SQLException {
         CallableStatement cs;
 
-        // Escapare eventuali apostrofi nel titolo o sede
         title = title.replace("'", "''");
         location = location.replace("'", "''");
 
@@ -81,9 +100,9 @@ public class PlannerImplementationDAO implements PlannerDAO {
     }
 
     @Override
-    public void getHackathons(String username, ArrayList<String> titles, ArrayList<String> locations,ArrayList<Long> periodOftime
-                              ,ArrayList<String> problemDescriptions, ArrayList<Date> startDates, ArrayList<Date> endDates,ArrayList<Date> startSubDate,ArrayList<Date> endSubDate,
-                              ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+    public void getHackathons(String username, List<String> titles, List<String> locations, List<Long> periodsOfTime,
+                              List<String> problemDescriptions, List<Date> startDates, List<Date> endDates,List<Date> startSubDate,List<Date> endSubDate,
+                              List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede , durata, data_inizio, data_fine, descrizione_problema, " +
                 "data_apertura_iscrizioni, data_chiusura_iscrizioni, max_iscritti, max_dim_team " +
@@ -98,7 +117,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
         while (rs.next()) {
             titles.add(rs.getString("titolo"));
             locations.add(rs.getString("sede"));
-            periodOftime.add(rs.getLong("durata"));
+            periodsOfTime.add(rs.getLong("durata"));
             problemDescriptions.add(rs.getString("descrizione_problema"));
             startDates.add(rs.getDate("data_inizio"));
             endDates.add(rs.getDate("data_fine"));
@@ -112,10 +131,10 @@ public class PlannerImplementationDAO implements PlannerDAO {
 
     @Override
     public void getUsers(String planUser,
-                         ArrayList<String> allUsernames,
-                         ArrayList<String> allNames,
-                         ArrayList<String> allSurnames,
-                         ArrayList<String> allPasswords) throws SQLException {
+                         List<String> allUsernames,
+                         List<String> allNames,
+                         List<String> allSurnames,
+                         List<String> allPasswords) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT * " +
                        "FROM Utente " +

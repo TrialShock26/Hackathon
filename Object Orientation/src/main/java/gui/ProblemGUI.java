@@ -5,14 +5,26 @@ import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Problem gui.
+ */
 public class ProblemGUI {
     private JFrame frame;
     private String oldDescription;
     private String newDescription;
 
+    /**
+     * Instantiates a new Problem gui.
+     *
+     * @param controller         the controller
+     * @param callerFrame        the caller frame
+     * @param hackathonName      the hackathon name
+     * @param location           the location
+     * @param problemDescription the problem description
+     */
     public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
         frame = new JFrame("Problema - " + hackathonName);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
         frame.setLocationRelativeTo(null);
 

@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
-import dao.PlannerDAO;
-import model.Hackathon;
 
+/**
+ * The type Planner gui.
+ */
 public class PlannerGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -30,12 +31,18 @@ public class PlannerGUI {
 
     private Controller controller;
 
+    /**
+     * Instantiates a new Planner gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
         this.controller = controller;
 
         frame = new JFrame("Gestisci");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -57,9 +64,7 @@ public class PlannerGUI {
         refreshBtn.setForeground(Color.WHITE);
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            refreshHackathons();
-        });
+        refreshBtn.addActionListener(e -> refreshHackathons());
 
         headerPanel.add(refreshBtn, BorderLayout.EAST);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
@@ -156,10 +161,9 @@ public class PlannerGUI {
 
         } catch (SQLException e) {
             String error = e.getMessage();
-            if (error.indexOf("\n") > 0) {
-                error = error.substring(0, error.indexOf("\n"));
-            }
-            JOptionPane.showMessageDialog(null,
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
                     "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;

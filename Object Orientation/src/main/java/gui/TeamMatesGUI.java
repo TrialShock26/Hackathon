@@ -6,16 +6,27 @@ import java.util.ArrayList;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Team mates gui.
+ */
 public class TeamMatesGUI {
     private JFrame frame;
 
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> surnames = new ArrayList<>();
 
-
+    /**
+     * Instantiates a new Team mates gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     * @param teamName    the team name
+     * @param hackTitle   the hack title
+     * @param location    the location
+     */
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame("Partecipanti del Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 500);
         frame.setLocationRelativeTo(null);
 
@@ -38,7 +49,12 @@ public class TeamMatesGUI {
             controller.getControllerPlayer().controllerGetTeammates(controller.getUser().getUsername(),
                     teamName, hackTitle, location, names, surnames);
         } catch (SQLException e){
-            System.out.println(e.getMessage());
+            String error = e.getMessage();
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
         // ====== LABEL NUMERO MEMBRI ======

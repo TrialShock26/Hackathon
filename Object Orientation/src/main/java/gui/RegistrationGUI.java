@@ -8,14 +8,33 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Registration gui.
+ */
 public class RegistrationGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private JPanel listPanel;
     private ButtonGroup hackathonGroup;
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> locations = new ArrayList<>();
+    private ArrayList<Integer> periodsOfTime = new ArrayList<>();
+    private ArrayList<Date> startDates = new ArrayList<>();
+    private ArrayList<Date> endDates = new ArrayList<>();
+    private ArrayList<Date> startSubDates = new ArrayList<>();
+    private ArrayList<Date> endSubDates = new ArrayList<>();
+    private ArrayList<Integer> maxPlayers = new ArrayList<>();
+    private ArrayList<Integer> maxTeamDims = new ArrayList<>();
 
+    /**
+     * Instantiates a new Registration gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -27,34 +46,7 @@ public class RegistrationGUI {
         headerPanel.setBackground(new Color(240, 240, 245));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-        JLabel titleLabel = new JLabel("Registrati ad un Hackathon", SwingConstants.LEFT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        headerPanel.add(titleLabel, BorderLayout.WEST);
-
-        JButton refreshBtn = new JButton("Aggiorna");
-        refreshBtn.setPreferredSize(new Dimension(120, 35));
-        refreshBtn.setBackground(new Color(70, 130, 180));
-        refreshBtn.setForeground(Color.WHITE);
-        refreshBtn.setFocusPainted(false);
-        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            // Qui potrai aggiungere la logica per ricaricare la lista
-            // (ad esempio refreshHackathons(); se lo implementi)
-        });
-        headerPanel.add(refreshBtn, BorderLayout.EAST);
-
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-
         // ====== DATI HACKATHON ======
-        ArrayList<String> titles = new ArrayList<>();
-        ArrayList<String> locations = new ArrayList<>();
-        ArrayList<Integer> periodsOfTime = new ArrayList<>();
-        ArrayList<Date> startDates = new ArrayList<>();
-        ArrayList<Date> endDates = new ArrayList<>();
-        ArrayList<Date> startSubDates = new ArrayList<>();
-        ArrayList<Date> endSubDates = new ArrayList<>();
-        ArrayList<Integer> maxPlayers = new ArrayList<>();
-        ArrayList<Integer> maxTeamDims = new ArrayList<>();
         try {
             controller.getControllerHackathon().controllerGetAvailableHackathons(titles, locations, periodsOfTime, startDates, endDates,
                     startSubDates, endSubDates, maxPlayers, maxTeamDims, false);
@@ -67,7 +59,7 @@ public class RegistrationGUI {
                     "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
@@ -76,13 +68,7 @@ public class RegistrationGUI {
         listPanel.setMaximumSize(new Dimension(700, listPanel.getPreferredSize().height));
 
         hackathonGroup = new ButtonGroup();
-        for (int i = 0; i < titles.size(); i++) {
-            JPanel card = createHackathonCard(titles.get(i), locations.get(i), periodsOfTime.get(i),
-                    startDates.get(i), endDates.get(i), startSubDates.get(i), endSubDates.get(i),
-                    maxPlayers.get(i), maxTeamDims.get(i));
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        createPanel();
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -161,6 +147,37 @@ public class RegistrationGUI {
 
         centerPanel.add(registerBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
+
+        JLabel titleLabel = new JLabel("Registrati ad un Hackathon", SwingConstants.LEFT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+
+        JButton refreshBtn = new JButton("Aggiorna");
+        refreshBtn.setPreferredSize(new Dimension(120, 35));
+        refreshBtn.setBackground(new Color(70, 130, 180));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        refreshBtn.addActionListener(e -> {
+            preparePanel();
+            try {
+                controller.getControllerHackathon().controllerGetAvailableHackathons(titles, locations, periodsOfTime, startDates, endDates,
+                        startSubDates, endSubDates, maxPlayers, maxTeamDims, true);
+            } catch (SQLException ex) {
+                String error = ex.getMessage();
+                int idx = error.indexOf("\n");
+                error = error.substring(0, idx);
+                JOptionPane.showMessageDialog(frame,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
+            createPanel();
+            listPanel.revalidate();
+            listPanel.repaint();
+        });
+        headerPanel.add(refreshBtn, BorderLayout.EAST);
+
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -254,5 +271,28 @@ public class RegistrationGUI {
             if (button.isSelected()) return button.getText();
         }
         return null;
+    }
+
+    private void preparePanel() {
+        listPanel.removeAll();
+        titles.clear();
+        locations.clear();
+        periodsOfTime.clear();
+        startDates.clear();
+        endDates.clear();
+        startSubDates.clear();
+        endSubDates.clear();
+        maxPlayers.clear();
+        maxTeamDims.clear();
+    }
+
+    private void createPanel() {
+        for (int i = 0; i < titles.size(); i++) {
+            JPanel card = createHackathonCard(titles.get(i), locations.get(i), periodsOfTime.get(i),
+                    startDates.get(i), endDates.get(i), startSubDates.get(i), endSubDates.get(i),
+                    maxPlayers.get(i), maxTeamDims.get(i));
+            listPanel.add(card);
+            listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
     }
 }

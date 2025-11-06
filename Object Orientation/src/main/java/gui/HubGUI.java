@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import controller.*;
 
+/**
+ * The type Hub gui.
+ */
 public class HubGUI {
     private JFrame frame;
     private JPanel hubPanel;
@@ -17,10 +20,15 @@ public class HubGUI {
     private JLabel title;
     private JLabel subtitle;
 
-    public HubGUI(Controller controller, JFrame callerFrame) {
+    /**
+     * Instantiates a new Hub gui.
+     *
+     * @param controller the controller
+     */
+    public HubGUI(Controller controller) {
 
         frame = new JFrame("HackathON - HUB");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -126,7 +134,7 @@ public class HubGUI {
             );
             if (response == JOptionPane.YES_OPTION) {
                 frame.dispose();
-                new LoginGUI(frame);
+                new LoginGUI();
             }
         });
         bottomPanel.add(indietroButton);

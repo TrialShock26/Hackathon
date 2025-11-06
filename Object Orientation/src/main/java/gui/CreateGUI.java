@@ -3,19 +3,26 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.sql.Date;
 import controller.Controller;
 import controller.ControllerPlanner;
 
+/**
+ * The type Create gui.
+ */
 public class CreateGUI {
     private JFrame frame;
     private Controller controller;
-    private JTextField titoloField, sedeField,
-            dataInizioField, dataFineField,
-            dataAperturaIscrizioniField, dataChiusuraIscrizioniField,
-            maxIscrittiField, maxDimTeamField;
+    private JTextField titoloField;
+    private JTextField sedeField;
+    private JTextField durataField;
+    private JTextField dataInizioField;
+    private JTextField dataFineField;
+    private JTextField dataAperturaIscrizioniField;
+    private JTextField dataChiusuraIscrizioniField;
+    private JTextField maxIscrittiField;
+    private JTextField maxDimTeamField;
 
     private ArrayList<String> utenti = new ArrayList<>();
     private ArrayList<String> giudiciSelezionati = new ArrayList<>();
@@ -24,10 +31,16 @@ public class CreateGUI {
     private ArrayList<String> surnames = new ArrayList<>();
     private ArrayList<String> passwords = new ArrayList<>();
 
+    /**
+     * Instantiates a new Create gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public CreateGUI(Controller controller, JFrame callerFrame) {
         this.controller = controller;
         frame = new JFrame("Crea Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -80,7 +93,7 @@ public class CreateGUI {
         // ===== SCROLL =====
         JScrollPane scrollPane = new JScrollPane(formPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== BOTTOM =====

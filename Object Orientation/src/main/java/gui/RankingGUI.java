@@ -3,11 +3,12 @@ package gui;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import javax.swing.*;
 import controller.Controller;
-import controller.ControllerHackathon;
 
+/**
+ * The type Ranking gui.
+ */
 public class RankingGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -18,6 +19,12 @@ public class RankingGUI {
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
 
+    /**
+     * Instantiates a new Ranking gui.
+     *
+     * @param controller  the controller
+     * @param callerFrame the caller frame
+     */
     public RankingGUI(Controller controller, JFrame callerFrame) {
 
         // --- PRIMO CARICAMENTO DATI ---
@@ -30,7 +37,7 @@ public class RankingGUI {
         }
 
         frame = new JFrame("Ranking Hackathon");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
 
@@ -52,9 +59,7 @@ public class RankingGUI {
         refreshBtn.setForeground(Color.WHITE);
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            refreshHackathons(controller);
-        });
+        refreshBtn.addActionListener(e -> refreshHackathons(controller));
 
         headerPanel.add(refreshBtn, BorderLayout.EAST);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
@@ -155,10 +160,9 @@ public class RankingGUI {
 
         } catch (SQLException e) {
             String error = e.getMessage();
-            if (error.indexOf("\n") > 0) {
-                error = error.substring(0, error.indexOf("\n"));
-            }
-            JOptionPane.showMessageDialog(null,
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
                     "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;

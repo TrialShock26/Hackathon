@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-
 import controller.Controller;
 
+/**
+ * The type Scoreboard gui.
+ */
 public class ScoreboardGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -17,7 +19,6 @@ public class ScoreboardGUI {
     private final DecimalFormat scoreFormat = new DecimalFormat("#.##");
 
     private Controller controller;
-    private JFrame callerFrame;
     private String hackathonName;
     private String location;
 
@@ -27,9 +28,16 @@ public class ScoreboardGUI {
     private ArrayList<String> locations = new ArrayList<>();
 
 
+    /**
+     * Instantiates a new Scoreboard gui.
+     *
+     * @param controller    the controller
+     * @param callerFrame   the caller frame
+     * @param hackathonName the hackathon name
+     * @param location      the location
+     */
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
         this.controller = controller;
-        this.callerFrame = callerFrame;
         this.hackathonName = hackathonName;
         this.location = location;
 
@@ -46,7 +54,7 @@ public class ScoreboardGUI {
                 ? "Classifica - " + hackathonName
                 : "Classifica Globale");
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(750, 500);
         frame.setLocationRelativeTo(null);
 

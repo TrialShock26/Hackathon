@@ -7,14 +7,25 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Teams gui.
+ */
 public class TeamsGUI {
     private JFrame frame;
     private JPanel mainPanel;
     private ButtonGroup teamGroup;
 
+    /**
+     * Instantiates a new Teams gui.
+     *
+     * @param controller        the controller
+     * @param callerFrame       the caller frame
+     * @param selectedHackathon the selected hackathon
+     * @param location          the location
+     */
     public TeamsGUI(Controller controller, JFrame callerFrame, String selectedHackathon, String location) {
         frame = new JFrame("Seleziona Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -31,7 +42,7 @@ public class TeamsGUI {
         ArrayList<String> teamNames = new ArrayList<>();
         try {
             controller.getControllerJudge().controllerGetTeams(selectedHackathon, location, teamNames, false);
-        } catch (SQLException | IllegalAccessException e) {
+        } catch (SQLException e) {
             String error = e.getMessage();
             int idx = error.indexOf("\n");
             error = error.substring(0, idx);

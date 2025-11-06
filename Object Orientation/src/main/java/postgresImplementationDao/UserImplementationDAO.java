@@ -3,11 +3,19 @@ package postgresImplementationDao;
 import dao.UserDAO;
 import database.DatabaseConnection;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Implementazione dell'interfaccia {@link UserDAO} per la gestione dei dati
+ * relativi ai giudici nel database PostgreSQL.
+ */
 public class UserImplementationDAO implements UserDAO {
     private Connection connection;
 
+    /**
+     * Costruisce un nuovo oggetto {@code TeamImplementationDAO} e
+     * inizializza la connessione al database.
+     */
     public UserImplementationDAO() {
         try {
             connection = DatabaseConnection.getInstance().getConnection();
@@ -20,7 +28,7 @@ public class UserImplementationDAO implements UserDAO {
     public String login(String username, String password) throws SQLException {
         String credentials = null;
         PreparedStatement query;
-        query = connection.prepareStatement("SELECT * FROM Utente WHERE username = ? AND password = ?");
+        query = connection.prepareStatement("SELECT nome, cognome FROM Utente WHERE username = ? AND password = ?");
         query.setString(1, username);
         query.setString(2, password);
         ResultSet rs = query.executeQuery();
@@ -43,9 +51,9 @@ public class UserImplementationDAO implements UserDAO {
     }
 
     @Override
-    public void getHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
-                              ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates, ArrayList<Date> endSubDates,
-                              ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim) throws SQLException {
+    public void getHackathons(List<String> titles, List<String> locations, List<Integer> periodsOfTime,
+                              List<Date> startDates, List<Date> endDates, List<Date> startSubDates, List<Date> endSubDates,
+                              List<Integer> maxPlayers, List<Integer> maxTeamDim) throws SQLException {
         PreparedStatement ps;
         String query = "SELECT titolo, sede, durata, data_inizio, data_fine, " +
                             "data_apertura_iscrizioni, data_chiusura_iscrizioni, " +

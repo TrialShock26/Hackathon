@@ -7,6 +7,9 @@ import java.util.Enumeration;
 import javax.swing.*;
 import controller.*;
 
+/**
+ * The type Join gui.
+ */
 public class JoinGUI {
     private JFrame frame;
     private JPanel mainPanel;
@@ -14,9 +17,18 @@ public class JoinGUI {
 
     private ArrayList<String> teamList = new ArrayList<>();
 
+    /**
+     * Instantiates a new Join gui.
+     *
+     * @param controller      the controller
+     * @param callerFrame     the caller frame
+     * @param currentTeam     the current team
+     * @param currentTitle    the current title
+     * @param currentLocation the current location
+     */
     public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam, String currentTitle,String currentLocation) {
         frame = new JFrame("Cambia Team");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
         frame.setLocationRelativeTo(null);
 
@@ -35,12 +47,15 @@ public class JoinGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        ControllerPlayer controllerplayer = new ControllerPlayer(controller);
-
         try{
             controller.getControllerPlayer().controllerGetOtherTeams(controller.getUser().getUsername(),currentTitle,currentLocation,teamList);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            String error = ex.getMessage();
+            int idx = error.indexOf("\n");
+            error = error.substring(0, idx);
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
         teamGroup = new ButtonGroup();

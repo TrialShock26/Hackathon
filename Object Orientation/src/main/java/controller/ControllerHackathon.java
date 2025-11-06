@@ -1,4 +1,4 @@
-package controller;
+package controller; //TODO javadoc
 
 import dao.HackathonDAO;
 import dao.UserDAO;
@@ -9,6 +9,9 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * The type Controller hackathon.
+ */
 public class ControllerHackathon {
     private ArrayList<Hackathon> availableHackathons;
     private ArrayList<Hackathon> closedHackathons;
@@ -18,8 +21,18 @@ public class ControllerHackathon {
     private ArrayList<Team> teamsInController;
     private ArrayList<Double> scoresInController;
 
-    public void controllerOverallRanking(ArrayList<String> teamNames, ArrayList<Double> scores,
-                                         ArrayList<String> titles, ArrayList<String> locations, boolean refreshing) throws SQLException {
+    /**
+     * Controller overall ranking.
+     *
+     * @param teamNames  the team names
+     * @param scores     the scores
+     * @param titles     the titles
+     * @param locations  the locations
+     * @param refreshing the refreshing
+     * @throws SQLException the sql exception
+     */
+    public void controllerOverallRanking(List<String> teamNames, List<Double> scores,
+                                         List<String> titles, List<String> locations, boolean refreshing) throws SQLException {
 
         if(myScoreboard == null || refreshing) {
 
@@ -47,6 +60,16 @@ public class ControllerHackathon {
         }
     }
 
+    /**
+     * Controller scoreboard.
+     *
+     * @param title      the title
+     * @param location   the location
+     * @param teamNames  the team names
+     * @param scores     the scores
+     * @param refreshing the refreshing
+     * @throws SQLException the sql exception
+     */
     public void controllerScoreboard(String title, String location,
                                      ArrayList<String> teamNames, ArrayList<Double> scores,
                                      boolean refreshing) throws SQLException {
@@ -116,14 +139,29 @@ public class ControllerHackathon {
 
     }
 
-    public void controllerGetAvailableHackathons(ArrayList<String> titles, ArrayList<String> locations, ArrayList<Integer> periodsOfTime,
-                                                 ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<Date> startSubDates,
-                                                 ArrayList<Date> endSubDates, ArrayList<Integer> maxPlayers, ArrayList<Integer> maxTeamDim,
-                                                 boolean refreshing) throws SQLException {
+    /**
+     * Controller get available hackathons.
+     *
+     * @param titles        the titles
+     * @param locations     the locations
+     * @param periodsOfTime the periods of time
+     * @param startDates    the start dates
+     * @param endDates      the end dates
+     * @param startSubDates the start sub dates
+     * @param endSubDates   the end sub dates
+     * @param maxPlayers    the max players
+     * @param maxTeamDim    the max team dim
+     * @param refreshing    the refreshing
+     * @throws SQLException the sql exception
+     */
+    public void controllerGetAvailableHackathons(List<String> titles, List<String> locations, List<Integer> periodsOfTime,
+                                                   List<Date> startDates, List<Date> endDates, List<Date> startSubDates,
+                                                   List<Date> endSubDates, List<Integer> maxPlayers, List<Integer> maxTeamDim,
+                                                   boolean refreshing) throws SQLException {
         if (availableHackathons == null || refreshing) {
             UserDAO user = new UserImplementationDAO();
             user.getHackathons(titles, locations, periodsOfTime, startDates, endDates, startSubDates, endSubDates, maxPlayers, maxTeamDim);
-            availableHackathons = new ArrayList<Hackathon>();
+            availableHackathons = new ArrayList<>();
             for (int i = 0; i < titles.size(); i++) {
                 availableHackathons.add(new Hackathon(titles.get(i), locations.get(i), periodsOfTime.get(i).longValue(), startDates.get(i),
                         endDates.get(i), startSubDates.get(i), endSubDates.get(i), maxPlayers.get(i), maxTeamDim.get(i), null));
@@ -143,13 +181,21 @@ public class ControllerHackathon {
         }
     }
 
-    public void controllerGetClosedHackathons(ArrayList<String> titles, ArrayList<String> locations, boolean refreshing) throws SQLException{
+    /**
+     * Controller get closed hackathons.
+     *
+     * @param titles     the titles
+     * @param locations  the locations
+     * @param refreshing the refreshing
+     * @throws SQLException the sql exception
+     */
+    public void controllerGetClosedHackathons(List<String> titles, List<String> locations, boolean refreshing) throws SQLException{
 
         if(closedHackathons==null || refreshing){
 
             closedHackathons = new ArrayList<>();
             HackathonDAO hackathon = new HackathonImplementationDAO();
-            hackathon.getClosedHackathons(titles,locations);
+            hackathon.getClosedHackathons(titles, locations);
             for(int i = 0; i < titles.size(); i++){
                 closedHackathons.add(new Hackathon(titles.get(i),locations.get(i),
                         0,null,null,null,null,0,0,null));
@@ -162,6 +208,13 @@ public class ControllerHackathon {
         }
     }
 
+    /**
+     * Gets available hackathon.
+     *
+     * @param title    the title
+     * @param location the location
+     * @return the available hackathon
+     */
     public Hackathon getAvailableHackathon(String title, String location) {
         for (Hackathon h : availableHackathons) {
             if (h.getTitle().equals(title) && h.getLocation().equals(location)) {return h;}
