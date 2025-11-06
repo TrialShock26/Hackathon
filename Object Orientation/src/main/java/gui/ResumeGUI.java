@@ -4,7 +4,7 @@ import java.awt.*;
 import java.sql.SQLException;
 import javax.swing.*;
 import controller.*;
-import model.*;
+import model.Hackathon;
 
 /**
  * The type Resume gui.
@@ -50,7 +50,8 @@ public class ResumeGUI {
 
         Hackathon selectedHackathon =  null;
 
-        for (Hackathon h : controller.getControllerPlanner().getMyHackathons()) {
+
+        for (Hackathon h : controller.getPlanner().getHackathons()) {
             if (h.getTitle().equals(hackathonName)) {
                 selectedHackathon = h;
             }
@@ -72,7 +73,6 @@ public class ResumeGUI {
         problemLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(problemLabel);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-
 
         JTextArea problemArea = new JTextArea(selectedHackathon.getProblemDescription());
         problemArea.setFont(new Font("Arial", Font.PLAIN, 14));

@@ -68,7 +68,7 @@ public class ScoreboardGUI {
 
         JLabel titleLabel = new JLabel(
                 hackathonName != null
-                        ? "Classifica Hackathon: " + hackathonName
+                        ? "Classifica: " + hackathonName
                         : "Classifica Globale",
                 SwingConstants.CENTER
         );
@@ -133,6 +133,7 @@ public class ScoreboardGUI {
         titles.clear();
         locations.clear();
 
+
         try {
             if (hackathonName != null) {
                 controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores, refreshing);
@@ -146,6 +147,7 @@ public class ScoreboardGUI {
                     "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;
         }
+
         return isCorrect;
     }
 

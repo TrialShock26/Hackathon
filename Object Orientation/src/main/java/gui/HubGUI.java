@@ -72,37 +72,32 @@ public class HubGUI {
         gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
         classificaButton = createStyledButton("Classifica", new Color(100, 149, 237));
 
-        // --- Azione per il bottone CREA ---
+        // --- Azioni bottoni ---
         creaButton.addActionListener(e -> {
             frame.setVisible(false);
             new CreateGUI(controller, frame);
         });
 
-        // --- Azione per il bottone GESTISCI ---
         gestisciButton.addActionListener(e -> {
             frame.setVisible(false);
             new PlannerGUI(controller, frame);
         });
 
-        // --- Azione per il bottone Valuta ---
         giudicaButton.addActionListener(e -> {
             frame.setVisible(false);
             new JudgeGUI(controller, frame);
         });
 
-        // --- Azione per il bottone Gioca ---
         gioButton.addActionListener(e -> {
             frame.setVisible(false);
             new PlayerGUI(controller, frame);
         });
 
-        // --- Azione per il bottone Nuova Partita ---
         nuovaPartitaButton.addActionListener(e -> {
             frame.setVisible(false);
             new RegistrationGUI(controller, frame);
         });
 
-        // --- Azione per il bottone Classifica ---
         classificaButton.addActionListener(e -> {
             frame.setVisible(false);
             new RankingGUI(controller, frame);
@@ -118,10 +113,9 @@ public class HubGUI {
         centerPanel.add(gridButtonsPanel);
         hubPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // --- BASSO (solo Indietro) ---
+        // --- BASSO (Indietro + Nome utente) ---
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottomPanel.setBackground(new Color(240, 240, 245));
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
         indietroButton = new JButton("Indietro");
         indietroButton.setFont(new Font("Arial", Font.BOLD, 13));
@@ -145,7 +139,22 @@ public class HubGUI {
         });
         bottomPanel.add(indietroButton);
 
-        hubPanel.add(bottomPanel, BorderLayout.SOUTH);
+        // --- Etichetta con nome utente (più evidente) ---
+        JLabel userLabel = new JLabel("Ciao, "
+                + controller.getUser().getName() + " "
+                + controller.getUser().getSurname());
+        userLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        userLabel.setForeground(new Color(40, 80, 160)); // blu-grigio visibile
+        userLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+
+        // Pannello contenitore per posizionamento
+        JPanel bottomContainer = new JPanel(new BorderLayout());
+        bottomContainer.setBackground(new Color(240, 240, 245));
+        bottomContainer.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        bottomContainer.add(bottomPanel, BorderLayout.WEST);
+        bottomContainer.add(userLabel, BorderLayout.EAST);
+
+        hubPanel.add(bottomContainer, BorderLayout.SOUTH);
 
         frame.setContentPane(hubPanel);
         frame.setVisible(true);
@@ -154,12 +163,12 @@ public class HubGUI {
     // --- Metodo per creare bottoni uniformi ma più piccoli ---
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 14)); // più piccolo
+        button.setFont(new Font("Arial", Font.BOLD, 14));
         button.setFocusPainted(false);
         button.setBackground(bgColor);
         button.setForeground(Color.WHITE);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(140, 45)); // ridotto
+        button.setPreferredSize(new Dimension(140, 45));
         button.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(bgColor.darker(), 2),
                 BorderFactory.createEmptyBorder(4, 8, 4, 8)

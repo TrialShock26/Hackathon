@@ -157,7 +157,7 @@ public class Controller {
      * @return l'oggetto ControllerPlanner
      */
     public ControllerPlanner getControllerPlanner() {
-        if (controllerPlanner == null) {controllerPlanner = new ControllerPlanner();}
+        if (controllerPlanner == null) {controllerPlanner = new ControllerPlanner(this);}
         return controllerPlanner;
     }
 
