@@ -82,5 +82,5 @@ public class Document {
      *
      * @param j l'oggetto Judge da aggiungere come commentatore.
      */
-    public void setCommentators(Judge j) {commentators.add(j);}
+    public void setCommentator(Judge j) {commentators.add(j);}
 }
