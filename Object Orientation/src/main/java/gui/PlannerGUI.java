@@ -20,7 +20,7 @@ public class PlannerGUI {
 
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
-    private ArrayList<Long> periodOftime = new ArrayList<>();
+    private ArrayList<Long> periodOfTime = new ArrayList<>();
     private ArrayList<String> problemDescriptions = new ArrayList<>();
     private ArrayList<Date> startDate = new ArrayList<>();
     private ArrayList<Date> endDate = new ArrayList<>();
@@ -116,12 +116,21 @@ public class PlannerGUI {
         openBtn.setFocusPainted(false);
         openBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         openBtn.addActionListener(e -> {
-            String selectedHackathon = getSelectedHackathon();
-            if (selectedHackathon == null) {
+            int selectedIndex = getSelectedHackathon();
+            if (selectedIndex == -1) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
                 frame.setVisible(false);
-                new ResumeGUI(controller, frame, selectedHackathon);
+                new ResumeGUI(controller, frame, titles.get(selectedIndex)/*,
+                        locations.get(selectedIndex),
+                        periodOfTime.get(selectedIndex),
+                        problemDescriptions.get(selectedIndex),
+                        startDate.get(selectedIndex),
+                        endDate.get(selectedIndex),
+                        startSubDate.get(selectedIndex),
+                        endSubDate.get(selectedIndex),
+                        maxPlayers.get(selectedIndex),
+                        maxTeamDim.get(selectedIndex)*/);
             }
         });
 
@@ -151,7 +160,7 @@ public class PlannerGUI {
 
         try {
             controller.getControllerPlanner().controllerGetHackathons(
-                    controller.getUser().getUsername(), titles, locations, periodOftime,
+                    controller.getUser().getUsername(), titles, locations, periodOfTime,
                     problemDescriptions, startDate, endDate, startSubDate, endSubDate,
                     maxPlayers, maxTeamDim,refreshing);
 
@@ -178,7 +187,7 @@ public class PlannerGUI {
         // svuotamento di tutte le informazioni relative agli hackathon
         titles.clear();
         locations.clear();
-        periodOftime.clear();
+        periodOfTime.clear();
         problemDescriptions.clear();
         startDate.clear();
         endDate.clear();
@@ -198,7 +207,7 @@ public class PlannerGUI {
 
         // 4. Ricostruisci tutte le card con i nuovi dati
         for (int i = 0; i < titles.size(); i++) {
-            JPanel card = createHackathonCard(titles.get(i));
+            JPanel card = createHackathonCard(titles.get(i), i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -212,15 +221,15 @@ public class PlannerGUI {
     private void populateHackathonList() {
         hackathonGroup = new ButtonGroup();
 
-        for (String hackathon : titles) {
-            JPanel card = createHackathonCard(hackathon);
+        for (int i = 0; i < titles.size(); i++) {
+            JPanel card = createHackathonCard(titles.get(i), i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
     }
 
     // ====== CREAZIONE CARD HACKATHON ======
-    private JPanel createHackathonCard(String hackathonName) {
+    private JPanel createHackathonCard(String hackathonName, int i) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -236,6 +245,7 @@ public class PlannerGUI {
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
         hackathonGroup.add(radio);
+        radio.setMnemonic(i);
 
         card.add(radio, BorderLayout.CENTER);
 
@@ -252,11 +262,11 @@ public class PlannerGUI {
     }
 
     // ====== OTTIENI HACKATHON SELEZIONATO ======
-    private String getSelectedHackathon() {
+    private int getSelectedHackathon() {
         for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
-            if (button.isSelected()) return button.getText();
+            if (button.isSelected()) return button.getMnemonic();
         }
-        return null;
+        return -1;
     }
 }

@@ -64,7 +64,7 @@ public class MyTeamGUI {
         ));
 
         // Campo titolo
-        JLabel titleFieldLabel = new JLabel("Titolo del Documento:");
+        JLabel titleFieldLabel = new JLabel("Titolo del documento:");
         titleFieldLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleFieldLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -80,7 +80,7 @@ public class MyTeamGUI {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Area testo
-        JLabel textLabel = new JLabel("Scrivi il contenuto del Documento da Pubblicare:");
+        JLabel textLabel = new JLabel("Scrivi il contenuto del documento da pubblicare:");
         textLabel.setFont(new Font("Arial", Font.BOLD, 16));
         textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         centerPanel.add(textLabel);
@@ -133,7 +133,7 @@ public class MyTeamGUI {
         teammatesBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         teammatesBtn.addActionListener(e -> {
             frame.setVisible(false);
-            new TeamMatesGUI(controller, frame, teamName,hackTitle,location);
+            new TeamMatesGUI(controller, frame, teamName, hackTitle, location);
         });
 
         JButton publishBtn = new JButton("Pubblica");
