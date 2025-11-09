@@ -154,6 +154,7 @@ public class ControllerHackathon {
      * @param refreshing    the refreshing
      * @throws SQLException the sql exception
      */
+
     public void controllerGetAvailableHackathons(List<String> titles, List<String> locations, List<Integer> periodsOfTime,
                                                    List<Date> startDates, List<Date> endDates, List<Date> startSubDates,
                                                    List<Date> endSubDates, List<Integer> maxPlayers, List<Integer> maxTeamDim,

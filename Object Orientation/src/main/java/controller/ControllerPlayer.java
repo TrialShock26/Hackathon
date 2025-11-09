@@ -109,6 +109,8 @@ public class ControllerPlayer {
 
         if(teamsInController == null){
 
+            teamsInController = new ArrayList<>();
+
             System.out.println("DEBUG - Carico DB: " + teamName);
 
             for(Team t : controller.getPlayer().getTeams()){

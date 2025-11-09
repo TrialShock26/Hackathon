@@ -22,6 +22,7 @@ public class MyTeamGUI {
      * @param hackTitle   the hack title
      * @param location    the location
      */
+
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
