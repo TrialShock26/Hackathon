@@ -66,6 +66,8 @@ public class ExAndVoteGUI {
                     "C'è stato un errore!\n" + error,
                     "Errore", JOptionPane.ERROR_MESSAGE);
         }
+
+        // Crea anteprime documento
         documentPreviews = new ArrayList<>();
         for (String documentContent : documentContents) {
             if (documentContent.length() >= 50) {
@@ -79,20 +81,28 @@ public class ExAndVoteGUI {
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
         documentGroup = new ButtonGroup();
         documentButtons = new JRadioButton[documentTitles.size()];
 
         for (int i = 0; i < documentTitles.size(); i++) {
             JPanel card = createDocumentCard(documentTitles.get(i), documentPreviews.get(i), i);
+
+            // Limita altezza della card
+            card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+            card.setAlignmentX(Component.LEFT_ALIGNMENT);
+
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
         JScrollPane scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
         // ===== PANEL INFERIORE =====
@@ -143,8 +153,8 @@ public class ExAndVoteGUI {
         try {
             frame.setContentPane(mainPanel);
             frame.setVisible(true);
-            documentTitles.getFirst();
-        } catch (NoSuchElementException e) {
+            documentTitles.get(0); // controlla se ci sono documenti
+        } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(frame,
                     "Non ci sono documenti da esaminare!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
@@ -223,12 +233,10 @@ public class ExAndVoteGUI {
         dialog.setLayout(new BorderLayout());
         dialog.getContentPane().setBackground(new Color(245, 245, 250));
 
-        // --- Pannello principale con due colonne ---
-        JPanel mainContent = new JPanel(new GridLayout(1, 2, 10, 0)); // due colonne
+        JPanel mainContent = new JPanel(new GridLayout(1, 2, 10, 0));
         mainContent.setBackground(new Color(245, 245, 250));
         mainContent.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // --- Sezione documento ---
         JTextArea contentArea = new JTextArea();
         contentArea.setText(content);
         contentArea.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -241,7 +249,6 @@ public class ExAndVoteGUI {
         contentScroll.setBorder(BorderFactory.createTitledBorder("Contenuto documento"));
         contentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        // --- Sezione commenti ---
         JTextArea commentArea = new JTextArea();
         commentArea.setText(comment + "\n" + controller.getUser().getName() + " " + controller.getUser().getSurname() + ":\n");
         commentArea.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -254,10 +261,8 @@ public class ExAndVoteGUI {
 
         mainContent.add(contentScroll);
         mainContent.add(commentScroll);
-
         dialog.add(mainContent, BorderLayout.CENTER);
 
-        // --- Pannello bottoni ---
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.setBackground(new Color(245, 245, 250));
 
@@ -294,12 +299,10 @@ public class ExAndVoteGUI {
 
         buttonPanel.add(commentBtn);
         buttonPanel.add(closeBtn);
-
         dialog.add(buttonPanel, BorderLayout.SOUTH);
+
         dialog.setVisible(true);
     }
-
-
 
     // ===== POPUP VALUTAZIONE =====
     private void openVoteDialog() {

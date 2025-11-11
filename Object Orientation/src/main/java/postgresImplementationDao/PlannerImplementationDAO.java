@@ -55,6 +55,7 @@ public class PlannerImplementationDAO implements PlannerDAO {
      * @param location la sede dell'hackathon da avviare
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
+
     @Override
     public void startHackathon(String title, String location) throws SQLException {
         CallableStatement cs;

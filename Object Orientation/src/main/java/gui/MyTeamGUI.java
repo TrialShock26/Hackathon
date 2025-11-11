@@ -8,6 +8,7 @@ import controller.*;
 /**
  * The type My team gui.
  */
+
 public class MyTeamGUI {
     private JFrame frame;
     private JTextArea textArea;

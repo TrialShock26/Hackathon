@@ -185,7 +185,8 @@ public class CreateGUI {
                     Integer.parseInt(maxIscrittiField.getText().trim()),
                     Integer.parseInt(maxDimTeamField.getText().trim()),
                     controller.getUser().getUsername(),
-                    giudiciSelezionati.toString()
+                    //formattazione coerente la procedure add_hackathon del db
+                    String.join(",", giudiciSelezionati) + ","
             );
 
             JOptionPane.showMessageDialog(frame, "Hackathon creato con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
