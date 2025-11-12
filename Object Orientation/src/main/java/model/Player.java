@@ -120,6 +120,12 @@ public class Player extends User {
     public List<Team> getTeams() {return myTeams;}
 
     /**
+     *
+     * @param t
+     */
+    public void setTeam(Team t) {myTeams.add(t);}
+
+    /**
      * Restituisce la lista delle iscrizioni del partecipante agli hackathon.
      *
      * @return una lista di oggetti {@code Registration}

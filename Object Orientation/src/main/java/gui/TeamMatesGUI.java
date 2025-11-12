@@ -39,17 +39,11 @@ public class TeamMatesGUI {
         this.hackTitle = hackTitle;
         this.location = location;
 
-        if(!loadTeammates(false)){
-            JOptionPane.showMessageDialog(frame,
-                    "Errore durante il caricamento dei partecipanti!",
-                    "Errore", JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
-        }
-
         frame = new JFrame("Partecipanti del Team");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 500);
         frame.setLocationRelativeTo(null);
+
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 245));
@@ -76,12 +70,14 @@ public class TeamMatesGUI {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ====== LISTA PARTECIPANTI ======
+        loadTeammates(false);
+
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        JPanel card_myself = createParticipantCard(
+        JPanel cardMyself = createParticipantCard(
                 controller.getUser().getName() + " " + controller.getUser().getSurname() + " (Tu)"
         );
 
@@ -91,7 +87,7 @@ public class TeamMatesGUI {
             listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         }
 
-        listPanel.add(card_myself);
+        listPanel.add(cardMyself);
 
         // Calcola altezza dinamica
         int cardHeight = 50;

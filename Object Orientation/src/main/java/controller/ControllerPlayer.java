@@ -49,7 +49,7 @@ public class ControllerPlayer {
                     myHackathons.add(new Hackathon(titles.get(i), locations.get(i), 0,
                             null, null, null, null, 0, 0, null));
 
-                    controller.getPlayer().getTeams().add(new Team(teamNames.get(i), null, null));
+                    controller.getPlayer().getTeams().add(new Team(teamNames.get(i), controller.getPlayer(), null));
 
                 }
 
@@ -143,7 +143,7 @@ public class ControllerPlayer {
 
             // Se non trovato, crea un nuovo team
             if (newTeam == null) {
-                newTeam = new Team(teamName, null, null);
+                newTeam = new Team(teamName, controller.getPlayer(), null);
             }
 
             // Aggiungi i giocatori al team

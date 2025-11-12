@@ -34,8 +34,8 @@ public class Team {
         membersNumber = 1;
         hackathonMember = hack;
         playerList = new ArrayList<>();
-//        if(p!=null){playerList.add(p);}
         playerList.add(p);
+        p.setTeam(this);
         progressList = new ArrayList<>();
         grades = new ArrayList<>();
     }
