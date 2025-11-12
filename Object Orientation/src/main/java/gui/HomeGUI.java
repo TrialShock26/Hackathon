@@ -6,7 +6,10 @@ import java.awt.event.*;
 import controller.*;
 
 /**
- * The type Home gui.
+ * Interfaccia grafica della schermata iniziale dell'applicazione.
+ * Questa classe rappresenta la home page del sistema, mostrando un'interfaccia
+ * con due opzioni principali: login per utenti già registrati
+ * e registrazione per nuovi utenti.
  */
 public class HomeGUI {
     private JFrame frame;
@@ -14,7 +17,12 @@ public class HomeGUI {
     private JButton subscribeButton;
 
     /**
-     * Instantiates a new Home gui.
+     * Costruisce l'interfaccia grafica della schermata home.
+     * Inizializza la finestra principale, configura
+     * il titolo e il sottotitolo dell'applicazione, crea i pulsanti per
+     * accedere alle funzionalità di login e registrazione, e aggiunge
+     * il logo dell'applicazione. Include anche un pulsante di chiusura
+     * con conferma per terminare l'applicazione.
      */
     public HomeGUI() {
         Controller controller = new Controller();
@@ -88,14 +96,14 @@ public class HomeGUI {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // ====== IMMAGINE ======
-      ImageIcon imageIcon = new ImageIcon("Object Orientation/src/main/java/gui/logo.png");
-      Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-      imageIcon = new ImageIcon(image);
+        ImageIcon imageIcon = new ImageIcon("Object Orientation/src/main/java/gui/logo.png");
+        Image image = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        imageIcon = new ImageIcon(image);
 
-      JLabel imageLabel = new JLabel(imageIcon);
-      imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-      imageLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
-      centerPanel.add(imageLabel);
+        JLabel imageLabel = new JLabel(imageIcon);
+        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        centerPanel.add(imageLabel);
 
         // ====== PANEL INFERIORE ======
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -126,7 +134,16 @@ public class HomeGUI {
         frame.setVisible(true);
     }
 
-    // ====== METODO PER BOTTONI CON HOVER ======
+    /**
+     * Crea un pulsante stilizzato che include un
+     * {@link MouseAdapter} per gestire l'effetto visivo
+     * quando il mouse entra ed esce dall'area del pulsante.
+     *
+     * @param text       il testo da visualizzare sul pulsante
+     * @param baseColor  il colore di sfondo normale del pulsante
+     * @param hoverColor il colore di sfondo quando il mouse passa sopra il pulsante
+     * @return il pulsante JButton configurato con gli stili specificati
+     */
     private JButton createStyledButton(String text, Color baseColor, Color hoverColor) {
         JButton button = new JButton(text);
         button.setFont(new Font("Arial", Font.BOLD, 18));
@@ -157,5 +174,4 @@ public class HomeGUI {
         button.setFocusPainted(false);
         return button;
     }
-
 }

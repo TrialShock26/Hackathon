@@ -9,7 +9,9 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Planner gui.
+ * Interfaccia grafica per la gestione degli hackathon da parte di un organizzatore.
+ * Permette di visualizzare la lista degli hackathon gestiti e accedere
+ * ai dettagli di uno specifico hackathon selezionato.
  */
 public class PlannerGUI {
     private JFrame frame;
@@ -20,7 +22,7 @@ public class PlannerGUI {
 
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
-    private ArrayList<Long> periodOftime = new ArrayList<>();
+    private ArrayList<Long> periodOfTime = new ArrayList<>();
     private ArrayList<String> problemDescriptions = new ArrayList<>();
     private ArrayList<Date> startDate = new ArrayList<>();
     private ArrayList<Date> endDate = new ArrayList<>();
@@ -32,10 +34,12 @@ public class PlannerGUI {
     private Controller controller;
 
     /**
-     * Instantiates a new Planner gui.
+     * Inizializza l'interfaccia grafica per la gestione degli hackathon,
+     * costruendo la finestra principale con la lista, i pulsanti e le funzionalità
+     * di aggiornamento e selezione.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame il frame chiamante, da riattivare quando si torna indietro
      */
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
@@ -69,7 +73,7 @@ public class PlannerGUI {
         headerPanel.add(refreshBtn, BorderLayout.EAST);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // ====== LISTA HACKATHON CON RADIOBUTTON ======
+        // ====== LISTA HACKATHON ======
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
@@ -88,7 +92,7 @@ public class PlannerGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
+        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -105,7 +109,7 @@ public class PlannerGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Apri" al centro
+        // Bottone "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -133,7 +137,7 @@ public class PlannerGUI {
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
 
-        if(!loadHackathons( false)) {
+        if (!loadHackathons(false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non sei un Organizzatore!",
                     "Errore", JOptionPane.ERROR_MESSAGE);
@@ -144,16 +148,21 @@ public class PlannerGUI {
         populateHackathonList();
     }
 
-    // ====== RICARICA I DATI DAL DB ======
+    /**
+     * Carica la lista degli hackathon da mostrare all'utente.
+     *
+     * @param refreshing indica se il caricamento è un aggiornamento forzato dal database (true)
+     *                   o un caricamento regolare (false)
+     * @return true se il caricamento è avvenuto correttamente, false in caso di errore
+     */
     private boolean loadHackathons(boolean refreshing) {
-
         boolean isCorrect = true;
 
         try {
             controller.getControllerPlanner().controllerGetHackathons(
-                    controller.getUser().getUsername(), titles, locations, periodOftime,
+                    controller.getUser().getUsername(), titles, locations, periodOfTime,
                     problemDescriptions, startDate, endDate, startSubDate, endSubDate,
-                    maxPlayers, maxTeamDim,refreshing);
+                    maxPlayers, maxTeamDim, refreshing);
 
             if (titles.isEmpty()) {
                 isCorrect = false;
@@ -172,13 +181,14 @@ public class PlannerGUI {
         return isCorrect;
     }
 
-    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    /**
+     * Aggiorna completamente le liste dei dati degli hackathon presenti,
+     * ricaricando i dati e ricostruendo i componenti grafici.
+     */
     private void refreshHackathons() {
-
-        // svuotamento di tutte le informazioni relative agli hackathon
         titles.clear();
         locations.clear();
-        periodOftime.clear();
+        periodOfTime.clear();
         problemDescriptions.clear();
         startDate.clear();
         endDate.clear();
@@ -187,40 +197,43 @@ public class PlannerGUI {
         maxPlayers.clear();
         maxTeamDim.clear();
 
-        // 1. Ricarica i dati dal DB
         loadHackathons(true);
 
-        // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
-
-        // 3. Ricrea il ButtonGroup da zero
         hackathonGroup = new ButtonGroup();
 
-        // 4. Ricostruisci tutte le card con i nuovi dati
         for (int i = 0; i < titles.size(); i++) {
-            JPanel card = createHackathonCard(titles.get(i));
+            JPanel card = createHackathonCard(i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
     }
 
-    // ====== POPOLA LA LISTA HACKATHON (SOLO PER IL COSTRUTTORE) ======
+    /**
+     * Popola la lista degli hackathon nella GUI alla prima apertura della finestra
+     * con le card di visualizzazione.
+     */
+    // ====== POPOLA LA LISTA HACKATHON ======
     private void populateHackathonList() {
         hackathonGroup = new ButtonGroup();
 
-        for (String hackathon : titles) {
-            JPanel card = createHackathonCard(hackathon);
+        for (int i = 0; i < titles.size(); i++) {
+            JPanel card = createHackathonCard(i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
     }
 
-    // ====== CREAZIONE CARD HACKATHON ======
-    private JPanel createHackathonCard(String hackathonName) {
+    /**
+     * Crea una card grafica per rappresentare un singolo hackathon nella lista.
+     *
+     * @param index l'indice dell'hackathon da visualizzare
+     * @return un pannello JPanel contenente il pulsante radio e la struttura grafica della card
+     */
+    private JPanel createHackathonCard(int index) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -231,16 +244,40 @@ public class PlannerGUI {
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JRadioButton radio = new JRadioButton(hackathonName);
+        // Mostra solo il titolo all’utente
+        JRadioButton radio = new JRadioButton(titles.get(index));
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        hackathonGroup.add(radio);
 
+        // Incapsula tutte le info in una stringa concatenata
+        String data = String.join("$",
+                titles.get(index),
+                locations.get(index),
+                String.valueOf(periodOfTime.get(index)),
+                problemDescriptions.get(index),
+                String.valueOf(startDate.get(index)),
+                String.valueOf(endDate.get(index)),
+                String.valueOf(startSubDate.get(index)),
+                String.valueOf(endSubDate.get(index)),
+                String.valueOf(maxPlayers.get(index)),
+                String.valueOf(maxTeamDim.get(index))
+        );
+
+        // L'action command contiene TUTTE le info
+        radio.setActionCommand(data);
+
+        hackathonGroup.add(radio);
         card.add(radio, BorderLayout.CENTER);
 
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
+            /**
+             * Gestisce l'azione del click su una card
+             * che seleziona il relativo hackathon.
+             *
+             * @param e l'evento che rappresenta il click del mouse
+             */
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 radio.setSelected(true);
@@ -251,12 +288,14 @@ public class PlannerGUI {
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
+    /**
+     * Restituisce il nome dell'hackathon selezionato dall'utente.
+     *
+     * @return il nome dell'hackathon selezionato, oppure {@code null} se nessuno è stato selezionato
+     */
     private String getSelectedHackathon() {
-        for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
-            if (button.isSelected()) return button.getText();
-        }
-        return null;
+        ButtonModel selected = hackathonGroup.getSelection();
+        if (selected == null) return null;
+        return selected.getActionCommand();  // Stringa lunga con tutte le info
     }
 }

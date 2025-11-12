@@ -5,7 +5,10 @@ import java.awt.*;
 import controller.*;
 
 /**
- * The type Hub gui.
+ * Interfaccia grafica dell'hub centrale dell'applicazione.
+ * Questa classe rappresenta la schermata di partenza da cui l'utente può accedere
+ * a tutte le funzionalità principali del sistema: giocare, creare hackathon, registrarsi
+ * a nuovi hackathon, valutare team, gestire hackathon e visualizzare classifiche.
  */
 public class HubGUI {
     private JFrame frame;
@@ -21,9 +24,13 @@ public class HubGUI {
     private JLabel subtitle;
 
     /**
-     * Instantiates a new Hub gui.
+     * Costruisce l'interfaccia grafica dell'hub principale.
+     * Inizializza la finestra con un layout contenente titolo, sottotitolo
+     * e una griglia di pulsanti per accedere alle diverse funzionalità:
+     * Gioca, Crea, Nuova Partita, Valuta, Gestisci e Classifica.
+     * Include anche un pulsante "Indietro" e mostra il nome completo dell'utente loggato.
      *
-     * @param controller the controller
+     * @param controller il controller principale dell'applicazione
      */
     public HubGUI(Controller controller) {
 
@@ -160,7 +167,15 @@ public class HubGUI {
         frame.setVisible(true);
     }
 
-    // --- Metodo per creare bottoni uniformi ma più piccoli ---
+    /**
+     * Crea un pulsante stilizzato con dimensioni e stile uniformi.
+     * Tutti i pulsanti creati con questo metodo hanno dimensioni standardizzate
+     * per mantenere la coerenza visiva nella griglia.
+     *
+     * @param text    il testo da visualizzare sul pulsante
+     * @param bgColor il colore di sfondo del pulsante
+     * @return il pulsante JButton configurato con lo stile specificato
+     */
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(new Font("Arial", Font.BOLD, 14));

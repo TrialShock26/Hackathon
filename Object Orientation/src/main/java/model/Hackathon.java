@@ -91,70 +91,70 @@ public class Hackathon {
      *
      * @return il titolo
      */
-    public String getTitle () {return title;}
+    public String getTitle() {return title;}
 
     /**
      * Restituisce la sede dell'hackathon.
      *
      * @return la sede
      */
-    public String getLocation () {return location;}
+    public String getLocation() {return location;}
 
     /**
      * Restituisce la data di inizio dell'hackathon.
      *
      * @return la data di inizio
      */
-    public Date getStartDate () {return startDate;}
+    public Date getStartDate() {return startDate;}
 
     /**
      * Restituisce la data di fine dell'hackathon.
      *
      * @return la data di fine
      */
-    public Date getEndDate () {return endDate;}
+    public Date getEndDate() {return endDate;}
 
     /**
      * Restituisce la durata dell'hackathon.
      *
      * @return la durata in giorni
      */
-    public long getPeriodOfTime () {return periodOfTime;}
+    public long getPeriodOfTime() {return periodOfTime;}
 
     /**
      * Restituisce la data di apertura delle iscrizioni.
      *
      * @return la data di apertura iscrizioni
      */
-    public Date getStartSubscriptionDate () {return startSubscriptionDate;}
+    public Date getStartSubscriptionDate() {return startSubscriptionDate;}
 
     /**
      * Restituisce la data di chiusura delle iscrizioni.
      *
      * @return la data di chiusura iscrizioni
      */
-    public Date getEndSubscriptionDate () {return endSubscriptionDate;}
+    public Date getEndSubscriptionDate() {return endSubscriptionDate;}
 
     /**
      * Restituisce il numero massimo di partecipanti ammessi.
      *
      * @return il numero massimo di partecipanti
      */
-    public int getMaxPlayers () {return maxPlayers;}
+    public int getMaxPlayers() {return maxPlayers;}
 
     /**
      * Restituisce la dimensione massima consentita per un team.
      *
      * @return la dimensione massima del team
      */
-    public int getMaxTeamDim () {return maxTeamDim;}
+    public int getMaxTeamDim() {return maxTeamDim;}
 
     /**
      * Restituisce la descrizione del problema da risolvere durante l'hackathon.
      *
      * @return la descrizione del problema
      */
-    public String getProblemDescription () {return problemDescription;}
+    public String getProblemDescription() {return problemDescription;}
 
     /**
      * Imposta la descrizione del problema, se non è già stata definita.
@@ -181,7 +181,7 @@ public class Hackathon {
      *
      * @param r l'oggetto {@code Registration} da aggiungere
      */
-    public void setRegisteredPlayers(Registration r) {registeredPlayers.add(r);}
+    public void setRegisteredPlayer(Registration r) {registeredPlayers.add(r);}
 
     /**
      * Restituisce la lista delle squadre partecipanti all'hackathon.
@@ -202,7 +202,7 @@ public class Hackathon {
      *
      * @return l'oggetto {@code Planner}
      */
-    public Planner getPlanner () {return planner;}
+    public Planner getPlanner() {return planner;}
 
     /**
      * Restituisce la selezione di riferimento per l'hackathon

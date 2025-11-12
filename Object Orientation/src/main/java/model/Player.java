@@ -64,7 +64,7 @@ public class Player extends User {
         }
         Registration r = new Registration(this, h);
         mySubscriptions.add(r);
-        h.setRegisteredPlayers(r);
+        h.setRegisteredPlayer(r);
 
         Team newTeam = new Team("Team di " + this.getUsername(), this, h);
         myTeams.add(newTeam);

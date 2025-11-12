@@ -6,14 +6,22 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Login gui.
+ * Interfaccia grafica per il login degli utenti.
+ * Permette agli utenti di inserire le proprie credenziali
+ * per accedere all'applicazione. In caso di autenticazione riuscita,
+ * l'utente viene reindirizzato alla schermata principale.
  */
 public class LoginGUI {
     private JPanel mainPanel;
     private JFrame frame;
 
     /**
-     * Instantiates a new Login gui.
+     * Crea e inizializza l'interfaccia grafica per il login.
+     * Configura tutti i componenti grafici necessari per l'inserimento
+     * delle credenziali, inclusi i campi per username e password,
+     * il pulsante di conferma per l'autenticazione e il pulsante
+     * per tornare alla schermata home. Gestisce anche la validazione
+     * dei campi e l'interazione con il controller per verificare le credenziali.
      */
     public LoginGUI() {
         Controller controller = new Controller();
@@ -77,6 +85,16 @@ public class LoginGUI {
         loginBtn.setFocusPainted(false);
         loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginBtn.addActionListener(new ActionListener() {
+            /**
+             * Gestisce l'azione del pulsante "Conferma" per il login.
+             * Verifica che i campi username e password siano compilati,
+             * effettua l'autenticazione tramite il controller e, in caso
+             * di successo, mostra un messaggio di benvenuto e apre la schermata
+             * di hub. In caso di credenziali errate o campi vuoti,
+             * mostra un messaggio di errore appropriato.
+             *
+             * @param e l'evento di azione generato dal click sul pulsante
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = userField.getText();
@@ -120,6 +138,13 @@ public class LoginGUI {
         backBtn.setFocusPainted(false);
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(new ActionListener() {
+            /**
+             * Gestisce l'azione del pulsante "Indietro".
+             * Chiude la finestra di login corrente e torna alla schermata
+             * iniziale dell'applicazione.
+             *
+             * @param e l'evento di azione generato dal click sul pulsante
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();

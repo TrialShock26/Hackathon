@@ -10,6 +10,7 @@ import java.util.List;
 /**
  * The type Controller planner.
  */
+
 public class ControllerPlanner {
 
     private Controller controller;
@@ -40,7 +41,7 @@ public class ControllerPlanner {
      * @param username            the username
      * @param titles              the titles
      * @param locations           the locations
-     * @param periodOftime        the period oftime
+     * @param periodOfTime        the period oftime
      * @param problemDescriptions the problem descriptions
      * @param startDate           the start date
      * @param endDate             the end date
@@ -52,7 +53,7 @@ public class ControllerPlanner {
      * @throws SQLException the sql exception
      */
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
-                                        List<Long> periodOftime, List<String> problemDescriptions,
+                                        List<Long> periodOfTime, List<String> problemDescriptions,
                                          List<Date> startDate, List<Date> endDate,
                                         List<Date> startSubDate, List<Date> endSubDate,
                                         List<Integer> maxPlayers, List<Integer> maxTeamDim,boolean refreshing) throws SQLException {
@@ -60,9 +61,9 @@ public class ControllerPlanner {
 
             if(controller.getPlanner().getHackathons().isEmpty() || refreshing){
                 PlannerDAO planner = new PlannerImplementationDAO();
-                planner.getHackathons(username, titles, locations,periodOftime,problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
+                planner.getHackathons(username, titles, locations,periodOfTime,problemDescriptions,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim);
                 for(int i=0;i<titles.size();i++){
-                    controller.getPlanner().getHackathons().add(new Hackathon(titles.get(i),locations.get(i),periodOftime.get(i),
+                    controller.getPlanner().getHackathons().add(new Hackathon(titles.get(i),locations.get(i),periodOfTime.get(i),
                             startDate.get(i),endDate.get(i),startSubDate.get(i),
                             endSubDate.get(i),maxPlayers.get(i),maxTeamDim.get(i),null));
                     try{
@@ -75,7 +76,7 @@ public class ControllerPlanner {
                 for (Hackathon myHackathon : controller.getPlanner().getHackathons()) {
                     titles.add(myHackathon.getTitle());
                     locations.add(myHackathon.getLocation());
-                    periodOftime.add(myHackathon.getPeriodOfTime());
+                    periodOfTime.add(myHackathon.getPeriodOfTime());
                     problemDescriptions.add(myHackathon.getProblemDescription());
                     startDate.add(myHackathon.getStartDate());
                     endDate.add(myHackathon.getEndDate());
