@@ -41,7 +41,7 @@ public class Planner extends User {
      * @param h l'hackathon a cui assegnare il giudice
      * @param j il giudice da invitare
      */
-    public void inviteJudge (Hackathon h, Judge j) {
+    public void inviteJudge(Hackathon h, Judge j) {
         if (h.getSelection() == null) {
             h.setSelection(new Selection(this, h));
             h.getSelection().setJudge(j);

@@ -5,15 +5,19 @@ import java.awt.*;
 import controller.Controller;
 
 /**
- * The type Subscribe gui.
+ * Interfaccia grafica che gestisce la schermata di registrazione di un nuovo utente
+ * sulla piattaforma.
+ * Consente all'utente di inserire le credenziali
+ * e di creare un nuovo account all'interno del sistema.
  */
 public class SubscribeGUI {
     private JFrame frame;
 
     /**
-     * Instantiates a new Subscribe gui.
+     * Inizializza la finestra di registrazione, creando il form per l'inserimento
+     * dei dati personali e gestendo l'azione di conferma e di ritorno alla home.
      *
-     * @param homeFrame the home frame
+     * @param homeFrame il frame della schermata principale da cui si è aperta la registrazione
      */
     public SubscribeGUI(JFrame homeFrame) {
         Controller controller = new Controller();
@@ -99,11 +103,31 @@ public class SubscribeGUI {
         frame.setVisible(true);
     }
 
-    // ===== METODI DI SUPPORTO =====
+    /**
+     * Metodo di supporto che aggiunge un campo di testo con relativa etichetta
+     * all’interno del pannello specificato.
+     *
+     * @param panel il pannello in cui aggiungere il campo
+     * @param gbc   il gestore di layout {@link GridBagConstraints}
+     * @param y     la posizione verticale del campo nel layout
+     * @param label l’etichetta testuale associata al campo
+     * @return il campo di testo creato
+     */
     private JTextField addLabeledField(JPanel panel, GridBagConstraints gbc, int y, String label) {
         return (JTextField) addLabeledField(panel, gbc, y, label, false);
     }
 
+    /**
+     * Metodo di supporto che aggiunge un campo (testo o password) con etichetta
+     * a un pannello, utilizzando un layout GridBag.
+     *
+     * @param panel      il pannello in cui aggiungere il campo
+     * @param gbc        il gestore del layout {@link GridBagConstraints}
+     * @param y          la posizione verticale del campo
+     * @param label      l’etichetta descrittiva del campo
+     * @param isPassword true se il campo deve essere una password, false altrimenti
+     * @return il componente del campo creato (JTextField o JPasswordField)
+     */
     private JComponent addLabeledField(JPanel panel, GridBagConstraints gbc, int y, String label, boolean isPassword) {
         gbc.gridx = 0;
         gbc.gridy = y;
@@ -118,6 +142,16 @@ public class SubscribeGUI {
         return field;
     }
 
+    /**
+     * Metodo di supporto che applica uno stile uniforme a un pulsante.
+     * Imposta colore di sfondo, dimensione, font e cursore per mantenere
+     * un aspetto coerente con l’interfaccia grafica.
+     *
+     * @param button il pulsante a cui applicare lo stile
+     * @param bgColor il colore di sfondo
+     * @param width   la larghezza preferita del pulsante
+     * @param height  l’altezza preferita del pulsante
+     */
     private void styleButton(JButton button, Color bgColor, int width, int height) {
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(bgColor);

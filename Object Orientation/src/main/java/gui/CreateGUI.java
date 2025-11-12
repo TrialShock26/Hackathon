@@ -1,4 +1,4 @@
-package gui;
+package gui;//TODO javadoc
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,6 @@ public class CreateGUI {
     private Controller controller;
     private JTextField titoloField;
     private JTextField sedeField;
-    private JTextField durataField;
     private JTextField dataInizioField;
     private JTextField dataFineField;
     private JTextField dataAperturaIscrizioniField;

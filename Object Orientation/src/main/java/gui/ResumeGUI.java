@@ -8,7 +8,9 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Resume gui.
+ * Interfaccia grafica che gestisce la visualizzazione del riepilogo di un hackathon.
+ * Permette all'organizzatore di visualizzare tutti i dettagli dell’hackathon selezionato,
+ * oltre a offrire funzionalità per avviare o terminare l’hackathon
  */
 public class ResumeGUI {
     private JFrame frame;
@@ -16,11 +18,13 @@ public class ResumeGUI {
     private Controller controller;
 
     /**
-     * Instantiates a new Resume gui.
+     * Inizializza la finestra del riepilogo di un hackathon, mostrando le informazioni
+     * principali e fornendo pulsanti per avviare o terminare l’evento.
      *
-     * @param controller    the controller
-     * @param callerFrame   the caller frame
-     * @param hackathonInfo hackathon info
+     * @param controller    il controller principale
+     * @param callerFrame   il frame chiamante
+     * @param hackathonInfo tutti i dati dell’hackathon di cui visualizzare il riepilogo,
+     *                      formattati tramite un carattere separatore
      */
 
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonInfo) {
@@ -102,14 +106,13 @@ public class ResumeGUI {
         problemScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         problemScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         problemScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        // Imposta preferenze iniziali ma lascia che cresca
         problemScroll.setPreferredSize(new Dimension(600, 100));
         problemScroll.setMinimumSize(new Dimension(600, 100));
         problemScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         contentPanel.add(problemScroll);
 
-        // Scroll principale (per tutta la GUI)
+        // Scroll principale
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -121,7 +124,7 @@ public class ResumeGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" (sinistra)
+        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -132,14 +135,14 @@ public class ResumeGUI {
         backBtn.setFocusPainted(false);
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
-            frame.dispose();       // chiudi ResumeGUI
-            callerFrame.setVisible(true); // mostra PlannerGUI originale
+            frame.dispose();
+            callerFrame.setVisible(true);
         });
         leftPanel.add(backBtn);
 
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pulsanti centrali (Inizia / Termina)
+        // Pulsanti centrali
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -149,9 +152,7 @@ public class ResumeGUI {
         startBtn.setForeground(Color.WHITE);
         startBtn.setFocusPainted(false);
         startBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        //Hackathon finalSelectedHackathon = selectedHackathon;
         startBtn.addActionListener(e -> {
-
             try{
                 controller.getControllerPlanner().controllerStartHackathon(hackathonInfoFormatted.getFirst(),
                         hackathonInfoFormatted.get(1)); //tile e location
@@ -169,7 +170,6 @@ public class ResumeGUI {
                         JOptionPane.ERROR_MESSAGE
                 );
             }
-
         });
 
         JButton endBtn = new JButton("Termina");
@@ -192,14 +192,12 @@ public class ResumeGUI {
                     controller.getControllerPlanner()
                             .controllerEndHackathon(hackathonInfoFormatted.getFirst(), hackathonInfoFormatted.get(1));
 
-                    // ====== CREA DIALOG PERSONALIZZATO ======
                     JDialog dialog = new JDialog(frame, "Hackathon concluso", true);
                     dialog.setSize(420, 200);
                     dialog.setLocationRelativeTo(frame);
                     dialog.setLayout(new BorderLayout());
                     dialog.getContentPane().setBackground(new Color(245, 247, 250));
 
-                    // ICONA + MESSAGGIO
                     JPanel messagePanel = new JPanel(new BorderLayout());
                     messagePanel.setOpaque(false);
                     messagePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
@@ -213,7 +211,6 @@ public class ResumeGUI {
                     messagePanel.add(msgLabel, BorderLayout.CENTER);
                     dialog.add(messagePanel, BorderLayout.CENTER);
 
-                    // ====== BOTTONI ======
                     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
                     buttonPanel.setOpaque(false);
 
@@ -227,7 +224,7 @@ public class ResumeGUI {
 
                     JButton rankingBtn = new JButton("Classifica");
                     rankingBtn.setPreferredSize(new Dimension(130, 35));
-                    rankingBtn.setBackground(new Color(30, 144, 255)); // azzurro vivo
+                    rankingBtn.setBackground(new Color(30, 144, 255));
                     rankingBtn.setForeground(Color.WHITE);
                     rankingBtn.setFocusPainted(false);
                     rankingBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -240,9 +237,7 @@ public class ResumeGUI {
 
                     buttonPanel.add(closeBtn);
                     buttonPanel.add(rankingBtn);
-
                     dialog.add(buttonPanel, BorderLayout.SOUTH);
-
                     dialog.setVisible(true);
 
                 } catch (SQLException ex) {
@@ -266,7 +261,15 @@ public class ResumeGUI {
         frame.setVisible(true);
     }
 
-    // ====== METODO DI SUPPORTO ======
+    /**
+     * Crea un pannello informativo per una singola coppia etichetta-valore
+     * da inserire nella tabella.
+     * Ogni riga mostra una proprietà dell’hackathon.
+     *
+     * @param label l’etichetta descrittiva del campo
+     * @param value il valore corrispondente da visualizzare
+     * @return un JPanel formattato contenente l’etichetta e il valore
+     */
     private JPanel createInfoRow(String label, String value) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         panel.setBackground(new Color(240, 240, 245));

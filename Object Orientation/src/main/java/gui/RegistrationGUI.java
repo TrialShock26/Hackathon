@@ -9,7 +9,10 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Registration gui.
+ * Interfaccia grafica dedicata alla registrazione di un utente
+ * a un hackathon disponibile.
+ * L'utente può visualizzare l'elenco degli hackathon aperti, consultare i relativi dettagli e completare la procedura
+ * di iscrizione, se le condizioni lo permettono.
  */
 public class RegistrationGUI {
     private JFrame frame;
@@ -27,10 +30,11 @@ public class RegistrationGUI {
     private ArrayList<Integer> maxTeamDims = new ArrayList<>();
 
     /**
-     * Instantiates a new Registration gui.
+     * Inizializza la finestra grafica, carica la lista degli hackathon disponibili
+     * e consente all'utente di selezionarne uno per effettuare la registrazione.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale
+     * @param callerFrame il frame chiamante da cui è stata aperta questa finestra
      */
     public RegistrationGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Registrazione Hackathon");
@@ -178,14 +182,26 @@ public class RegistrationGUI {
         headerPanel.add(refreshBtn, BorderLayout.EAST);
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
-
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
     }
 
-    // ====== CREA CARD HACKATHON ======
+    /**
+     * Crea una card rappresentante un singolo hackathon, con nome e pulsante di selezione.
+     *
+     * @param titolo                 il titolo dell’hackathon
+     * @param sede                   la sede in cui si svolge
+     * @param durata                 la durata in giorni
+     * @param dataInizio             la data di inizio
+     * @param dataFine               la data di fine
+     * @param dataAperturaIscrizioni la data di apertura delle iscrizioni
+     * @param dataChiusuraIscrizioni la data di chiusura delle iscrizioni
+     * @param maxIscritti            il numero massimo di partecipanti
+     * @param maxDimTeam             la dimensione massima consentita per i team
+     * @return il pannello rappresentante l’hackathon
+     */
     private JPanel createHackathonCard(String titolo, String sede, int durata, Date dataInizio, Date dataFine,
                                        Date dataAperturaIscrizioni, Date dataChiusuraIscrizioni, int maxIscritti, int maxDimTeam) {
         JPanel card = new JPanel(new BorderLayout());
@@ -199,8 +215,6 @@ public class RegistrationGUI {
         JRadioButton radio = new JRadioButton(titolo);
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
-
-        // Quando si seleziona, apre un popup con le info riepilogative
         radio.addActionListener(e -> showHackathonInfoPopup(titolo, sede, durata, dataInizio, dataFine, dataAperturaIscrizioni,
                 dataChiusuraIscrizioni, maxIscritti, maxDimTeam));
 
@@ -213,7 +227,19 @@ public class RegistrationGUI {
         return card;
     }
 
-    // ====== MOSTRA POPUP RIEPILOGO HACKATHON ======
+    /**
+     * Mostra un popup contenente le informazioni dettagliate sull’hackathon selezionato.
+     *
+     * @param titolo                 il titolo dell’hackathon
+     * @param sede                   la sede dell’evento
+     * @param durata                 la durata in giorni
+     * @param dataInizio             la data di inizio
+     * @param dataFine               la data di fine
+     * @param dataAperturaIscrizioni la data di apertura iscrizioni
+     * @param dataChiusuraIscrizioni la data di chiusura iscrizioni
+     * @param maxIscritti            il numero massimo di partecipanti
+     * @param maxDimTeam             la dimensione massima dei team
+     */
     private void showHackathonInfoPopup(String titolo, String sede, int durata, Date dataInizio, Date dataFine,
                                         Date dataAperturaIscrizioni, Date dataChiusuraIscrizioni, int maxIscritti, int maxDimTeam) {
         JDialog dialog = new JDialog(frame, "Dettagli Hackathon", true);
@@ -264,7 +290,11 @@ public class RegistrationGUI {
         dialog.setVisible(true);
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
+    /**
+     * Restituisce il nome dell’hackathon selezionato dall’utente.
+     *
+     * @return il titolo dell’hackathon selezionato o {@code null} se nessuno è selezionato
+     */
     private String getSelectedHackathon() {
         for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -273,6 +303,10 @@ public class RegistrationGUI {
         return null;
     }
 
+    /**
+     * Svuota il pannello della lista e tutte le collezioni di dati associate,
+     * preparando la GUI per un nuovo caricamento di hackathon.
+     */
     private void preparePanel() {
         listPanel.removeAll();
         titles.clear();
@@ -286,6 +320,10 @@ public class RegistrationGUI {
         maxTeamDims.clear();
     }
 
+    /**
+     * Crea dinamicamente le card per ciascun hackathon disponibile
+     * e li aggiunge alla lista visibile nella GUI.
+     */
     private void createPanel() {
         for (int i = 0; i < titles.size(); i++) {
             JPanel card = createHackathonCard(titles.get(i), locations.get(i), periodsOfTime.get(i),

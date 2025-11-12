@@ -6,7 +6,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type My team gui.
+ * Interfaccia grafica per la gestione del team di un giocatore.
+ * Permette ai membri di un team di pubblicare documenti con i progressi del progetto
+ * durante un hackathon. L'interfaccia include campi per inserire il titolo e il contenuto
+ * del documento, oltre a pulsanti per pubblicare i progressi e visualizzare i partecipanti del team.
+ * Fornisce anche informazioni sull'utente corrente e sul nome del team.
  */
 
 public class MyTeamGUI {
@@ -15,13 +19,14 @@ public class MyTeamGUI {
     private JTextField titleField;
 
     /**
-     * Instantiates a new My team gui.
+     * Crea e inizializza l'interfaccia grafica per la gestione del team,
+     * configurando tutti i componenti necessari.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
-     * @param teamName    the team name
-     * @param hackTitle   the hack title
-     * @param location    the location
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame la finestra chiamante a cui tornare dopo l'operazione
+     * @param teamName    il nome del team corrente
+     * @param hackTitle   il titolo dell'hackathon a cui partecipa il team
+     * @param location    la sede dell'hackathon
      */
 
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
@@ -66,7 +71,7 @@ public class MyTeamGUI {
         ));
 
         // Campo titolo
-        JLabel titleFieldLabel = new JLabel("Titolo del Documento:");
+        JLabel titleFieldLabel = new JLabel("Titolo del documento:");
         titleFieldLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleFieldLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -82,7 +87,7 @@ public class MyTeamGUI {
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Area testo
-        JLabel textLabel = new JLabel("Scrivi il contenuto del Documento da Pubblicare:");
+        JLabel textLabel = new JLabel("Scrivi il contenuto del documento da pubblicare:");
         textLabel.setFont(new Font("Arial", Font.BOLD, 16));
         textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         centerPanel.add(textLabel);
@@ -135,7 +140,7 @@ public class MyTeamGUI {
         teammatesBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         teammatesBtn.addActionListener(e -> {
             frame.setVisible(false);
-            new TeamMatesGUI(controller, frame, teamName,hackTitle,location);
+            new TeamMatesGUI(controller, frame, teamName, hackTitle, location);
         });
 
         JButton publishBtn = new JButton("Pubblica");

@@ -47,7 +47,7 @@ public class Team {
      * @param title   il titolo del documento
      * @param content il contenuto del documento
      */
-    public void publishProgress (String title, String content) {
+    public void publishProgress(String title, String content) {
         Document d = new Document(title, content, this);
         progressList.add(d);
     }
@@ -57,14 +57,7 @@ public class Team {
      *
      * @return il nome del team
      */
-    public String getName () {return name;}
-
-    /**
-     * Restituisce l'{@link Hackathon} a cui il team è iscritto.
-     *
-     * @return l'hackathon associato
-     */
-    public Hackathon getHackathon() {return hackathonMember;}
+    public String getName() {return name;}
 
     /**
      * Restituisce il numero di membri attuali del team.
@@ -72,6 +65,13 @@ public class Team {
      * @return il numero di membri
      */
     public int getMembersNumber() {return membersNumber;}
+
+    /**
+     * Restituisce l'{@link Hackathon} a cui il team è iscritto.
+     *
+     * @return l'hackathon associato
+     */
+    public Hackathon getHackathon() {return hackathonMember;}
 
     /**
      * Restituisce la lista dei {@link Player} che compongono il team.
@@ -85,7 +85,7 @@ public class Team {
      *
      * @param p il giocatore da aggiungere
      */
-    public void setPlayer (Player p) {
+    public void setPlayer(Player p) {
         playerList.add(p);
         membersNumber++;
     }
@@ -105,7 +105,7 @@ public class Team {
      *
      * @return la lista dei progressi
      */
-    public List<Document> getProgress () {return progressList;}
+    public List<Document> getProgress() {return progressList;}
 
     /**
      * Restituisce la lista delle {@link Grade} ricevute dal team.
@@ -119,5 +119,5 @@ public class Team {
      *
      * @param g la valutazione da aggiungere
      */
-    public void setGrades (Grade g) {grades.add(g);}
+    public void setGrade(Grade g) {grades.add(g);}
 }

@@ -8,7 +8,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Teams gui.
+ * Interfaccia grafica per il giudice che gestisce la visualizzazione
+ * dei team partecipanti a un determinato hackathon.
+ * Consente al giudice di visualizzare i team registrati,
+ * selezionarne uno tramite {@link JRadioButton} e accedere alla schermata successiva
+ * per esaminare e valutare il team scelto.
  */
 public class TeamsGUI {
     private JFrame frame;
@@ -16,12 +20,13 @@ public class TeamsGUI {
     private ButtonGroup teamGroup;
 
     /**
-     * Instantiates a new Teams gui.
+     * Inizializza la finestra, recupera l'elenco dei team associati a un hackathon
+     * e costruisce l'interfaccia grafica per permettere la selezione di un team.
      *
-     * @param controller        the controller
-     * @param callerFrame       the caller frame
-     * @param selectedHackathon the selected hackathon
-     * @param location          the location
+     * @param controller        il controller principale
+     * @param callerFrame       il frame chiamante, da cui si accede a questa GUI
+     * @param selectedHackathon il nome dell’hackathon selezionato
+     * @param location          la sede dell’hackathon
      */
     public TeamsGUI(Controller controller, JFrame callerFrame, String selectedHackathon, String location) {
         frame = new JFrame("Seleziona Team");
@@ -129,7 +134,13 @@ public class TeamsGUI {
         frame.setVisible(true);
     }
 
-    // ====== CREAZIONE CARD TEAM ======
+    /**
+     * Crea una card per un singolo team,
+     * contenente un {@link JRadioButton} per la selezione.
+     *
+     * @param teamName il nome del team da visualizzare nella card
+     * @return un JPanel contenente il nome del team e il relativo JRadioButton
+     */
     private JPanel createTeamCard(String teamName) {
         JPanel card = new JPanel(new BorderLayout());
         // non forzare un preferred size troppo rigido: usa maximum size per farle adattare al viewport
@@ -150,7 +161,11 @@ public class TeamsGUI {
         return card;
     }
 
-    // ====== OTTIENI TEAM SELEZIONATO ======
+    /**
+     * Restituisce il nome del team selezionato dall’utente nella lista dei {@link JRadioButton}
+     *
+     * @return il nome del team selezionato, oppure {@code null} se nessun team è stato selezionato
+     */
     private String getSelectedTeam() {
         for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();

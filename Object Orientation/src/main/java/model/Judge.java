@@ -40,7 +40,7 @@ public class Judge extends User {
      * @param problem la descrizione del problema da pubblicare
      * @throws IllegalAccessException se la descrizione del problema è già stata impostata
      */
-    public void publishProblem (Hackathon h, String problem) throws IllegalAccessException {
+    public void publishProblem(Hackathon h, String problem) throws IllegalAccessException {
         h.setProblemDescription(problem);
     }
 
@@ -50,10 +50,10 @@ public class Judge extends User {
      * @param d       il documento da commentare
      * @param comment il testo del commento
      */
-    public void commentDocument (Document d, String comment) {
+    public void commentDocument(Document d, String comment) {
         d.setComment(comment);
         commentDone.add(d);
-        d.setCommentators(this);
+        d.setCommentator(this);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Judge extends User {
     public void gradeTeam(Team t, int value) {
         Grade g = new Grade(this, t, value);
         myGradings.add(g);
-        t.setGrades(g);
+        t.setGrade(g);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Judge extends User {
      *
      * @param inSel la selezione da aggiungere
      */
-    public void setSelections(Selection inSel) {mySelections.add(inSel);}
+    public void setSelection(Selection inSel) {mySelections.add(inSel);}
 
     /**
      * Restituisce la lista delle valutazioni assegnate dal giudice.

@@ -7,7 +7,9 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Player gui.
+ * Interfaccia grafica dedicata ai partecipanti.
+ * Permette a un utente giocatore di visualizzare i team a cui partecipa, di selezionarne uno
+ * per aprirne i dettagli, oppure di cambiare squadra.
  */
 public class PlayerGUI {
     private JFrame frame;
@@ -23,10 +25,11 @@ public class PlayerGUI {
     private Controller controller;
 
     /**
-     * Instantiates a new Player gui.
+     * Inizializza l'interfaccia grafica per il giocatore, caricando le informazioni
+     * sui team a cui partecipa e fornendo pulsanti per aggiornare i risultati o cambiare team.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame il frame chiamante, da riattivare quando si torna indietro
      */
     public PlayerGUI(Controller controller, JFrame callerFrame) {
 
@@ -161,7 +164,13 @@ public class PlayerGUI {
 
     }
 
-    // ====== RICARICA I DATI DAL DB ======
+    /**
+     * Carica la lista dei team da mostrare all'utente.
+     *
+     * @param refreshing indica se il caricamento è un aggiornamento forzato dal database (true)
+     *                   o un caricamento regolare (false)
+     * @return true se il caricamento è avvenuto correttamente, false in caso di errore
+     */
     private boolean loadHackathons(boolean refreshing) {
 
         boolean isCorrect = true;
@@ -185,7 +194,10 @@ public class PlayerGUI {
         return isCorrect;
     }
 
-    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    /**
+     * Aggiorna completamente le liste dei dati dei team, ricaricando i dati
+     * e ricostruendo i componenti grafici nella finestra.
+     */
     private void refreshHackathons() {
 
         //svuotamento di tutte le informazioni relative agli hackathon e ai team
@@ -215,7 +227,10 @@ public class PlayerGUI {
 
     }
 
-    // ====== POPOLA LA LISTA TEAM (SOLO PER IL COSTRUTTORE) ======
+    /**
+     * Popola la lista dei team alla prima apertura della GUI con
+     * le card per i team.
+     */
     private void populateTeamList() {
         teamGroup = new ButtonGroup();
 
@@ -226,7 +241,16 @@ public class PlayerGUI {
         }
     }
 
-    // ====== CREAZIONE CARD TEAM ======
+    /**
+     * Crea una card per rappresentare un team.
+     * Ogni elemento contiene il nome del team, il titolo e la sede
+     * dell'hackathon di riferimento e un pulsante {@link JRadioButton} per la selezione.
+     *
+     * @param teamName       il nome del team
+     * @param hackathonName  il nome dell'hackathon associato
+     * @param index          l'indice del team nella lista
+     * @return un oggetto {@link JPanel} contenente le informazioni del team
+     */
     private JPanel createTeamCard(String teamName, String hackathonName, int index) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
@@ -262,6 +286,12 @@ public class PlayerGUI {
 
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
+            /**
+             * Gestisce l'azione del click su una card
+             * che seleziona il relativo hackathon.
+             *
+             * @param e l'evento che rappresenta il click del mouse
+             */
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 radio.setSelected(true);
@@ -271,7 +301,12 @@ public class PlayerGUI {
 
         return card;
     }
-    // ====== OTTIENI INDICE TEAM SELEZIONATO ======
+
+    /**
+     * Restituisce l'indice del team selezionato dall'utente.
+     *
+     * @return l'indice del team selezionato, oppure -1 se nessun team è selezionato
+     */
     private int getSelectedTeamIndex() {
         ButtonModel selectedModel = teamGroup.getSelection();
         return (selectedModel != null) ? Integer.parseInt(selectedModel.getActionCommand()) : -1;
