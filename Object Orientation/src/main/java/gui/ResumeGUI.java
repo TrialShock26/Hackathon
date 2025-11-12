@@ -2,9 +2,10 @@ package gui;
 
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import controller.*;
-import model.Hackathon;
 
 /**
  * Interfaccia grafica che gestisce la visualizzazione del riepilogo di un hackathon.
@@ -14,6 +15,7 @@ import model.Hackathon;
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
+    private Controller controller;
 
     /**
      * Inizializza la finestra del riepilogo di un hackathon, mostrando le informazioni
@@ -21,9 +23,12 @@ public class ResumeGUI {
      *
      * @param controller    il controller principale
      * @param callerFrame   il frame chiamante
-     * @param hackathonName il nome dell’hackathon di cui visualizzare il riepilogo
+     * @param hackathonInfo tutti i dati dell’hackathon di cui visualizzare il riepilogo,
+     *                      formattati tramite un carattere separatore
      */
-    public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonName) {
+
+    public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonInfo) {
+        this.controller = controller;
         frame = new JFrame("Riepilogo");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
@@ -44,29 +49,40 @@ public class ResumeGUI {
         contentPanel.setBackground(new Color(240, 240, 245));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
+        ArrayList<String> hackathonInfoFormatted = new ArrayList<>(Arrays.asList(hackathonInfo.split("\\$")));
+
         // Titolo hackathon
-        JLabel hackTitle = new JLabel(hackathonName);
+        JLabel hackTitle = new JLabel(hackathonInfoFormatted.getFirst());
         hackTitle.setFont(new Font("Arial", Font.BOLD, 20));
         hackTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         contentPanel.add(hackTitle);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        Hackathon selectedHackathon =  null;
+        // Creazione di una stringa unica contenente tutte le informazioni di un hackathon,
+        // separate dal carattere '$'. L'ordine degli elementi è importante e deve rimanere coerente
+        // con l’ordine usato quando verrà effettuato lo split per ricostruire i dati.
+        //
+        // Indici dei campi (usati poi in hackathonInfoFormatted.get(index)):
+        //  0 → Titolo
+        //  1 → Location
+        //  2 → Durata (periodOfTime)
+        //  3 → Descrizione del problema
+        //  4 → Data inizio hackathon
+        //  5 → Data fine hackathon
+        //  6 → Data apertura iscrizioni
+        //  7 → Data chiusura iscrizioni
+        //  8 → Numero massimo di partecipanti
+        //  9 → Dimensione massima dei team
+        //
 
-        for (Hackathon h : controller.getPlanner().getHackathons()) {
-            if (h.getTitle().equals(hackathonName)) {
-                selectedHackathon = h;
-            }
-        }
-
-        contentPanel.add(createInfoRow("Sede:", String.valueOf(selectedHackathon.getLocation())));
-        contentPanel.add(createInfoRow("Durata:", String.valueOf(selectedHackathon.getPeriodOfTime()) + " giorni"));
-        contentPanel.add(createInfoRow("Data Inizio:", selectedHackathon.getStartDate().toString()));
-        contentPanel.add(createInfoRow("Data Fine:", selectedHackathon.getEndDate().toString()));
-        contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", selectedHackathon.getStartSubscriptionDate().toString()));
-        contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", selectedHackathon.getEndSubscriptionDate().toString()));
-        contentPanel.add(createInfoRow("Max Iscritti:", String.valueOf(selectedHackathon.getMaxPlayers())));
-        contentPanel.add(createInfoRow("Max Dim. Team:", String.valueOf(selectedHackathon.getMaxTeamDim())));
+        contentPanel.add(createInfoRow("Sede:", String.valueOf(hackathonInfoFormatted.get(1))));
+        contentPanel.add(createInfoRow("Durata:", hackathonInfoFormatted.get(2) + " giorni"));
+        contentPanel.add(createInfoRow("Data Inizio:", hackathonInfoFormatted.get(4)));
+        contentPanel.add(createInfoRow("Data Fine:", hackathonInfoFormatted.get(5)));
+        contentPanel.add(createInfoRow("Data Apertura Iscrizioni:", hackathonInfoFormatted.get(6)));
+        contentPanel.add(createInfoRow("Data Chiusura Iscrizioni:", hackathonInfoFormatted.get(7)));
+        contentPanel.add(createInfoRow("Max Iscritti:", hackathonInfoFormatted.get(8)));
+        contentPanel.add(createInfoRow("Max Dim. Team:", hackathonInfoFormatted.get(9)));
 
         // ====== DESCRIZIONE PROBLEMA ======
         JLabel problemLabel = new JLabel("Descrizione Problema:");
@@ -75,7 +91,7 @@ public class ResumeGUI {
         contentPanel.add(problemLabel);
         contentPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 
-        JTextArea problemArea = new JTextArea(selectedHackathon.getProblemDescription());
+        JTextArea problemArea = new JTextArea(hackathonInfoFormatted.get(3));
         problemArea.setFont(new Font("Arial", Font.PLAIN, 14));
         problemArea.setLineWrap(true);
         problemArea.setWrapStyleWord(true);
@@ -136,13 +152,13 @@ public class ResumeGUI {
         startBtn.setForeground(Color.WHITE);
         startBtn.setFocusPainted(false);
         startBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        Hackathon finalSelectedHackathon = selectedHackathon;
         startBtn.addActionListener(e -> {
-            try {
-                controller.getControllerPlanner().controllerStartHackathon(finalSelectedHackathon.getTitle(), finalSelectedHackathon.getLocation());
+            try{
+                controller.getControllerPlanner().controllerStartHackathon(hackathonInfoFormatted.getFirst(),
+                        hackathonInfoFormatted.get(1)); //tile e location
                 JOptionPane.showMessageDialog(
                         frame,
-                        "Hackathon \"" + hackathonName + "\" avviato!",
+                        "Hackathon \"" + hackathonInfoFormatted.getFirst() + "\" avviato!",
                         "Avvio",
                         JOptionPane.INFORMATION_MESSAGE
                 );
@@ -165,7 +181,7 @@ public class ResumeGUI {
         endBtn.addActionListener(e -> {
             int response = JOptionPane.showConfirmDialog(
                     frame,
-                    "Vuoi davvero terminare l’hackathon \"" + hackathonName + "\"?",
+                    "Vuoi davvero terminare l’hackathon \"" + hackathonInfoFormatted.getFirst() + "\"?",
                     "Conferma terminazione",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
@@ -174,7 +190,7 @@ public class ResumeGUI {
             if (response == JOptionPane.YES_OPTION) {
                 try {
                     controller.getControllerPlanner()
-                            .controllerEndHackathon(finalSelectedHackathon.getTitle(), finalSelectedHackathon.getLocation());
+                            .controllerEndHackathon(hackathonInfoFormatted.getFirst(), hackathonInfoFormatted.get(1));
 
                     JDialog dialog = new JDialog(frame, "Hackathon concluso", true);
                     dialog.setSize(420, 200);
@@ -187,7 +203,7 @@ public class ResumeGUI {
                     messagePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
                     JLabel iconLabel = new JLabel(UIManager.getIcon("OptionPane.informationIcon"));
-                    JLabel msgLabel = new JLabel("<html><div style='text-align:center;'>Hackathon <b>\"" + hackathonName + "\"</b><br>terminato con successo!</div></html>");
+                    JLabel msgLabel = new JLabel("<html><div style='text-align:center;'>Hackathon <b>\"" + hackathonInfoFormatted.getFirst() + "\"</b><br>terminato con successo!</div></html>");
                     msgLabel.setFont(new Font("Arial", Font.PLAIN, 16));
                     msgLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -216,7 +232,7 @@ public class ResumeGUI {
                     rankingBtn.addActionListener(ev -> {
                         dialog.dispose();
                         frame.dispose();
-                        new ScoreboardGUI(controller, callerFrame, hackathonName, finalSelectedHackathon.getLocation());
+                        new ScoreboardGUI(controller, callerFrame, hackathonInfoFormatted.getFirst(), hackathonInfoFormatted.get(1));
                     });
 
                     buttonPanel.add(closeBtn);

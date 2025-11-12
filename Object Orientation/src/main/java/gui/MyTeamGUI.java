@@ -12,6 +12,7 @@ import controller.*;
  * del documento, oltre a pulsanti per pubblicare i progressi e visualizzare i partecipanti del team.
  * Fornisce anche informazioni sull'utente corrente e sul nome del team.
  */
+
 public class MyTeamGUI {
     private JFrame frame;
     private JTextArea textArea;
@@ -27,6 +28,7 @@ public class MyTeamGUI {
      * @param hackTitle   il titolo dell'hackathon a cui partecipa il team
      * @param location    la sede dell'hackathon
      */
+
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

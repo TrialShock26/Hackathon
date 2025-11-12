@@ -104,75 +104,82 @@ public class ControllerPlayer {
      * @param surnames the surnames
      * @throws SQLException the sql exception
      */
-    public void controllerGetTeammates(String username, String teamName, String title, String location,
-                                       List<String> names, List<String> surnames) throws SQLException{
 
-        if(teamsInController == null){
+    public void controllerGetTeammates(String username, String teamName, String title, String location,
+                                       List<String> names, List<String> surnames, boolean refreshing) throws SQLException {
+
+        // Inizializza la cache se non esiste
+        if (teamsInController == null) {
+            teamsInController = new ArrayList<>();
+        }
+
+        // Cerca il team nella cache
+        Team cachedTeam = null;
+        for (Team t : teamsInController) {
+            if (t.getName().equals(teamName)) {
+                cachedTeam = t;
+            }
+        }
+
+        if (cachedTeam == null || refreshing || teamsInController.isEmpty()) {
 
             System.out.println("DEBUG - Carico DB: " + teamName);
 
-            for(Team t : controller.getPlayer().getTeams()){
-                if(t.getName().equals(teamName)){
-                    PlayerDAO playerDAO = new PlayerImplementationDAO();
-                    playerDAO.getTeammates(username, teamName, title, location, names, surnames);
-                    for (int i = 0; i < names.size(); i++) {
-                        Player p = new Player(null,null,names.get(i),surnames.get(i));
-                        t.setPlayer(p);
-                    }
-                    teamsInController.add(t);
-                    System.out.println("DEBUG - Aggiungo alla cache" + teamName);
+            names.clear();
+            surnames.clear();
 
+            PlayerDAO playerDAO = new PlayerImplementationDAO();
+            playerDAO.getTeammates(username, teamName, title, location, names, surnames);
+
+            // Cerca il team tra quelli del player
+            Team newTeam = null;
+            if (controller.getPlayer() != null && controller.getPlayer().getTeams() != null) {
+                for (Team t : controller.getPlayer().getTeams()) {
+                    if (t.getName().equals(teamName)) {
+                        newTeam = t;
+                    }
                 }
             }
+
+            // Se non trovato, crea un nuovo team
+            if (newTeam == null) {
+                newTeam = new Team(teamName, null, null);
+            }
+
+            // Aggiungi i giocatori al team
+            for (int i = 0; i < names.size(); i++) {
+                Player p = new Player(null, null, names.get(i), surnames.get(i));
+                newTeam.setPlayer(p);
+            }
+
+            teamsInController.add(newTeam);
+            System.out.println("DEBUG - Aggiungo alla cache: " + newTeam.getName());
+            System.out.println(newTeam.getPlayers());
+
 
         } else {
 
-            boolean cached = false;
+            // Team trovato in cache
+            System.out.println("DEBUG - Carico CACHE: " + teamName);
 
-            surnames.clear();
             names.clear();
+            surnames.clear();
 
-            Team currteam = new Team(null,null,null);
-
-            for(Team t : teamsInController) {
-                if(t.getName().equals(teamName)){
-                    cached = true;
-                    currteam = t;
-                }
-            }
-
-            if(cached){
-
-                System.out.println("DEBUG - Carico CACHE: " + teamName);
-
-                for(Player p : currteam.getPlayers()){
+            for (Player p : cachedTeam.getPlayers()) {
+                if (p != null) {
                     names.add(p.getName());
                     surnames.add(p.getSurname());
                 }
-            }else{
-                System.out.println("DEBUG - Carico DB: " + teamName);
-
-                teamsInController.add(currteam);
-                PlayerDAO playerDAO = new PlayerImplementationDAO();
-                playerDAO.getTeammates(username, teamName, title, location, names, surnames);
-                for(int i = 0; i < names.size(); i++){
-                    currteam.setPlayer(new Player(null,null,names.get(i),surnames.get(i)));
-                }
-
-                System.out.println("DEBUG - Aggiungo alla cache" + currteam.getName());
-
             }
+            // Team non in cache, carica dal database
 
         }
 
         System.out.println("STAMPA CACHE ------ \n");
-
-        for(Team t: teamsInController){
+        for (Team t : teamsInController) {
             System.out.println(t.getName());
         }
-
     }
-
     /**
      * Subscribe.
      *
