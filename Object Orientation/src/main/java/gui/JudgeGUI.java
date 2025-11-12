@@ -9,7 +9,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Judge gui.
+ * Interfaccia grafica per i giudici degli hackathon.
+ * Permette di visualizzare gli hackathon in cui sono coinvolti,
+ * consultare i problemi assegnati e accedere alla valutazione dei team partecipanti.
+ * L'interfaccia presenta una lista di hackathon selezionabili tramite {@link JRadioButton}
+ * e un pulsante per accedere al problema posto nell'hackathon.
  */
 public class JudgeGUI {
     private JFrame frame;
@@ -21,10 +25,14 @@ public class JudgeGUI {
     private ArrayList<String> problemDescriptions = new ArrayList<>();
 
     /**
-     * Instantiates a new Judge gui.
+     * Crea e inizializza l'interfaccia grafica.
+     * Recupera la lista degli hackathon in cui l'utente è giudice
+     * e configura tutti i componenti grafici per la selezione e gestione.
+     * Se il giudice non è assegnato ad alcun hackathon, mostra un messaggio di errore e
+     * chiude la finestra, tornando alla schermata chiamante.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame la finestra chiamante a cui tornare dopo l'operazione
      */
     public JudgeGUI(Controller controller, JFrame callerFrame) {
         frame = new JFrame("Valuta");
@@ -188,6 +196,13 @@ public class JudgeGUI {
         }
     }
 
+    /**
+     * Crea una card per rappresentare graficamente un hackathon.
+     * Il pannello contiene un {@link JRadioButton} con il nome dell'hackathon.
+     *
+     * @param hackathonName il nome dell'hackathon da visualizzare
+     * @return un JPanel contenente il {@link JRadioButton} dell'hackathon
+     */
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setPreferredSize(new Dimension(650, 60));
@@ -209,7 +224,13 @@ public class JudgeGUI {
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
+    /**
+     * Determina quale hackathon è stato selezionato dall'utente.
+     * Scorre tutti i {@link JRadioButton} del gruppo e restituisce il testo
+     * del bottone selezionato.
+     *
+     * @return il nome dell'hackathon selezionato, oppure null se nessun hackathon è selezionato
+     */
     private String getSelectedHackathon() {
         for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -218,6 +239,11 @@ public class JudgeGUI {
         return null;
     }
 
+    /**
+     * Prepara il pannello per un aggiornamento rimuovendo tutti i componenti
+     * e svuotando le liste dei dati degli hackathon.
+     * Questo metodo viene chiamato prima di ricaricare i dati aggiornati dal database.
+     */
     private void preparePanel() {
         listPanel.removeAll();
         titles.clear();
@@ -225,6 +251,11 @@ public class JudgeGUI {
         problemDescriptions.clear();
     }
 
+    /**
+     * Popola il pannello con le card degli hackathon disponibili.
+     * Per ogni hackathon presente nella lista dei titoli, crea una card
+     * e la aggiunge al pannello con la relativa spaziatura.
+     */
     private void createPanel() {
         for (String hackathon : titles) {
             JPanel card = createHackathonCard(hackathon);

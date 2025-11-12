@@ -6,7 +6,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type My team gui.
+ * Interfaccia grafica per la gestione del team di un giocatore.
+ * Permette ai membri di un team di pubblicare documenti con i progressi del progetto
+ * durante un hackathon. L'interfaccia include campi per inserire il titolo e il contenuto
+ * del documento, oltre a pulsanti per pubblicare i progressi e visualizzare i partecipanti del team.
+ * Fornisce anche informazioni sull'utente corrente e sul nome del team.
  */
 public class MyTeamGUI {
     private JFrame frame;
@@ -14,13 +18,14 @@ public class MyTeamGUI {
     private JTextField titleField;
 
     /**
-     * Instantiates a new My team gui.
+     * Crea e inizializza l'interfaccia grafica per la gestione del team,
+     * configurando tutti i componenti necessari.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
-     * @param teamName    the team name
-     * @param hackTitle   the hack title
-     * @param location    the location
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame la finestra chiamante a cui tornare dopo l'operazione
+     * @param teamName    il nome del team corrente
+     * @param hackTitle   il titolo dell'hackathon a cui partecipa il team
+     * @param location    la sede dell'hackathon
      */
     public MyTeamGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame(teamName);

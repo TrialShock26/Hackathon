@@ -9,7 +9,9 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Planner gui.
+ * Interfaccia grafica per la gestione degli hackathon da parte di un organizzatore.
+ * Permette di visualizzare la lista degli hackathon gestiti e accedere
+ * ai dettagli di uno specifico hackathon selezionato.
  */
 public class PlannerGUI {
     private JFrame frame;
@@ -32,10 +34,12 @@ public class PlannerGUI {
     private Controller controller;
 
     /**
-     * Instantiates a new Planner gui.
+     * Inizializza l'interfaccia grafica per la gestione degli hackathon,
+     * costruendo la finestra principale con la lista, i pulsanti e le funzionalità
+     * di aggiornamento e selezione.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame il frame chiamante, da riattivare quando si torna indietro
      */
     public PlannerGUI(Controller controller, JFrame callerFrame) {
 
@@ -144,7 +148,13 @@ public class PlannerGUI {
         populateHackathonList();
     }
 
-    // ====== RICARICA I DATI DAL DB ======
+    /**
+     * Carica la lista degli hackathon da mostrare all'utente.
+     *
+     * @param refreshing indica se il caricamento è un aggiornamento forzato dal database (true)
+     *                   o un caricamento regolare (false)
+     * @return true se il caricamento è avvenuto correttamente, false in caso di errore
+     */
     private boolean loadHackathons(boolean refreshing) {
 
         boolean isCorrect = true;
@@ -153,7 +163,7 @@ public class PlannerGUI {
             controller.getControllerPlanner().controllerGetHackathons(
                     controller.getUser().getUsername(), titles, locations, periodOftime,
                     problemDescriptions, startDate, endDate, startSubDate, endSubDate,
-                    maxPlayers, maxTeamDim,refreshing);
+                    maxPlayers, maxTeamDim, refreshing);
 
             if (titles.isEmpty()) {
                 isCorrect = false;
@@ -172,7 +182,10 @@ public class PlannerGUI {
         return isCorrect;
     }
 
-    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    /**
+     * Aggiorna completamente le liste dei dati degli hackathon presenti,
+     * ricaricando i dati e ricostruendo i componenti grafici.
+     */
     private void refreshHackathons() {
 
         // svuotamento di tutte le informazioni relative agli hackathon
@@ -208,7 +221,10 @@ public class PlannerGUI {
         listPanel.repaint();
     }
 
-    // ====== POPOLA LA LISTA HACKATHON (SOLO PER IL COSTRUTTORE) ======
+    /**
+     * Popola la lista degli hackathon nella GUI alla prima apertura della finestra
+     * con le card di visualizzazione.
+     */
     private void populateHackathonList() {
         hackathonGroup = new ButtonGroup();
 
@@ -219,7 +235,12 @@ public class PlannerGUI {
         }
     }
 
-    // ====== CREAZIONE CARD HACKATHON ======
+    /**
+     * Crea una card grafica per rappresentare un singolo hackathon nella lista.
+     *
+     * @param hackathonName il nome dell'hackathon da visualizzare
+     * @return un pannello JPanel contenente il pulsante radio e la struttura grafica della card
+     */
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
@@ -241,6 +262,12 @@ public class PlannerGUI {
 
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
+            /**
+             * Gestisce l'azione del click su una card
+             * che seleziona il relativo hackathon.
+             *
+             * @param e l'evento che rappresenta il click del mouse
+             */
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
                 radio.setSelected(true);
@@ -251,7 +278,11 @@ public class PlannerGUI {
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
+    /**
+     * Restituisce il nome dell'hackathon selezionato dall'utente.
+     *
+     * @return il nome dell'hackathon selezionato, oppure {@code null} se nessuno è stato selezionato
+     */
     private String getSelectedHackathon() {
         for (Enumeration<AbstractButton> buttons = hackathonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();

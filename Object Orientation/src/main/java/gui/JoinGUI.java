@@ -8,7 +8,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Join gui.
+ * Interfaccia grafica per il cambio di team di un giocatore.
+ * Permette di visualizzare i team disponibili nell'hackathon di riferimento,
+ * e consente all'utente di selezionare e confermare il passaggio a un nuovo team.
+ * L'interfaccia presenta una lista di team selezionabili tramite {@link JRadioButton}
+ * e pulsanti per confermare o annullare l'operazione.
  */
 public class JoinGUI {
     private JFrame frame;
@@ -18,13 +22,15 @@ public class JoinGUI {
     private ArrayList<String> teamList = new ArrayList<>();
 
     /**
-     * Instantiates a new Join gui.
+     * Crea e inizializza l'interfaccia grafica per il cambio team.
+     * Recupera la lista dei team disponibili, escludendo quello corrente,
+     * e configura tutti i componenti grafici necessari per la selezione.
      *
-     * @param controller      the controller
-     * @param callerFrame     the caller frame
-     * @param currentTeam     the current team
-     * @param currentTitle    the current title
-     * @param currentLocation the current location
+     * @param controller      il controller principale dell'applicazione
+     * @param callerFrame     la finestra chiamante a cui tornare dopo l'operazione
+     * @param currentTeam     il nome del team corrente del giocatore
+     * @param currentTitle    il titolo dell'hackathon
+     * @param currentLocation la sede dell'hackathon
      */
     public JoinGUI(Controller controller, JFrame callerFrame, String currentTeam, String currentTitle,String currentLocation) {
         frame = new JFrame("Cambia Team");
@@ -156,7 +162,13 @@ public class JoinGUI {
         frame.setVisible(true);
     }
 
-    // ====== CREAZIONE CARD TEAM ======
+    /**
+     * Crea una card per rappresentare graficamente un team.
+     * Il pannello contiene un {@link JRadioButton} con il nome del team.
+     *
+     * @param teamName il nome del team da visualizzare
+     * @return un JPanel contenente il {@link JRadioButton} del team
+     */
     private JPanel createTeamCard(String teamName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
@@ -176,7 +188,13 @@ public class JoinGUI {
         return card;
     }
 
-    // ====== OTTIENI TEAM SELEZIONATO ======
+    /**
+     * Determina quale team è stato selezionato dall'utente.
+     * Scorre tutti i {@link JRadioButton} del gruppo e restituisce il testo
+     * del bottone selezionato.
+     *
+     * @return il nome del team selezionato, oppure null se nessun team è selezionato
+     */
     private String getSelectedTeam() {
         for (Enumeration<AbstractButton> buttons = teamGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();

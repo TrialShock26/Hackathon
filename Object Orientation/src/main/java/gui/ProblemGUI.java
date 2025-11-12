@@ -6,7 +6,10 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Problem gui.
+ * Interfaccia grafica dedicata alla visualizzazione e modifica
+ * del problema associato a un determinato hackathon.
+ * Permette al giudice di visualizzare la descrizione del problema e, se non ancora pubblicata,
+ * di inserirne una nuova utilizzando il pulsante "Pubblica".
  */
 public class ProblemGUI {
     private JFrame frame;
@@ -14,13 +17,14 @@ public class ProblemGUI {
     private String newDescription;
 
     /**
-     * Instantiates a new Problem gui.
+     * Crea una finestra grafica che mostra la descrizione del problema associato a un hackathon.
+     * Se la descrizione non è ancora stata pubblicata, il giudice può inserirla e pubblicarla.
      *
-     * @param controller         the controller
-     * @param callerFrame        the caller frame
-     * @param hackathonName      the hackathon name
-     * @param location           the location
-     * @param problemDescription the problem description
+     * @param controller         il controller principale
+     * @param callerFrame        il frame chiamante da cui è stata aperta questa finestra
+     * @param hackathonName      il nome dell’hackathon associato al problema
+     * @param location           la sede in cui si svolge l’hackathon
+     * @param problemDescription la descrizione attuale del problema
      */
     public ProblemGUI(Controller controller, JFrame callerFrame, String hackathonName, String location, String problemDescription) {
         frame = new JFrame("Problema - " + hackathonName);

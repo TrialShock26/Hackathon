@@ -9,7 +9,9 @@ import java.util.Comparator;
 import controller.Controller;
 
 /**
- * The type Scoreboard gui.
+ * Interfaccia grafica che rappresenta la schermata della classifica di un hackathon.
+ * Permette di visualizzare la classifica di un singolo hackathon o la classifica globale
+ * di tutti i team, con funzionalità per aggiornare e ricaricare i dati.
  */
 public class ScoreboardGUI {
     private JFrame frame;
@@ -27,14 +29,14 @@ public class ScoreboardGUI {
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
 
-
     /**
-     * Instantiates a new Scoreboard gui.
+     * Crea e visualizza l'interfaccia grafica per la classifica di un hackathon specifico
+     * o per la classifica generale di tutti gli hackathon.
      *
-     * @param controller    the controller
-     * @param callerFrame   the caller frame
-     * @param hackathonName the hackathon name
-     * @param location      the location
+     * @param controller    il controller principale
+     * @param callerFrame   il frame chiamante
+     * @param hackathonName il nome dell'hackathon, {@code null} se nella classifica globale
+     * @param location      la sede dell'hackathon, {@code null} se nella classifica globale
      */
     public ScoreboardGUI(Controller controller, JFrame callerFrame, String hackathonName, String location) {
         this.controller = controller;
@@ -124,7 +126,13 @@ public class ScoreboardGUI {
         frame.setVisible(true);
     }
 
-    // ====== CARICA I DATI DAL CONTROLLER ======
+    /**
+     * Carica le liste dei dati dei team da mostrare all'utente.
+     *
+     * @param refreshing indica se il caricamento è un aggiornamento forzato dal database (true)
+     *                   o un caricamento regolare (false)
+     * @return true se il caricamento è avvenuto correttamente, false in caso di errore
+     */
     private boolean loadScoreboard(boolean refreshing) {
         boolean isCorrect = true;
 
@@ -132,7 +140,6 @@ public class ScoreboardGUI {
         scores.clear();
         titles.clear();
         locations.clear();
-
 
         try {
             if (hackathonName != null) {
@@ -151,27 +158,22 @@ public class ScoreboardGUI {
         return isCorrect;
     }
 
-    // ====== AGGIORNA LA CLASSIFICA ======
+    /**
+     * Aggiorna completamente le liste dei dati dei team presenti,
+     * ricaricando i dati e ricostruendo i componenti grafici.
+     */
     private void refreshScoreboard() {
-        // svuotamento di tutte le informazioni relative ai team
-
-        // 1. Ricarica i dati dal controller
         loadScoreboard(true);
-
-        // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
-
-        // 3. Ricostruisci tutte le card con i nuovi dati
         populateScoreboard();
-
-        // ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
     }
 
-    // ====== POPOLA LA LISTA DELLA CLASSIFICA ======
+    /**
+     * Popola la lista dei team con i relativi punteggi, ordinandoli in base al punteggio.
+     */
     private void populateScoreboard() {
-        // ===== ORDINAMENTO =====
         ArrayList<Integer> indices = new ArrayList<>();
         for (int i = 0; i < teams.size(); i++) indices.add(i);
         indices.sort(Comparator.comparingDouble(i -> -scores.get(i)));
@@ -188,7 +190,14 @@ public class ScoreboardGUI {
         }
     }
 
-    // ===== CARD per hackathon singolo =====
+    /**
+     * Crea la card grafica per visualizzare un team in una classifica di un singolo hackathon.
+     *
+     * @param team  il nome del team
+     * @param score il punteggio del team
+     * @param rank  la posizione in classifica
+     * @return il JPanel rappresentante la card del team
+     */
     private JPanel createTeamCard(String team, double score, int rank) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
@@ -209,7 +218,16 @@ public class ScoreboardGUI {
         return card;
     }
 
-    // ===== CARD per classifica globale =====
+    /**
+     * Crea la card grafica per visualizzare un team nella classifica globale.
+     *
+     * @param team      il nome del team
+     * @param score     il punteggio del team
+     * @param hackathon il titolo dell'hackathon associato
+     * @param location  la sede dell'hackathon associato
+     * @param rank      la posizione in classifica
+     * @return il JPanel rappresentante la card del team nella classifica globale
+     */
     private JPanel createGlobalTeamCard(String team, double score, String hackathon, String location, int rank) {
         JPanel card = new JPanel(new GridLayout(1, 3));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
@@ -219,7 +237,6 @@ public class ScoreboardGUI {
         ));
         card.setBackground(getPodiumColor(rank));
 
-        // Info Hackathon
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(getPodiumColor(rank));
@@ -238,7 +255,12 @@ public class ScoreboardGUI {
         return card;
     }
 
-    // ===== Colore podio =====
+    /**
+     * Restituisce il colore di sfondo per la posizione in classifica (oro, argento, bronzo).
+     *
+     * @param rank la posizione in classifica
+     * @return il colore corrispondente al piazzamento
+     */
     private Color getPodiumColor(int rank) {
         return switch (rank) {
             case 1 -> new Color(255, 215, 0);   // oro

@@ -1,4 +1,4 @@
-package gui;
+package gui;//TODO javadoc
 
 import javax.swing.*;
 import java.awt.*;

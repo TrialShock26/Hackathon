@@ -7,7 +7,10 @@ import javax.swing.*;
 import controller.Controller;
 
 /**
- * The type Ranking gui.
+ * Interfaccia grafica per l'accesso alle
+ * classifiche degli hackathon conclusi.
+ * Permette all'utente di selezionare un hackathon terminato per visualizzarne la classifica
+ * oppure di visualizzare la classifica globale di tutti i team attraverso i vari hackathon.
  */
 public class RankingGUI {
     private JFrame frame;
@@ -20,10 +23,11 @@ public class RankingGUI {
     private ArrayList<String> locations = new ArrayList<>();
 
     /**
-     * Instantiates a new Ranking gui.
+     * Inizializza la finestra grafica per la selezione degli hackathon conclusi e consente
+     * di aprire la classifica relativa o quella globale.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame il frame chiamante da cui viene aperta questa finestra
      */
     public RankingGUI(Controller controller, JFrame callerFrame) {
 
@@ -147,7 +151,14 @@ public class RankingGUI {
         frame.setVisible(true);
     }
 
-    // ====== CARICA I DATI DAL CONTROLLER ======
+    /**
+     * Carica la lista degli hackathon da mostrare all'utente.
+     *
+     * @param controller il controller principale
+     * @param refreshing indica se il caricamento è un aggiornamento forzato dal database (true)
+     *                   o un caricamento regolare (false)
+     * @return true se il caricamento è avvenuto correttamente, false in caso di errore
+     */
     private boolean loadHackathons(Controller controller, boolean refreshing) {
         boolean isCorrect = true;
 
@@ -171,34 +182,34 @@ public class RankingGUI {
         return isCorrect;
     }
 
-    // ====== RICREA COMPLETAMENTE LA LISTA ======
+    /**
+     * Aggiorna completamente le liste dei dati degli hackathon, ricaricando i dati
+     * e ricostruendo i componenti grafici nella finestra.
+     *
+     * @param controller il controller principale
+     */
     private void refreshHackathons(Controller controller) {
-        // Svuotamento di tutte le informazioni relative agli hackathon
         titles.clear();
         locations.clear();
 
-        // 1. Ricarica i dati dal controller
         loadHackathons(controller,true);
 
-        // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
-
-        // 3. Ricrea il ButtonGroup da zero
         hackathonGroup = new ButtonGroup();
 
-        // 4. Ricostruisci tutte le card con i nuovi dati
         for (String hackathon : titles) {
             JPanel card = createHackathonCard(hackathon);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // Ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
     }
 
-    // ====== POPOLA LA LISTA HACKATHON (SOLO PER IL COSTRUTTORE) ======
+    /**
+     * Popola la lista iniziale degli hackathon con i dati caricati al primo avvio della finestra.
+     */
     private void populateHackathonList() {
         hackathonGroup = new ButtonGroup();
 
@@ -209,7 +220,12 @@ public class RankingGUI {
         }
     }
 
-    // ====== CREAZIONE CARD HACKATHON ======
+    /**
+     * Crea una card rappresentante un singolo hackathon con il relativo pulsante di selezione.
+     *
+     * @param hackathonName il nome dell’hackathon
+     * @return il JPanel corrispondente all’hackathon
+     */
     private JPanel createHackathonCard(String hackathonName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
@@ -221,7 +237,6 @@ public class RankingGUI {
         card.setMaximumSize(new Dimension(700, 80));
         card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // RadioButton a sinistra
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
         radio.setActionCommand(hackathonName);
@@ -232,7 +247,6 @@ public class RankingGUI {
         leftPanel.add(radio);
         card.add(leftPanel, BorderLayout.WEST);
 
-        // Nome hackathon a destra
         JLabel nameLabel = new JLabel(hackathonName);
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
@@ -241,7 +255,6 @@ public class RankingGUI {
         rightPanel.add(nameLabel);
         card.add(rightPanel, BorderLayout.CENTER);
 
-        // Rendi cliccabile tutta la card
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -253,7 +266,11 @@ public class RankingGUI {
         return card;
     }
 
-    // ====== OTTIENI HACKATHON SELEZIONATO ======
+    /**
+     * Restituisce il nome dell’hackathon selezionato nella lista.
+     *
+     * @return il nome dell’hackathon selezionato o {@code null} se nessun hackathon è selezionato
+     */
     private String getSelectedHackathon() {
         if (hackathonGroup.getSelection() != null) {
             return hackathonGroup.getSelection().getActionCommand();
@@ -261,7 +278,11 @@ public class RankingGUI {
         return null;
     }
 
-    // ====== OTTIENI LOCATION SELEZIONATA ======
+    /**
+     * Restituisce la sede associata all’hackathon selezionato.
+     *
+     * @return la sede selezionata o {@code null} se nessun hackathon è selezionato
+     */
     private String getSelectedLocation() {
         String selected = getSelectedHackathon();
         if (selected == null) return null;

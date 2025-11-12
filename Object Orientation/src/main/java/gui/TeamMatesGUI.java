@@ -7,7 +7,11 @@ import javax.swing.*;
 import controller.*;
 
 /**
- * The type Team mates gui.
+ * Interfaccia grafica che mostra i compagni di squadra di un partecipante
+ * a un hackathon.
+ * Questa GUI permette di visualizzare l’elenco dei partecipanti di un team
+ * (incluso l’utente stesso) in una finestra scorrevole, con la possibilità di tornare
+ * alla schermata chiamante.
  */
 public class TeamMatesGUI {
     private JFrame frame;
@@ -16,13 +20,15 @@ public class TeamMatesGUI {
     private ArrayList<String> surnames = new ArrayList<>();
 
     /**
-     * Instantiates a new Team mates gui.
+     * Crea e visualizza una finestra contenente la lista dei membri di un team,
+     * mostrando ogni partecipante all’interno di una card grafica.
+     * Include un pulsante per tornare alla schermata precedente.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
-     * @param teamName    the team name
-     * @param hackTitle   the hack title
-     * @param location    the location
+     * @param controller  il controller principale dell’applicazione
+     * @param callerFrame il frame chiamante (schermata precedente)
+     * @param teamName    il nome del team
+     * @param hackTitle   il titolo dell’hackathon di riferimento
+     * @param location    la sede dell’hackathon di riferimento
      */
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         frame = new JFrame("Partecipanti del Team");
@@ -125,7 +131,14 @@ public class TeamMatesGUI {
         frame.setVisible(true);
     }
 
-    // ====== CREAZIONE CARD PARTECIPANTE ======
+    /**
+     * Crea una card che rappresenta graficamente un partecipante del team.
+     * Ogni card contiene il nome e il cognome del partecipante,
+     * e viene inserita all’interno della lista visualizzata nella GUI.
+     *
+     * @param participantName il nome completo del partecipante da visualizzare
+     * @return il pannello JPanel contenente le informazioni del partecipante
+     */
     private JPanel createParticipantCard(String participantName) {
         JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
