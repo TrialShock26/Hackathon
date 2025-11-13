@@ -229,7 +229,7 @@ public class ScoreboardGUI {
      * @return il JPanel rappresentante la card del team nella classifica globale
      */
     private JPanel createGlobalTeamCard(String team, double score, String hackathon, String location, int rank) {
-        JPanel card = new JPanel(new GridLayout(1, 3));
+        JPanel card = new JPanel(new BorderLayout());
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
@@ -237,20 +237,24 @@ public class ScoreboardGUI {
         ));
         card.setBackground(getPodiumColor(rank));
 
+        // --- Pannello informazioni Hackathon (sinistra) ---
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(getPodiumColor(rank));
         infoPanel.add(new JLabel("Hackathon: " + hackathon));
         infoPanel.add(new JLabel("Sede: " + location));
-        card.add(infoPanel);
+        card.add(infoPanel, BorderLayout.WEST);
 
+        // --- Nome team (centro) ---
         JLabel teamLabel = new JLabel(rank + ". " + team, SwingConstants.CENTER);
         teamLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        card.add(teamLabel);
+        card.add(teamLabel, BorderLayout.CENTER);
 
+        // --- Punteggio (destra) ---
         JLabel scoreLabel = new JLabel(scoreFormat.format(score), SwingConstants.RIGHT);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        card.add(scoreLabel);
+        scoreLabel.setPreferredSize(new Dimension(100, 30)); // evita che si schiacci
+        card.add(scoreLabel, BorderLayout.EAST);
 
         return card;
     }
