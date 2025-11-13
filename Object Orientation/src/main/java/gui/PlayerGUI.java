@@ -35,7 +35,6 @@ public class PlayerGUI {
 
         this.controller =  controller;
 
-
         frame = new JFrame("Gioca");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);

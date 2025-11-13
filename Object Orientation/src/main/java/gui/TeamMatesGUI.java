@@ -22,16 +22,15 @@ public class TeamMatesGUI {
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> surnames = new ArrayList<>();
 
+    // 🔧 Pannelli e componenti principali
+    private JPanel listPanel;
+    private JScrollPane scrollPane;
+    private JLabel countLabel;
+
     /**
      * Crea e visualizza una finestra contenente la lista dei membri di un team,
      * mostrando ogni partecipante all’interno di una card grafica.
      * Include un pulsante per tornare alla schermata precedente.
-     *
-     * @param controller  il controller principale dell’applicazione
-     * @param callerFrame il frame chiamante (schermata precedente)
-     * @param teamName    il nome del team
-     * @param hackTitle   il titolo dell’hackathon di riferimento
-     * @param location    la sede dell’hackathon di riferimento
      */
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         this.controller = controller;
@@ -43,7 +42,6 @@ public class TeamMatesGUI {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 500);
         frame.setLocationRelativeTo(null);
-
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(240, 240, 245));
@@ -59,8 +57,10 @@ public class TeamMatesGUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel);
 
+        loadTeammates(false);
+
         // ====== LABEL NUMERO MEMBRI ======
-        JLabel countLabel = new JLabel("Membri totali: " + (names.size() + 1), SwingConstants.CENTER);
+        countLabel = new JLabel("Membri totali: " + names.size(), SwingConstants.CENTER);
         countLabel.setFont(new Font("Arial", Font.BOLD, 16));
         countLabel.setForeground(new Color(60, 100, 170));
         countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -70,32 +70,15 @@ public class TeamMatesGUI {
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
         // ====== LISTA PARTECIPANTI ======
-        loadTeammates(false);
-
-        JPanel listPanel = new JPanel();
+        listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        JPanel cardMyself = createParticipantCard(
-                controller.getUser().getName() + " " + controller.getUser().getSurname() + " (Tu)"
-        );
+        // Popola inizialmente la lista
+        populateTeammates();
 
-        for (int i = 0; i < names.size(); i++) {
-            JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i));
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
-        }
-
-        listPanel.add(cardMyself);
-
-        // Calcola altezza dinamica
-        int cardHeight = 50;
-        int gap = 8;
-        int totalHeight = names.size() * (cardHeight + gap) + 20;
-        listPanel.setPreferredSize(new Dimension(500, Math.max(totalHeight, 300)));
-
-        JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane = new JScrollPane(listPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -107,7 +90,7 @@ public class TeamMatesGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        // Bottone "Indietro" (sinistra)
+        // Bottone "Indietro"
         JButton backBtn = new JButton("Indietro");
         backBtn.setPreferredSize(new Dimension(120, 35));
         backBtn.setBackground(new Color(150, 150, 150));
@@ -119,18 +102,15 @@ public class TeamMatesGUI {
             callerFrame.setVisible(true);
         });
 
-        // Bottone "Aggiorna" (destra)
+        // Bottone "Aggiorna"
         JButton refreshBtn = new JButton("Aggiorna");
         refreshBtn.setPreferredSize(new Dimension(120, 35));
         refreshBtn.setBackground(new Color(70, 130, 180));
         refreshBtn.setForeground(Color.WHITE);
         refreshBtn.setFocusPainted(false);
         refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> {
-            refreshTeammates();
-        });
+        refreshBtn.addActionListener(e -> refreshTeammates());
 
-        // Pannelli separati per allineamento sinistra e destra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         leftPanel.setBackground(new Color(240, 240, 245));
         leftPanel.add(backBtn);
@@ -148,64 +128,50 @@ public class TeamMatesGUI {
         frame.setVisible(true);
     }
 
+    /**
+     * Aggiorna la lista dei compagni di squadra.
+     */
     private void refreshTeammates() {
         names.clear();
         surnames.clear();
 
-        //  Ricarica i dati dal controller
         loadTeammates(true);
-
-        // Aggiorna la GUI
         populateTeammates();
+
+        // Aggiorna il contatore
+        countLabel.setText("Membri totali: " + names.size());
     }
 
+    /**
+     * Popola la lista dei compagni di squadra nella GUI.
+     */
     private void populateTeammates() {
-        // Pannello principale della lista
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBackground(new Color(240, 240, 245));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
-
-        // Ricrea la card per te stesso
-        JPanel card_myself = createParticipantCard(
-                controller.getUser().getName() + " " + controller.getUser().getSurname() + " (Tu)"
-        );
+        listPanel.removeAll();
 
         // Aggiungi i teammates
         for (int i = 0; i < names.size(); i++) {
-            JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i));
-            listPanel.add(card);
-            listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+            if(names.get(i).equals(controller.getPlayer().getName())) {
+                JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i) + " " + "(Tu)");
+                listPanel.add(card);
+                listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+
+            } else {
+                JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i));
+                listPanel.add(card);
+                listPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+            }
         }
 
-        // Aggiungi la card dell'utente
-        listPanel.add(card_myself);
-
-        // Calcola altezza dinamica
-        int cardHeight = 50;
-        int gap = 8;
-        int totalHeight = names.size() * (cardHeight + gap) + 20;
-        listPanel.setPreferredSize(new Dimension(500, Math.max(totalHeight, 300)));
-
-        // Aggiorna lo JScrollPane esistente
-        JScrollPane scrollPane = new JScrollPane(listPanel);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        frame.getContentPane().remove(1); // Rimuove il vecchio scrollPane (assumendo sia il secondo componente in BorderLayout.CENTER)
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-        // Rinfresca la GUI
-        frame.revalidate();
-        frame.repaint();
+        listPanel.revalidate();
+        listPanel.repaint();
     }
 
-    private boolean loadTeammates(boolean refreshing){
+    /**
+     * Carica i nomi e cognomi dei membri del team dal database.
+     */
+    private boolean loadTeammates(boolean refreshing) {
         boolean isCorrect = true;
 
-        // ====== RECUPERA I PARTECIPANTI ======
         try {
             controller.getControllerPlayer().controllerGetTeammates(
                     controller.getUser().getUsername(),
@@ -217,14 +183,14 @@ public class TeamMatesGUI {
                     refreshing
             );
 
-            if(names.isEmpty()){
+            if (names.isEmpty()) {
                 isCorrect = false;
             }
 
         } catch (SQLException e) {
             String error = e.getMessage();
             int idx = error.indexOf("\n");
-            error = error.substring(0, idx);
+            if (idx > 0) error = error.substring(0, idx);
             JOptionPane.showMessageDialog(frame, "C'è stato un errore!\n" + error, "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;
         }
@@ -233,12 +199,7 @@ public class TeamMatesGUI {
     }
 
     /**
-     * Crea una card che rappresenta graficamente un partecipante del team.
-     * Ogni card contiene il nome e il cognome del partecipante,
-     * e viene inserita all’interno della lista visualizzata nella GUI.
-     *
-     * @param participantName il nome completo del partecipante da visualizzare
-     * @return il pannello JPanel contenente le informazioni del partecipante
+     * Crea una card grafica per un partecipante.
      */
     private JPanel createParticipantCard(String participantName) {
         JPanel card = new JPanel(new BorderLayout());

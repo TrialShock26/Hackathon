@@ -15,7 +15,6 @@ import java.util.List;
 public class ControllerPlayer {
     private Controller controller;
     private ArrayList<Hackathon> myHackathons;
-    private ArrayList<Team> teamsInController;
 
     /**
      * Instantiates a new Controller player.
@@ -37,7 +36,9 @@ public class ControllerPlayer {
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
                                         List<String> teamNames,boolean refreshing) throws SQLException{
 
-            if(controller.getPlayer().getTeams().isEmpty() || myHackathons == null || refreshing) {
+
+        if(myHackathons == null || refreshing) {
+            //if(controller.getPlayer().getTeams().isEmpty() || myHackathons == null || refreshing) {
 
                 myHackathons = new ArrayList<>();
 
@@ -45,13 +46,39 @@ public class ControllerPlayer {
 
                 player.getHackathons(username, titles, locations, teamNames);
 
-                for (int i = 0; i < locations.size(); i++) {
-                    myHackathons.add(new Hackathon(titles.get(i), locations.get(i), 0,
-                            null, null, null, null, 0, 0, null));
+                //ottengo i team con i rispettivi hackathon in cui gioco
 
-                    controller.getPlayer().getTeams().add(new Team(teamNames.get(i), controller.getPlayer(), null));
+
+                for (int i = 0; i < locations.size(); i++) {
+
+                    //aggiungo gli hackathon ai quali gioco
+
+                    Hackathon hack = new Hackathon(titles.get(i), locations.get(i), 0,
+                            null, null, null, null, 0, 0, null);
+
+                    Team newTeam = new Team(teamNames.get(i),
+                            controller.getPlayer(),
+                            hack);
+
+                    hack.setTeam(newTeam);
+
+                    myHackathons.add(hack);
+
+                    //aggiungo i team a cui gioco (legati agli hackathon)
+
+                    //System.out.println(newTeam.getName());
+
+                    //controller.getPlayer().getTeams();
 
                 }
+
+//                for(Team t : controller.getPlayer().getTeams()){
+//                    System.out.println(t.getName());
+//                }
+
+//                for(Hackathon h : myHackathons){
+//                    System.out.println(h.getTitle());
+//                }
 
             } else{
                 for(int i = 0; i < myHackathons.size(); i++){
@@ -60,6 +87,12 @@ public class ControllerPlayer {
                     teamNames.add(controller.getPlayer().getTeams().get(i).getName());
                 }
             }
+
+        //verifico se ogni team in cui partecipo è stato salvato
+
+//        for(Team t : controller.getPlayer().getTeams()){
+//            System.out.println(t.getName());
+//        }
 
     }
 
@@ -108,77 +141,56 @@ public class ControllerPlayer {
     public void controllerGetTeammates(String username, String teamName, String title, String location,
                                        List<String> names, List<String> surnames, boolean refreshing) throws SQLException {
 
-        // Inizializza la cache se non esiste
-        if (teamsInController == null) {
-            teamsInController = new ArrayList<>();
-        }
+        //System.out.println(controller.getPlayer().getTeams());
 
-        // Cerca il team nella cache
-        Team cachedTeam = null;
-        for (Team t : teamsInController) {
-            if (t.getName().equals(teamName)) {
-                cachedTeam = t;
-            }
-        }
+       for(int i = 0; i < controller.getPlayer().getTeams().size(); i++) {
+           if (controller.getPlayer().getTeams().get(i).getName().equals(teamName)) {
+               if (controller.getPlayer().getTeams().get(i).getPlayers().size() == 1 || refreshing) {
 
-        if (cachedTeam == null || refreshing || teamsInController.isEmpty()) {
+                   System.out.println("DB");
 
-            System.out.println("DEBUG - Carico DB: " + teamName);
+                   //se ci sono solo io potrei dover caricare altri teamMates
 
-            names.clear();
-            surnames.clear();
+                   //carico i teammates da db
 
-            PlayerDAO playerDAO = new PlayerImplementationDAO();
-            playerDAO.getTeammates(username, teamName, title, location, names, surnames);
-
-            // Cerca il team tra quelli del player
-            Team newTeam = null;
-            if (controller.getPlayer() != null && controller.getPlayer().getTeams() != null) {
-                for (Team t : controller.getPlayer().getTeams()) {
-                    if (t.getName().equals(teamName)) {
-                        newTeam = t;
-                    }
-                }
-            }
-
-            // Se non trovato, crea un nuovo team
-            if (newTeam == null) {
-                newTeam = new Team(teamName, controller.getPlayer(), null);
-            }
-
-            // Aggiungi i giocatori al team
-            for (int i = 0; i < names.size(); i++) {
-                Player p = new Player(null, null, names.get(i), surnames.get(i));
-                newTeam.setPlayer(p);
-            }
-
-            teamsInController.add(newTeam);
-            System.out.println("DEBUG - Aggiungo alla cache: " + newTeam.getName());
-            System.out.println(newTeam.getPlayers());
+                   PlayerDAO playerDAO = new PlayerImplementationDAO();
+                   playerDAO.getTeammates(username, teamName, title, location, names, surnames);
 
 
-        } else {
+                   for (int j = 0; j < names.size(); j++) {
+                       controller.getPlayer().getTeams().get(i).setPlayer(
+                               new Player(null, null,
+                                       names.get(j),
+                                       surnames.get(j))
+                       );
+                   }
 
-            // Team trovato in cache
-            System.out.println("DEBUG - Carico CACHE: " + teamName);
+                   //aggiungo me stesso poichè dal db non risale il nome e il cognome dell'utente stesso
+                   //mentre nel model se stesso è presente
 
-            names.clear();
-            surnames.clear();
+                   names.add((controller.getPlayer().getTeams().get(i).getPlayers().get(0).getName()));
+                   surnames.add((controller.getPlayer().getTeams().get(i).getPlayers().get(0).getSurname()));
 
-            for (Player p : cachedTeam.getPlayers()) {
-                if (p != null) {
-                    names.add(p.getName());
-                    surnames.add(p.getSurname());
-                }
-            }
-            // Team non in cache, carica dal database
+               } else {
 
-        }
+                   System.out.println("CACHE");
 
-        System.out.println("STAMPA CACHE ------ \n");
-        for (Team t : teamsInController) {
-            System.out.println(t.getName());
-        }
+                   for (int j = 0; j < controller.getPlayer().getTeams().get(i).getPlayers().size(); j++) {
+                       System.out.println(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getName());
+                   }
+
+                   names.clear();
+                   surnames.clear();
+
+                   for (int j = 0; j < controller.getPlayer().getTeams().get(i).getPlayers().size(); j++) {
+                       names.add(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getName());
+                       surnames.add(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getSurname());
+                   }
+
+               }
+           }
+
+       }
     }
     /**
      * Subscribe.

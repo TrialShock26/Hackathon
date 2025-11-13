@@ -13,133 +13,231 @@ import java.util.*;
  * The type Controller hackathon.
  */
 public class ControllerHackathon {
+    private Controller controller;
     private ArrayList<Hackathon> availableHackathons;
     private ArrayList<Hackathon> closedHackathons;
-    private ArrayList<Team> myScoreboard;
-    private ArrayList<Double> myScores;
-    private ArrayList<Hackathon> overallHackathons;
-    private ArrayList<Team> teamsInController;
-    private ArrayList<Double> scoresInController;
+    private ArrayList<ArrayList<Object>> myScoreboard;
+    private ArrayList<Team> myOverall;
+    private ArrayList<Double> myOverallScores;
+
+
+    public ControllerHackathon(Controller controller) {this.controller = controller;}
 
     /**
      * Controller overall ranking.
      *
      * @param teamNames  the team names
      * @param scores     the scores
-     * @param titles     the titles
-     * @param locations  the locations
+     * @param title    the title
+     * @param location  the location
      * @param refreshing the refreshing
      * @throws SQLException the sql exception
      */
-    public void controllerOverallRanking(List<String> teamNames, List<Double> scores,
-                                         List<String> titles, List<String> locations, boolean refreshing) throws SQLException {
 
-        if(myScoreboard == null || refreshing) {
-
-            myScoreboard = new ArrayList<>();
-            myScores = new ArrayList<>();
-            overallHackathons = new ArrayList<>();
-            HackathonDAO hackathon = new HackathonImplementationDAO();
-            hackathon.overallRanking(teamNames,scores,titles,locations);
-
-            for(int i = 0; i < teamNames.size(); i++){
-                myScoreboard.add(new Team(teamNames.get(i),null,null));
-                myScores.add(scores.get(i));
-                overallHackathons.add(new Hackathon(titles.get(i),locations.get(i),0,null,null,
-                        null,null,0,0,null));
-            }
-
-        } else {
-            for (int i = 0; i < myScoreboard.size(); i++) {
-                teamNames.add(myScoreboard.get(i).getName());
-                scores.add(myScores.get(i));
-                titles.add(overallHackathons.get(i).getTitle());
-                locations.add(overallHackathons.get(i).getLocation());
-
-            }
-        }
-    }
-
-    /**
-     * Controller scoreboard.
-     *
-     * @param title      the title
-     * @param location   the location
-     * @param teamNames  the team names
-     * @param scores     the scores
-     * @param refreshing the refreshing
-     * @throws SQLException the sql exception
-     */
     public void controllerScoreboard(String title, String location,
                                      ArrayList<String> teamNames, ArrayList<Double> scores,
                                      boolean refreshing) throws SQLException {
 
-        if (teamsInController == null || refreshing) {
-            System.out.println("DEBUG - Carico ranking da DB: " + title + ", refresh=" + refreshing);
+        if (myScoreboard == null || refreshing) {
+
+            myScoreboard = new ArrayList<>();
+
+            System.out.println(title);
 
             HackathonDAO hackathonDAO = new HackathonImplementationDAO();
             hackathonDAO.scoreboard(title, location, teamNames, scores);
-            teamsInController = new ArrayList<>();
-            scoresInController = new ArrayList<>();
 
             for (int i = 0; i < teamNames.size(); i++) {
-                Team t = new Team(teamNames.get(i), null,
-                        new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
-                teamsInController.add(t);
-                System.out.println("DEBUG - Aggiungo alla cache" + teamsInController.get(i).getName());
-                scoresInController.add(scores.get(i));
+                Team newTeam = new Team(
+                        teamNames.get(i),
+                        controller.getPlayer(),
+                        new Hackathon(title, location, 0, null, null, null, null, 0, 0, null)
+                );
+
+                ArrayList<Object> pair = new ArrayList<>();
+                pair.add(newTeam);       // indice 0 → Team
+                pair.add(scores.get(i)); // indice 1 → punteggio Double
+
+                myScoreboard.add(pair);
             }
 
         } else {
+
+            teamNames.clear();
+            scores.clear();
+
             boolean isCached = false;
 
-            for (int i = 0; i < teamsInController.size(); i++) {
-                Team t = teamsInController.get(i);
+            for (ArrayList<Object> pair : myScoreboard) {
+                Team t = (Team) pair.get(0);
                 if (t.getHackathon().getTitle().equals(title) &&
-                        t.getHackathon().getLocation().equals(location))
+                        t.getHackathon().getLocation().equals(location)) {
                     isCached = true;
+                }
             }
 
             if (isCached) {
+                for (ArrayList<Object> pair : myScoreboard) {
+                    Team t = (Team) pair.get(0);
+                    double score = (double) pair.get(1);
 
-                System.out.println("DEBUG - Carico da CACHE: " + title + ", refresh=" + refreshing);
-
-                teamNames.clear();
-                scores.clear();
-
-                for (int i = 0; i < teamsInController.size(); i++) {
-                    if(teamsInController.get(i).getHackathon().getTitle().equals(title)){
-                        teamNames.add(teamsInController.get(i).getName());
-                        scores.add(scoresInController.get(i));
+                    if (t.getHackathon().getTitle().equals(title) &&
+                            t.getHackathon().getLocation().equals(location)) {
+                        teamNames.add(t.getName());
+                        scores.add(score);
                     }
                 }
 
             } else {
 
-                teamNames.clear();
-                scores.clear();
                 HackathonDAO hackathonDAO = new HackathonImplementationDAO();
                 hackathonDAO.scoreboard(title, location, teamNames, scores);
+
                 for (int i = 0; i < teamNames.size(); i++) {
-                    Team t = new Team(teamNames.get(i), null,
-                            new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
-                    teamsInController.add(t);
-                    scoresInController.add(scores.get(i));
+                    String daoTeamName = teamNames.get(i);
+                    boolean exists = false;
 
-                    System.out.println("DEBUG - Aggiungo alla cache" + teamsInController.get(i).getName());
+                    for (ArrayList<Object> pair : myScoreboard) {
+                        Team t = (Team) pair.get(0);
+                        if (t.getName().equals(daoTeamName) &&
+                                t.getHackathon().getTitle().equals(title) &&
+                                t.getHackathon().getLocation().equals(location)) {
+                            exists = true;
+                        }
+                    }
 
+                    if (!exists) {
+                        Team newTeam = new Team(
+                                daoTeamName,
+                                controller.getPlayer(),
+                                new Hackathon(title, location, 0, null, null, null, null, 0, 0, null)
+                        );
+
+                        ArrayList<Object> pair = new ArrayList<>();
+                        pair.add(newTeam);
+                        pair.add(scores.get(i));
+
+                        myScoreboard.add(pair);
+                    }
                 }
             }
         }
-
-        System.out.println("VISUALIZZAZIONE CACHE ---------- \n");
-        for(Team t: teamsInController) {
-            System.out.println(t.getName());
-        }
-
     }
 
-    /**
+
+    public void controllerOverallRanking(List<String> teamNames, List<Double> scores,
+                                         List<String> titles, List<String> locations,
+                                         boolean refreshing) throws SQLException {
+
+        if(myOverall == null || refreshing) {
+
+            myOverall = new ArrayList<>();
+            myOverallScores = new ArrayList<>();
+
+            System.out.println("DB");
+
+            HackathonDAO hackathonDAO = new HackathonImplementationDAO();
+            hackathonDAO.overallRanking(teamNames,scores,titles,locations);
+
+            for (int i = 0; i < teamNames.size(); i++) {
+                Team newTeam = new Team(
+                        teamNames.get(i),
+                        controller.getPlayer(),
+                        new Hackathon(titles.get(i), locations.get(i), 0, null, null, null, null, 0, 0, null)
+                );
+                myOverall.add(newTeam);
+                myOverallScores.add(scores.get(i));
+            }
+
+
+        }else{
+
+            System.out.println("CACHE");
+
+            teamNames.clear();
+            scores.clear();
+            titles.clear();
+            locations.clear();
+
+            for(int i = 0; i < myOverall.size(); i++) {
+                teamNames.add(myOverall.get(i).getName());
+                scores.add(myOverallScores.get(i));
+                titles.add(myOverall.get(i).getHackathon().getTitle());
+                locations.add(myOverall.get(i).getHackathon().getLocation());
+            }
+
+        }
+
+
+        /*System.out.println("=== controllerOverallRanking ===");
+        ArrayList<String> addedTeams = new ArrayList<>();
+
+        if (controller.getPlayer().getTeams().isEmpty() || refreshing) {
+            System.out.println("Cache vuota o refresh richiesto, caricamento dal DB...");
+
+            HackathonDAO hackathonDAO = new HackathonImplementationDAO();
+            hackathonDAO.overallRanking(teamNames, scores, titles, locations);
+
+            for (int i = 0; i < teamNames.size(); i++) {
+                String teamName = teamNames.get(i);
+                String title = titles.get(i);
+                String location = locations.get(i);
+                double score = scores.get(i);
+
+                boolean exists = false;
+                for (Team t : controller.getPlayer().getTeams()) {
+                    if (t.getName().equals(teamName) &&
+                            t.getHackathon().getTitle().equals(title) &&
+                            t.getHackathon().getLocation().equals(location)) {
+                        exists = true;
+                    }
+                }
+
+                if (!exists) {
+                    Team t = new Team(teamName, controller.getPlayer(),
+                            new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
+                    controller.getPlayer().getTeams().add(t);
+
+                    System.out.println("Aggiunto Team ranking: " + teamName + " -> " + score);
+                } else {
+                    System.out.println("Team già presente: " + teamName);
+                }
+            }
+
+        } else {
+            System.out.println("Caricamento dati dalla cache per overall ranking...");
+            teamNames.clear();
+            scores.clear();
+            titles.clear();
+            locations.clear();
+
+            for (Team t : controller.getPlayer().getTeams()) {
+                boolean alreadyAdded = false;
+                for (String added : addedTeams) {
+                    if (added.equals(t.getName())) {
+                        alreadyAdded = true;
+                    }
+                }
+
+                if (!alreadyAdded) {
+                    teamNames.add(t.getName());
+                    titles.add(t.getHackathon().getTitle());
+                    locations.add(t.getHackathon().getLocation());
+
+                    for (ArrayList<String> pair : teamScorePairs) {
+                        if (pair.get(0).equals(t.getName())) {
+                            scores.add(Double.parseDouble(pair.get(1)));
+                        }
+                    }
+
+                    addedTeams.add(t.getName());
+                    System.out.println("Caricato dalla cache ranking: " + t.getName() + " -> " + scores.get(scores.size()-1));
+                }
+            }
+        }*/
+    }
+
+/**
      * Controller get available hackathons.
      *
      * @param titles        the titles

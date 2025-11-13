@@ -172,12 +172,15 @@ public class RankingGUI {
         } catch (SQLException e) {
             String error = e.getMessage();
             int idx = error.indexOf("\n");
-            error = error.substring(0, idx);
+            if (idx != -1) {
+                error = error.substring(0, idx);
+            }
             JOptionPane.showMessageDialog(frame,
                     "C'è stato un errore!\n" + error,
                     "Errore", JOptionPane.ERROR_MESSAGE);
             isCorrect = false;
         }
+
 
         return isCorrect;
     }
