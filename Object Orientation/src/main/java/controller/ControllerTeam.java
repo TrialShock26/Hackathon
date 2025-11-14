@@ -59,7 +59,7 @@ public class ControllerTeam {
             TeamDAO teamDB = new TeamImplementationDAO();
             teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
             teams = new ArrayList<>();
-            Team t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
+            Team t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location));
             for (int i = 0; i < documentTitles.size(); i++) {
                 Document d = new Document(documentTitles.get(i), documentContents.get(i), t);
                 d.setComment(documentComments.get(i));
@@ -77,7 +77,7 @@ public class ControllerTeam {
             } else {
                 TeamDAO teamDB = new TeamImplementationDAO();
                 teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
-                t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
+                t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location));
                 for (int i = 0; i < documentTitles.size(); i++) {
                     Document d = new Document(documentTitles.get(i), documentContents.get(i), t);
                     d.setComment(documentComments.get(i));

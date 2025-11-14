@@ -16,7 +16,7 @@ public class ControllerHackathon {
     private Controller controller;
     private ArrayList<Hackathon> availableHackathons;
     private ArrayList<Hackathon> closedHackathons;
-    private ArrayList<ArrayList<Object>> myScoreboard;
+    private ArrayList<ArrayList<Double>> scoresMatrix;
     private ArrayList<Team> myOverall;
     private ArrayList<Double> myOverallScores;
 
@@ -35,91 +35,39 @@ public class ControllerHackathon {
      */
 
     public void controllerScoreboard(String title, String location,
-                                     ArrayList<String> teamNames, ArrayList<Double> scores,
-                                     boolean refreshing) throws SQLException {
+                                     List<String> teamNames, List<Double> scores) throws SQLException {
+        if (scoresMatrix == null) {
+            scoresMatrix = new ArrayList<>();
+            for (int i = 0; i < closedHackathons.size(); i++) {
+                scoresMatrix.add(new ArrayList<>());
+            }
+        }
+        Hackathon hack = null;
+        int idx = -1;
+        for (Hackathon h : closedHackathons) {
+            if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
+                idx = closedHackathons.indexOf(h);
+                hack = h;
+            }
+        }
 
-        if (myScoreboard == null || refreshing) {
-
-            myScoreboard = new ArrayList<>();
-
-            System.out.println(title);
-
+        if (scoresMatrix.get(idx).isEmpty()) {
             HackathonDAO hackathonDAO = new HackathonImplementationDAO();
             hackathonDAO.scoreboard(title, location, teamNames, scores);
 
             for (int i = 0; i < teamNames.size(); i++) {
                 Team newTeam = new Team(
                         teamNames.get(i),
-                        controller.getPlayer(),
-                        new Hackathon(title, location, 0, null, null, null, null, 0, 0, null)
+                        null,
+                        hack
                 );
-
-                ArrayList<Object> pair = new ArrayList<>();
-                pair.add(newTeam);       // indice 0 → Team
-                pair.add(scores.get(i)); // indice 1 → punteggio Double
-
-                myScoreboard.add(pair);
+                hack.setTeam(newTeam);
+                scoresMatrix.get(idx).add(scores.get(i));
             }
-
         } else {
-
-            teamNames.clear();
-            scores.clear();
-
-            boolean isCached = false;
-
-            for (ArrayList<Object> pair : myScoreboard) {
-                Team t = (Team) pair.get(0);
-                if (t.getHackathon().getTitle().equals(title) &&
-                        t.getHackathon().getLocation().equals(location)) {
-                    isCached = true;
-                }
-            }
-
-            if (isCached) {
-                for (ArrayList<Object> pair : myScoreboard) {
-                    Team t = (Team) pair.get(0);
-                    double score = (double) pair.get(1);
-
-                    if (t.getHackathon().getTitle().equals(title) &&
-                            t.getHackathon().getLocation().equals(location)) {
-                        teamNames.add(t.getName());
-                        scores.add(score);
-                    }
-                }
-
-            } else {
-
-                HackathonDAO hackathonDAO = new HackathonImplementationDAO();
-                hackathonDAO.scoreboard(title, location, teamNames, scores);
-
-                for (int i = 0; i < teamNames.size(); i++) {
-                    String daoTeamName = teamNames.get(i);
-                    boolean exists = false;
-
-                    for (ArrayList<Object> pair : myScoreboard) {
-                        Team t = (Team) pair.get(0);
-                        if (t.getName().equals(daoTeamName) &&
-                                t.getHackathon().getTitle().equals(title) &&
-                                t.getHackathon().getLocation().equals(location)) {
-                            exists = true;
-                        }
-                    }
-
-                    if (!exists) {
-                        Team newTeam = new Team(
-                                daoTeamName,
-                                controller.getPlayer(),
-                                new Hackathon(title, location, 0, null, null, null, null, 0, 0, null)
-                        );
-
-                        ArrayList<Object> pair = new ArrayList<>();
-                        pair.add(newTeam);
-                        pair.add(scores.get(i));
-
-                        myScoreboard.add(pair);
-                    }
-                }
+            for (int i = 0;  i < hack.getTeams().size(); i++) {
+                teamNames.add(hack.getTeams().get(i).getName());
+                scores.add(scoresMatrix.get(idx).get(i));
             }
         }
     }
@@ -128,13 +76,9 @@ public class ControllerHackathon {
     public void controllerOverallRanking(List<String> teamNames, List<Double> scores,
                                          List<String> titles, List<String> locations,
                                          boolean refreshing) throws SQLException {
-
-        if(myOverall == null || refreshing) {
-
+        if (myOverall == null || refreshing) {
             myOverall = new ArrayList<>();
             myOverallScores = new ArrayList<>();
-
-            System.out.println("DB");
 
             HackathonDAO hackathonDAO = new HackathonImplementationDAO();
             hackathonDAO.overallRanking(teamNames,scores,titles,locations);
@@ -143,98 +87,19 @@ public class ControllerHackathon {
                 Team newTeam = new Team(
                         teamNames.get(i),
                         controller.getPlayer(),
-                        new Hackathon(titles.get(i), locations.get(i), 0, null, null, null, null, 0, 0, null)
+                        new Hackathon(titles.get(i), locations.get(i))
                 );
                 myOverall.add(newTeam);
                 myOverallScores.add(scores.get(i));
             }
-
-
-        }else{
-
-            System.out.println("CACHE");
-
-            teamNames.clear();
-            scores.clear();
-            titles.clear();
-            locations.clear();
-
-            for(int i = 0; i < myOverall.size(); i++) {
+        } else {
+            for (int i = 0; i < myOverall.size(); i++) {
                 teamNames.add(myOverall.get(i).getName());
                 scores.add(myOverallScores.get(i));
                 titles.add(myOverall.get(i).getHackathon().getTitle());
                 locations.add(myOverall.get(i).getHackathon().getLocation());
             }
-
         }
-
-
-        /*System.out.println("=== controllerOverallRanking ===");
-        ArrayList<String> addedTeams = new ArrayList<>();
-
-        if (controller.getPlayer().getTeams().isEmpty() || refreshing) {
-            System.out.println("Cache vuota o refresh richiesto, caricamento dal DB...");
-
-            HackathonDAO hackathonDAO = new HackathonImplementationDAO();
-            hackathonDAO.overallRanking(teamNames, scores, titles, locations);
-
-            for (int i = 0; i < teamNames.size(); i++) {
-                String teamName = teamNames.get(i);
-                String title = titles.get(i);
-                String location = locations.get(i);
-                double score = scores.get(i);
-
-                boolean exists = false;
-                for (Team t : controller.getPlayer().getTeams()) {
-                    if (t.getName().equals(teamName) &&
-                            t.getHackathon().getTitle().equals(title) &&
-                            t.getHackathon().getLocation().equals(location)) {
-                        exists = true;
-                    }
-                }
-
-                if (!exists) {
-                    Team t = new Team(teamName, controller.getPlayer(),
-                            new Hackathon(title, location, 0, null, null, null, null, 0, 0, null));
-                    controller.getPlayer().getTeams().add(t);
-
-                    System.out.println("Aggiunto Team ranking: " + teamName + " -> " + score);
-                } else {
-                    System.out.println("Team già presente: " + teamName);
-                }
-            }
-
-        } else {
-            System.out.println("Caricamento dati dalla cache per overall ranking...");
-            teamNames.clear();
-            scores.clear();
-            titles.clear();
-            locations.clear();
-
-            for (Team t : controller.getPlayer().getTeams()) {
-                boolean alreadyAdded = false;
-                for (String added : addedTeams) {
-                    if (added.equals(t.getName())) {
-                        alreadyAdded = true;
-                    }
-                }
-
-                if (!alreadyAdded) {
-                    teamNames.add(t.getName());
-                    titles.add(t.getHackathon().getTitle());
-                    locations.add(t.getHackathon().getLocation());
-
-                    for (ArrayList<String> pair : teamScorePairs) {
-                        if (pair.get(0).equals(t.getName())) {
-                            scores.add(Double.parseDouble(pair.get(1)));
-                        }
-                    }
-
-                    addedTeams.add(t.getName());
-                    System.out.println("Caricato dalla cache ranking: " + t.getName() + " -> " + scores.get(scores.size()-1));
-                }
-            }
-        }*/
     }
 
 /**
@@ -290,15 +155,14 @@ public class ControllerHackathon {
      */
     public void controllerGetClosedHackathons(List<String> titles, List<String> locations, boolean refreshing) throws SQLException{
 
-        if(closedHackathons==null || refreshing){
-
+        if (closedHackathons == null || refreshing) {
             closedHackathons = new ArrayList<>();
             HackathonDAO hackathon = new HackathonImplementationDAO();
             hackathon.getClosedHackathons(titles, locations);
             for(int i = 0; i < titles.size(); i++){
-                closedHackathons.add(new Hackathon(titles.get(i),locations.get(i),
-                        0,null,null,null,null,0,0,null));
+                closedHackathons.add(new Hackathon(titles.get(i),locations.get(i)));
             }
+            scoresMatrix = null;
         }else{
             for(Hackathon hackathon : closedHackathons){
                 titles.add(hackathon.getTitle());

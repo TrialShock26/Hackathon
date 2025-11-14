@@ -53,8 +53,7 @@ public class ControllerPlayer {
 
                     //aggiungo gli hackathon ai quali gioco
 
-                    Hackathon hack = new Hackathon(titles.get(i), locations.get(i), 0,
-                            null, null, null, null, 0, 0, null);
+                    Hackathon hack = new Hackathon(titles.get(i), locations.get(i));
 
                     Team newTeam = new Team(teamNames.get(i),
                             controller.getPlayer(),

@@ -45,7 +45,7 @@ public class ControllerJudge {
             judgeDB.getHackathons(username, titles, locations, problemDescriptions);
             controller.getJudge().getSelections().clear();
             for (int i = 0; i < titles.size(); i++) {
-                Hackathon h = new Hackathon(titles.get(i), locations.get(i), 0, null, null, null, null, 0, 0, null);
+                Hackathon h = new Hackathon(titles.get(i), locations.get(i));
                 h.setProblemDescription(problemDescriptions.get(i));
                 Selection s = new Selection(null, h);
                 s.setJudge(controller.getJudge());
