@@ -67,7 +67,7 @@ public class Player extends User {
         h.setRegisteredPlayer(r);
 
         Team newTeam = new Team("Team di " + this.getUsername(), this, h);
-        myTeams.add(newTeam);
+        setTeam(newTeam);
         h.setTeam(newTeam);
         return 0;
     }
@@ -108,7 +108,7 @@ public class Player extends User {
         old.playerLeaving(this);
         if (old.getMembersNumber() == 0) {h.teamLeaving(old);}
         t.setPlayer(this);
-        myTeams.add(t);
+        setTeam(t);
         return 0;
     }
 
@@ -122,8 +122,9 @@ public class Player extends User {
     }
 
     /**
+     * Aggiunge un team specifico alla lista dei team del giocatore.
      *
-     * @param t
+     * @param t il team da aggiungere alla lista
      */
     public void setTeam(Team t) {
         myTeams.add(t);

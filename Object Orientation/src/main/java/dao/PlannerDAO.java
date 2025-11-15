@@ -77,19 +77,12 @@ public interface PlannerDAO {
 
     /**
      * Recupera la lista di tutti gli utenti registrati nel sistema per procedere all'invito come giudice.
-     * Popola le liste fornite con username, nomi, cognomi e password
-     * di tutti gli utenti, escludendo l'organizzatore che effettua la richiesta.
+     * Popola le liste fornite con gli username di tutti gli utenti,
+     * escludendo l'organizzatore che effettua la richiesta.
      *
      * @param planUser     il nome utente dell'organizzatore che richiede i dati
      * @param allUsernames lista da popolare con gli username degli utenti
-     * @param allNames     lista da popolare con i nomi degli utenti
-     * @param allSurnames  lista da popolare con i cognomi degli utenti
-     * @param allPasswords lista da popolare con le password degli utenti
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    void getUsers(String planUser,
-                  List<String> allUsernames,
-                  List<String> allNames,
-                  List<String> allSurnames,
-                  List<String> allPasswords) throws SQLException;
+    void getUsers(String planUser, List<String> allUsernames) throws SQLException;
 }

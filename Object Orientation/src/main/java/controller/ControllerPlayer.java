@@ -1,4 +1,4 @@
-package controller; //TODO javadoc
+package controller;
 
 import dao.PlayerDAO;
 import postgresImplementationDao.PlayerImplementationDAO;
@@ -8,101 +8,74 @@ import model.Team;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * The type Controller player.
+ * Controller per la gestione delle operazioni relative ai giocatori negli hackathon.
+ * Questa classe gestisce l'interazione tra il giocatore e gli hackathon a cui partecipa,
+ * inclusa la gestione dei team, l'iscrizione agli eventi e il recupero delle informazioni
+ * sui compagni di squadra e sugli altri team disponibili.
  */
 public class ControllerPlayer {
     private Controller controller;
     private ArrayList<Hackathon> myHackathons;
 
     /**
-     * Instantiates a new Controller player.
+     * Costruttore della classe ControllerPlayer con relativo riferimento al
+     * {@link Controller} padre.
      *
-     * @param controller the controller
+     * @param controller il controller principale dell'applicazione
      */
     public ControllerPlayer(Controller controller) {this.controller = controller;}
 
     /**
-     * Controller get hackathons.
+     * Recupera la lista degli hackathon a cui il giocatore partecipa.
+     * Se i dati non sono già in cache o è richiesto un aggiornamento, interroga il database
+     * per ottenere gli hackathon e i relativi team. Altrimenti utilizza i dati memorizzati localmente.
      *
-     * @param username   the username
-     * @param titles     the titles
-     * @param locations  the locations
-     * @param teamNames  the team names
-     * @param refreshing the refreshing
-     * @throws SQLException the sql exception
+     * @param username   lo username del giocatore
+     * @param titles     la lista da popolare con i titoli degli hackathon
+     * @param locations  la lista da popolare con le sedi degli hackathon
+     * @param teamNames  la lista da popolare con i nomi dei team del giocatore
+     * @param refreshing true se si vuole forzare l'aggiornamento dei dati dal database
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
                                         List<String> teamNames,boolean refreshing) throws SQLException{
 
 
-        if(myHackathons == null || refreshing) {
-            //if(controller.getPlayer().getTeams().isEmpty() || myHackathons == null || refreshing) {
-
+        if (myHackathons == null || refreshing) {
                 myHackathons = new ArrayList<>();
-
                 PlayerDAO player = new PlayerImplementationDAO();
-
                 player.getHackathons(username, titles, locations, teamNames);
 
-                //ottengo i team con i rispettivi hackathon in cui gioco
-
-
                 for (int i = 0; i < locations.size(); i++) {
-
-                    //aggiungo gli hackathon ai quali gioco
-
                     Hackathon hack = new Hackathon(titles.get(i), locations.get(i));
-
                     Team newTeam = new Team(teamNames.get(i),
                             controller.getPlayer(),
                             hack);
-
                     hack.setTeam(newTeam);
-
                     myHackathons.add(hack);
-
-                    //aggiungo i team a cui gioco (legati agli hackathon)
-
-                    //System.out.println(newTeam.getName());
-
-                    //controller.getPlayer().getTeams();
-
                 }
-
-//                for(Team t : controller.getPlayer().getTeams()){
-//                    System.out.println(t.getName());
-//                }
-
-//                for(Hackathon h : myHackathons){
-//                    System.out.println(h.getTitle());
-//                }
-
-            } else{
+            } else {
                 for(int i = 0; i < myHackathons.size(); i++){
                     titles.add(myHackathons.get(i).getTitle());
                     locations.add(myHackathons.get(i).getLocation());
                     teamNames.add(controller.getPlayer().getTeams().get(i).getName());
                 }
             }
-
-        //verifico se ogni team in cui partecipo è stato salvato
-
-//        for(Team t : controller.getPlayer().getTeams()){
-//            System.out.println(t.getName());
-//        }
-
     }
 
     /**
-     * Controller get other teams.
+     * Recupera la lista degli altri team disponibili per un determinato hackathon.
+     * Esclude i team a cui il giocatore è già iscritto, mostrando solo quelli
+     * a cui è possibile unirsi.
      *
-     * @param username  the username
-     * @param title     the title
-     * @param location  the location
-     * @param teamNames the team names
-     * @throws SQLException the sql exception
+     * @param username  lo username del giocatore
+     * @param title     il titolo dell'hackathon
+     * @param location  la sede dell'hackathon
+     * @param teamNames la lista da popolare con i nomi degli altri team disponibili
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerGetOtherTeams(String username, String title, String location,
                                         List<String> teamNames) throws SQLException {
@@ -111,93 +84,91 @@ public class ControllerPlayer {
     }
 
     /**
-     * Controller join team.
+     * Permette al giocatore di unirsi a un team esistente per un determinato hackathon.
+     * Registra l'associazione tra il giocatore e il team nel database e nella memoria locale.
      *
-     * @param username the username
-     * @param teamName the team name
-     * @param title    the title
-     * @param location the location
-     * @throws SQLException the sql exception
+     * @param username lo username del giocatore che vuole unirsi al team
+     * @param teamName il nome del team a cui unirsi
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerJoinTeam(String username, String teamName, String title, String location) throws SQLException {
             PlayerDAO player = new PlayerImplementationDAO();
             player.joinTeam(username,teamName,title,location);
-            //controller.getPlayer().joinTeam() ??
+            //controller.getPlayer().joinTeam();
     }
 
     /**
-     * Controller get teammates.
+     * Recupera la lista dei compagni di squadra del giocatore in un team specifico.
+     * Se i dati non sono in cache o è richiesto un aggiornamento, li recupera dal database.
+     * Include automaticamente il giocatore stesso nella lista dei membri del team.
      *
-     * @param username the username
-     * @param teamName the team name
-     * @param title    the title
-     * @param location the location
-     * @param names    the names
-     * @param surnames the surnames
-     * @throws SQLException the sql exception
+     * @param username   lo username del giocatore
+     * @param teamName   il nome del team
+     * @param title      il titolo dell'hackathon
+     * @param location   la sede dell'hackathon
+     * @param names      la lista da popolare con i nomi dei compagni di squadra
+     * @param surnames   la lista da popolare con i cognomi dei compagni di squadra
+     * @param refreshing true se si vuole forzare l'aggiornamento dei dati dal database
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-
     public void controllerGetTeammates(String username, String teamName, String title, String location,
                                        List<String> names, List<String> surnames, boolean refreshing) throws SQLException {
 
-        //System.out.println(controller.getPlayer().getTeams());
+        Team t = findTeam(teamName, title, location);
+        if (Objects.requireNonNull(t).getPlayers().size() == 1 || refreshing) {
 
-       for(int i = 0; i < controller.getPlayer().getTeams().size(); i++) {
-           if (controller.getPlayer().getTeams().get(i).getName().equals(teamName)) {
-               if (controller.getPlayer().getTeams().get(i).getPlayers().size() == 1 || refreshing) {
+            PlayerDAO playerDAO = new PlayerImplementationDAO();
+            playerDAO.getTeammates(username, teamName, title, location, names, surnames);
+            t.getPlayers().clear();
 
-                   System.out.println("DB");
+            t.setPlayer(controller.getPlayer());
+            for (int j = 0; j < names.size(); j++) {
+                t.setPlayer(new Player(null, null,
+                                names.get(j),
+                                surnames.get(j))
+                );
+            }
 
-                   //se ci sono solo io potrei dover caricare altri teamMates
-
-                   //carico i teammates da db
-
-                   PlayerDAO playerDAO = new PlayerImplementationDAO();
-                   playerDAO.getTeammates(username, teamName, title, location, names, surnames);
-
-
-                   for (int j = 0; j < names.size(); j++) {
-                       controller.getPlayer().getTeams().get(i).setPlayer(
-                               new Player(null, null,
-                                       names.get(j),
-                                       surnames.get(j))
-                       );
-                   }
-
-                   //aggiungo me stesso poichè dal db non risale il nome e il cognome dell'utente stesso
-                   //mentre nel model se stesso è presente
-
-                   names.add((controller.getPlayer().getTeams().get(i).getPlayers().get(0).getName()));
-                   surnames.add((controller.getPlayer().getTeams().get(i).getPlayers().get(0).getSurname()));
-
-               } else {
-
-                   System.out.println("CACHE");
-
-                   for (int j = 0; j < controller.getPlayer().getTeams().get(i).getPlayers().size(); j++) {
-                       System.out.println(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getName());
-                   }
-
-                   names.clear();
-                   surnames.clear();
-
-                   for (int j = 0; j < controller.getPlayer().getTeams().get(i).getPlayers().size(); j++) {
-                       names.add(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getName());
-                       surnames.add(controller.getPlayer().getTeams().get(i).getPlayers().get(j).getSurname());
-                   }
-
-               }
-           }
-
-       }
+            names.add((controller.getUser().getName()));
+            surnames.add((controller.getUser().getSurname()));
+        } else {
+            for (int j = 0; j < t.getPlayers().size(); j++) {
+                names.add(t.getPlayers().get(j).getName());
+                surnames.add(t.getPlayers().get(j).getSurname());
+            }
+        }
     }
+
     /**
-     * Subscribe.
+     * Metodo di supporto per recuperare un team dalla lista dei team a cui è iscritto il giocatore.
      *
-     * @param username the username
-     * @param title    the title
-     * @param location the location
-     * @throws SQLException the sql exception
+     * @param teamName il nome del team
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @return il team cercato o {@code null} se non esiste
+     */
+    private Team findTeam(String teamName, String title, String location) {
+        for (int i = 0; i < controller.getPlayer().getTeams().size(); i++) {
+            if (controller.getPlayer().getTeams().get(i).getName().equals(teamName) &&
+                    controller.getPlayer().getTeams().get(i).getHackathon().getTitle().equals(title) &&
+                    controller.getPlayer().getTeams().get(i).getHackathon().getLocation().equals(location)) {
+                return controller.getPlayer().getTeams().get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Iscrive il giocatore a un hackathon specifico.
+     * Registra l'iscrizione nel database e aggiorna la memoria locale
+     * aggiungendo l'hackathon alla lista degli eventi a cui partecipa.
+     *
+     * @param username lo username del giocatore che si vuole iscrivere
+     * @param title    il titolo dell'hackathon
+     * @param location la sede dell'hackathon
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void subscribe(String username, String title, String location) throws SQLException {
         PlayerDAO player = new PlayerImplementationDAO();

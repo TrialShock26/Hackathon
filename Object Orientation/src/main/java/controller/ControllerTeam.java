@@ -1,4 +1,4 @@
-package controller; //TODO javadoc
+package controller;
 
 import dao.TeamDAO;
 import postgresImplementationDao.TeamImplementationDAO;
@@ -10,30 +10,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Controller team.
+ * Controller per la gestione delle operazioni relative ai team negli hackathon.
+ * Questa classe gestisce la pubblicazione dei progressi dei team, il recupero
+ * dei documenti associati e la gestione della cache dei team e dei loro contenuti.
  */
 public class ControllerTeam {
     private Controller controller;
     private ArrayList<Team> teams;
 
     /**
-     * Instantiates a new Controller team.
+     * Costruttore della classe ControllerTeam con relativo riferimento al
+     * {@link Controller} padre.
      *
-     * @param controller the controller
+     * @param controller il controller principale dell'applicazione
      */
-    public ControllerTeam(Controller controller) {
-        this.controller = controller;
-    }
+    public ControllerTeam(Controller controller) {this.controller = controller;}
 
     /**
-     * Controller publish progress.
+     * Pubblica un documento di progresso per un team specifico in un hackathon.
+     * Il documento viene registrato nel database e associato
+     * nella memoria locale al team e all'hackathon indicati.
      *
-     * @param teamName  the team name
-     * @param hackTitle the hack title
-     * @param location  the location
-     * @param docTitle  the doc title
-     * @param content   the content
-     * @throws SQLException the sql exception
+     * @param teamName  il nome del team
+     * @param hackTitle il titolo dell'hackathon
+     * @param location  la sede dell'hackathon
+     * @param docTitle  il titolo del documento da pubblicare
+     * @param content   il contenuto del documento
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
         TeamDAO teamController = new TeamImplementationDAO();
@@ -41,16 +44,18 @@ public class ControllerTeam {
     }
 
     /**
-     * Controller get documents.
+     * Recupera la lista dei documenti di progresso pubblicati da un team per un hackathon.
+     * Se i dati non sono in cache o è richiesto un aggiornamento, li recupera dal database.
+     * Altrimenti cerca il team nella memoria locale e restituisce i documenti memorizzati.
      *
-     * @param teamName         the team name
-     * @param title            the title
-     * @param location         the location
-     * @param documentTitles   the document titles
-     * @param documentContents the document contents
-     * @param documentComments the document comments
-     * @param refreshing       the refreshing
-     * @throws SQLException the sql exception
+     * @param teamName         il nome del team
+     * @param title            il titolo dell'hackathon
+     * @param location         la sede dell'hackathon
+     * @param documentTitles   la lista da popolare con i titoli dei documenti
+     * @param documentContents la lista da popolare con i contenuti dei documenti
+     * @param documentComments la lista da popolare con i commenti sui documenti
+     * @param refreshing       true se si vuole forzare l'aggiornamento dei dati dal database
+     * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerGetDocuments(String teamName, String title, String location,
                                        List<String> documentTitles, List<String> documentContents,
@@ -88,6 +93,15 @@ public class ControllerTeam {
         }
     }
 
+    /**
+     * Cerca un team specifico nella memoria locale utilizzando nome, titolo hackathon e sede.
+     * Metodo privato di supporto per la gestione della cache dei team.
+     *
+     * @param teamName il nome del team da cercare
+     * @param title    il titolo dell'hackathon associato al team
+     * @param location la sede dell'hackathon associato al team
+     * @return il team trovato, oppure null se non presente nella cache
+     */
     private Team findTeam(String teamName, String title, String location) {
         for (Team t : teams) {
             if (t.getName().equals(teamName) && t.getHackathon().getTitle().equals(title) &&
@@ -99,9 +113,9 @@ public class ControllerTeam {
     }
 
     /**
-     * Gets teams.
+     * Restituisce la lista di tutti i team memorizzati nella cache.
      *
-     * @return the teams
+     * @return la lista dei team
      */
     public List<Team> getTeams() {return teams;}
 }

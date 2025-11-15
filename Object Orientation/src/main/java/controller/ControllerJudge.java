@@ -12,7 +12,6 @@ import java.util.List;
  * gestendo le operazioni che un giudice può eseguire come visualizzare hackathon,
  * pubblicare problemi, esaminare team e documenti, e assegnare valutazioni.
  */
-
 public class ControllerJudge {
     private Controller controller;
 
@@ -21,7 +20,6 @@ public class ControllerJudge {
      *
      * @param controller il controller "padre".
      */
-
     public ControllerJudge(Controller controller) {this.controller = controller;}
 
     /**
@@ -37,7 +35,6 @@ public class ControllerJudge {
      * @throws SQLException           se si verifica un errore durante l'accesso al database
      * @throws IllegalAccessException se si verifica un errore di accesso illegale
      */
-
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
                                         List<String> problemDescriptions, boolean refreshing) throws SQLException, IllegalAccessException {
         if (controller.getJudge().getSelections().isEmpty() || refreshing) {
@@ -70,7 +67,6 @@ public class ControllerJudge {
      * @throws SQLException           se si verifica un errore durante l'accesso al database
      * @throws IllegalAccessException se si prova a modificare un problema già impostato precedentemente
      */
-
     public void controllerPublishProblem(String title, String location, String problemDescription) throws SQLException, IllegalAccessException {
         JudgeDAO judgeDB = new JudgeImplementationDAO();
         judgeDB.publishProblem(problemDescription, title, location);
@@ -92,7 +88,6 @@ public class ControllerJudge {
      * @param refreshing true per forzare l'aggiornamento dal database, false per usare i dati in cache
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-
     public void controllerGetTeams(String title, String location, List<String> teamNames, boolean refreshing) throws SQLException {
         Hackathon h = findHackathon(title, location);
         if (h == null) {return;}
@@ -117,7 +112,6 @@ public class ControllerJudge {
      * @param location la sede dell'hackathon da cercare
      * @return l'hackathon trovato (il valore null non è mai ritornato in quanto può leggere solo dati già presenti in cache)
      */
-
     private Hackathon findHackathon(String title, String location) {
         for (Selection s : controller.getJudge().getSelections()) {
             Hackathon h = s.getHackathon();
@@ -142,7 +136,6 @@ public class ControllerJudge {
      * @param text       il nuovo commento da aggiungere al documento
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-
     public void controllerExamineDocument(String username, String docTitle, String content, String oldComment,
                                           String teamName, String hackTitle, String location, String text) throws SQLException {
         JudgeDAO judgeDB = new JudgeImplementationDAO();
@@ -171,7 +164,6 @@ public class ControllerJudge {
      * @param value    il punteggio da assegnare al team
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-
     public void controllerGradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
         JudgeDAO judgeDB = new JudgeImplementationDAO();
         judgeDB.gradeTeam(username, teamName, title, location, value);

@@ -1,4 +1,4 @@
-package gui;//TODO javadoc
+package gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,10 +6,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import controller.Controller;
-import controller.ControllerPlanner;
 
 /**
- * The type Create gui.
+ * Interfaccia grafica per la creazione di un nuovo hackathon.
+ * Questa classe permette agli utenti di inserire tutti i dati necessari per creare
+ * un hackathon, inclusi titolo, sede, date, limiti di partecipazione e selezione dei giudici.
+ * Fornisce validazione dei campi e gestione degli errori tramite dialog modali.
  */
 public class CreateGUI {
     private JFrame frame;
@@ -26,15 +28,12 @@ public class CreateGUI {
     private ArrayList<String> utenti = new ArrayList<>();
     private ArrayList<String> giudiciSelezionati = new ArrayList<>();
 
-    private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<String> surnames = new ArrayList<>();
-    private ArrayList<String> passwords = new ArrayList<>();
-
     /**
-     * Instantiates a new Create gui.
+     * Inizializza l'interfaccia grafica per la creazione di un hackathon,
+     * configurando tutti i componenti visivi, i campi per i dati e i pulsanti di controllo.
      *
-     * @param controller  the controller
-     * @param callerFrame the caller frame
+     * @param controller  il controller principale dell'applicazione
+     * @param callerFrame il frame chiamante a cui tornare dopo la creazione o l'annullamento
      */
     public CreateGUI(Controller controller, JFrame callerFrame) {
         this.controller = controller;
@@ -127,6 +126,16 @@ public class CreateGUI {
         frame.setVisible(true);
     }
 
+    /**
+     * Crea un campo di input con etichetta e lo aggiunge al pannello specificato.
+     * Metodo di supporto per la costruzione dell'interfaccia grafica.
+     *
+     * @param panel il pannello a cui aggiungere il campo
+     * @param gbc   le impostazioni per il layout {@link GridBagConstraints}
+     * @param y     la posizione verticale nel layout
+     * @param label il testo dell'etichetta del campo
+     * @return il {@link JTextField} di testo creato
+     */
     private JTextField creaCampo(JPanel panel, GridBagConstraints gbc, int y, String label) {
         gbc.gridx = 0; gbc.gridy = y;
         JLabel lbl = new JLabel(label);
@@ -140,6 +149,14 @@ public class CreateGUI {
         return field;
     }
 
+    /**
+     * Metodo di suppoto che crea un pulsante stilizzato con il testo e il colore specificati.
+     * Applica uno stile uniforme a tutti i pulsanti dell'interfaccia.
+     *
+     * @param text      il testo da visualizzare sul pulsante
+     * @param baseColor il colore di sfondo del pulsante
+     * @return il {@link JButton} creato e stilizzato
+     */
     private JButton creaPulsante(String text, Color baseColor) {
         JButton btn = new JButton(text);
         btn.setPreferredSize(new Dimension(120, 35));
@@ -151,6 +168,14 @@ public class CreateGUI {
         return btn;
     }
 
+    /**
+     * Metodo di supporto che valida i dati inseriti e salva l'hackathon.
+     * Controlla che tutti i campi siano compilati, che siano stati selezionati
+     * almeno 2 giudici e che le date siano nel formato corretto.
+     * In caso di successo chiude la finestra e ritorna al frame chiamante.
+     *
+     * @param callerFrame il frame chiamante a cui tornare dopo il salvataggio
+     */
     private void salvaHackathon(JFrame callerFrame) {
         if (titoloField.getText().isEmpty() ||
                 sedeField.getText().isEmpty() ||
@@ -199,10 +224,16 @@ public class CreateGUI {
         }
     }
 
+    /**
+     * Metodo di supporto che mostra un dialog modale per la selezione dei giudici dell'hackathon.
+     * Recupera la lista degli utenti disponibili e permette la selezione
+     * tramite {@link JCheckBox}. Richiede la selezione di almeno 2 giudici.
+     * Alla conferma, aggiorna la lista dei giudici selezionati e mostra un riepilogo.
+     */
     private void mostraDialogSelezioneGiudici() {
 
         try{
-            controller.getControllerPlanner().controllerGetUsers(controller.getUser().getUsername(),utenti,names,surnames,passwords);
+            controller.getControllerPlanner().controllerGetUsers(controller.getUser().getUsername(), utenti);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
         }
