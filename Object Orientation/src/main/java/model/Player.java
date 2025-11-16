@@ -67,7 +67,6 @@ public class Player extends User {
         h.setRegisteredPlayer(r);
 
         Team newTeam = new Team("Team di " + this.getUsername(), this, h);
-        setTeam(newTeam);
         h.setTeam(newTeam);
         return 0;
     }

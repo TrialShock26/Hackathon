@@ -2,11 +2,11 @@ package controller;
 
 import dao.PlayerDAO;
 import postgresImplementationDao.PlayerImplementationDAO;
+import model.Registration;
 import model.Hackathon;
 import model.Player;
 import model.Team;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +18,6 @@ import java.util.Objects;
  */
 public class ControllerPlayer {
     private Controller controller;
-    private ArrayList<Hackathon> myHackathons;
 
     /**
      * Costruttore della classe ControllerPlayer con relativo riferimento al
@@ -42,8 +41,7 @@ public class ControllerPlayer {
      */
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
                                         List<String> teamNames,boolean refreshing) throws SQLException{
-        if (myHackathons == null || refreshing) {
-            myHackathons = new ArrayList<>();
+        if (controller.getPlayer().getSubscriptions().isEmpty() || refreshing) {
             PlayerDAO player = new PlayerImplementationDAO();
             player.getHackathons(username, titles, locations, teamNames);
 
@@ -53,12 +51,12 @@ public class ControllerPlayer {
                         controller.getPlayer(),
                         hack);
                 hack.setTeam(newTeam);
-                myHackathons.add(hack);
+                controller.getPlayer().getSubscriptions().add(new Registration(controller.getPlayer(), hack));
             }
         } else {
-            for(int i = 0; i < myHackathons.size(); i++){
-                titles.add(myHackathons.get(i).getTitle());
-                locations.add(myHackathons.get(i).getLocation());
+            for(int i = 0; i < controller.getPlayer().getSubscriptions().size(); i++){
+                titles.add(controller.getPlayer().getSubscriptions().get(i).getHackathon().getTitle());
+                locations.add(controller.getPlayer().getSubscriptions().get(i).getHackathon().getLocation());
                 teamNames.add(controller.getPlayer().getTeams().get(i).getName());
             }
         }
@@ -95,7 +93,8 @@ public class ControllerPlayer {
         PlayerDAO player = new PlayerImplementationDAO();
         player.joinTeam(username,teamName,title,location);
 
-        for (Hackathon h : myHackathons) {
+        for (Registration r : controller.getPlayer().getSubscriptions()) {
+            Hackathon h = r.getHackathon();
             if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
                 for (Team t : h.getTeams()) {
                     if (t.getName().equals(teamName)) {
