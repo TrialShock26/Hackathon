@@ -155,7 +155,7 @@ public class ResumeGUI {
         startBtn.addActionListener(e -> {
             try{
                 controller.getControllerPlanner().controllerStartHackathon(hackathonInfoFormatted.getFirst(),
-                        hackathonInfoFormatted.get(1)); //tile e location
+                        hackathonInfoFormatted.get(1)); //title e location
                 JOptionPane.showMessageDialog(
                         frame,
                         "Hackathon \"" + hackathonInfoFormatted.getFirst() + "\" avviato!",
@@ -163,12 +163,12 @@ public class ResumeGUI {
                         JOptionPane.INFORMATION_MESSAGE
                 );
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(
-                        frame,
-                        ex.getMessage(),
-                        "Errore!",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                String error = ex.getMessage();
+                int idx = error.indexOf("\n");
+                error = error.substring(0, idx);
+                JOptionPane.showMessageDialog(frame,
+                        "C'è stato un errore!\n" + error,
+                        "Errore", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -232,6 +232,7 @@ public class ResumeGUI {
                     rankingBtn.addActionListener(ev -> {
                         dialog.dispose();
                         frame.dispose();
+                        controller.getControllerHackathon().addClosedHackathon(hackathonInfoFormatted.getFirst(), hackathonInfoFormatted.get(1));
                         new ScoreboardGUI(controller, callerFrame, hackathonInfoFormatted.getFirst(), hackathonInfoFormatted.get(1));
                     });
 
@@ -241,12 +242,12 @@ public class ResumeGUI {
                     dialog.setVisible(true);
 
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            ex.getMessage(),
-                            "Errore!",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                    String error = ex.getMessage();
+                    int idx = error.indexOf("\n");
+                    error = error.substring(0, idx);
+                    JOptionPane.showMessageDialog(frame,
+                            "C'è stato un errore!\n" + error,
+                            "Errore", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

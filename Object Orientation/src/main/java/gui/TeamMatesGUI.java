@@ -22,7 +22,6 @@ public class TeamMatesGUI {
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> surnames = new ArrayList<>();
 
-    // 🔧 Pannelli e componenti principali
     private JPanel listPanel;
     private JScrollPane scrollPane;
     private JLabel countLabel;

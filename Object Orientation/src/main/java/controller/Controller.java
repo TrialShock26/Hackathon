@@ -146,7 +146,7 @@ public class Controller {
      * @return l'oggetto ControllerHackathon
      */
     public ControllerHackathon getControllerHackathon() {
-        if (controllerHackathon == null) {controllerHackathon = new ControllerHackathon(this);}
+        if (controllerHackathon == null) {controllerHackathon = new ControllerHackathon();}
         return controllerHackathon;
     }
 

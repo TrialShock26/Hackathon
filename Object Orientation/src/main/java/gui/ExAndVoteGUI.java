@@ -3,7 +3,6 @@ package gui;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import javax.swing.*;
 import controller.*;
 

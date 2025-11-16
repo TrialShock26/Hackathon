@@ -131,13 +131,9 @@ public class PlannerImplementationDAO implements PlannerDAO {
     }
 
     @Override
-    public void getUsers(String planUser,
-                         List<String> allUsernames,
-                         List<String> allNames,
-                         List<String> allSurnames,
-                         List<String> allPasswords) throws SQLException {
+    public void getUsers(String planUser, List<String> allUsernames) throws SQLException {
         PreparedStatement ps;
-        String query = "SELECT * " +
+        String query = "SELECT username " +
                        "FROM Utente " +
                        "WHERE username <> ? AND username <> 'username';";
         ps = connection.prepareStatement(query);
@@ -146,9 +142,6 @@ public class PlannerImplementationDAO implements PlannerDAO {
 
         while (rs.next()) {
             allUsernames.add(rs.getString("username"));
-            allNames.add(rs.getString("nome"));
-            allSurnames.add(rs.getString("cognome"));
-            allPasswords.add(rs.getString("password"));
         }
         rs.close();
     }

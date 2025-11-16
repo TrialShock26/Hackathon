@@ -77,14 +77,16 @@ public class ScoreboardGUI {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         headerPanel.add(titleLabel, BorderLayout.CENTER);
 
-        JButton refreshBtn = new JButton("Aggiorna");
-        refreshBtn.setPreferredSize(new Dimension(120, 35));
-        refreshBtn.setBackground(new Color(70, 130, 180));
-        refreshBtn.setForeground(Color.WHITE);
-        refreshBtn.setFocusPainted(false);
-        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        refreshBtn.addActionListener(e -> refreshScoreboard());
-        headerPanel.add(refreshBtn, BorderLayout.EAST);
+        if (hackathonName == null) {
+            JButton refreshBtn = new JButton("Aggiorna");
+            refreshBtn.setPreferredSize(new Dimension(120, 35));
+            refreshBtn.setBackground(new Color(70, 130, 180));
+            refreshBtn.setForeground(Color.WHITE);
+            refreshBtn.setFocusPainted(false);
+            refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            refreshBtn.addActionListener(e -> refreshScoreboard());
+            headerPanel.add(refreshBtn, BorderLayout.EAST);
+        }
 
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
@@ -143,7 +145,7 @@ public class ScoreboardGUI {
 
         try {
             if (hackathonName != null) {
-                controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores, refreshing);
+                controller.getControllerHackathon().controllerScoreboard(hackathonName, location, teams, scores);
                 isCorrect = !teams.isEmpty();
             } else {
                 controller.getControllerHackathon().controllerOverallRanking(teams, scores, titles, locations, refreshing);
