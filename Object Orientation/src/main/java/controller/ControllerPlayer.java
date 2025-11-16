@@ -42,28 +42,26 @@ public class ControllerPlayer {
      */
     public void controllerGetHackathons(String username, List<String> titles, List<String> locations,
                                         List<String> teamNames,boolean refreshing) throws SQLException{
-
-
         if (myHackathons == null || refreshing) {
-                myHackathons = new ArrayList<>();
-                PlayerDAO player = new PlayerImplementationDAO();
-                player.getHackathons(username, titles, locations, teamNames);
+            myHackathons = new ArrayList<>();
+            PlayerDAO player = new PlayerImplementationDAO();
+            player.getHackathons(username, titles, locations, teamNames);
 
-                for (int i = 0; i < locations.size(); i++) {
-                    Hackathon hack = new Hackathon(titles.get(i), locations.get(i));
-                    Team newTeam = new Team(teamNames.get(i),
-                            controller.getPlayer(),
-                            hack);
-                    hack.setTeam(newTeam);
-                    myHackathons.add(hack);
-                }
-            } else {
-                for(int i = 0; i < myHackathons.size(); i++){
-                    titles.add(myHackathons.get(i).getTitle());
-                    locations.add(myHackathons.get(i).getLocation());
-                    teamNames.add(controller.getPlayer().getTeams().get(i).getName());
-                }
+            for (int i = 0; i < locations.size(); i++) {
+                Hackathon hack = new Hackathon(titles.get(i), locations.get(i));
+                Team newTeam = new Team(teamNames.get(i),
+                        controller.getPlayer(),
+                        hack);
+                hack.setTeam(newTeam);
+                myHackathons.add(hack);
             }
+        } else {
+            for(int i = 0; i < myHackathons.size(); i++){
+                titles.add(myHackathons.get(i).getTitle());
+                locations.add(myHackathons.get(i).getLocation());
+                teamNames.add(controller.getPlayer().getTeams().get(i).getName());
+            }
+        }
     }
 
     /**
@@ -94,9 +92,18 @@ public class ControllerPlayer {
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerJoinTeam(String username, String teamName, String title, String location) throws SQLException {
-            PlayerDAO player = new PlayerImplementationDAO();
-            player.joinTeam(username,teamName,title,location);
-            //controller.getPlayer().joinTeam();
+        PlayerDAO player = new PlayerImplementationDAO();
+        player.joinTeam(username,teamName,title,location);
+
+        for (Hackathon h : myHackathons) {
+            if (h.getTitle().equals(title) && h.getLocation().equals(location)) {
+                for (Team t : h.getTeams()) {
+                    if (t.getName().equals(teamName)) {
+                        controller.getPlayer().joinTeam(t, h);
+                    }
+                }
+            }
+        }
     }
 
     /**

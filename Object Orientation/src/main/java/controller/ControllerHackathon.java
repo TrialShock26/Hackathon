@@ -204,4 +204,21 @@ public class ControllerHackathon {
         }
         return null;
     }
+
+    /**
+     * Introduce nella memoria locale un hackathon appena concluso, allocando
+     * la relativa riga nella matrice dei punteggi.
+     *
+     * @param title     il titolo dell'hackathon
+     * @param location  la sede dell'hackathon
+     */
+    public void addClosedHackathon(String title, String location) {
+        if  (closedHackathons == null) {
+            closedHackathons = new ArrayList<>();
+        }
+        closedHackathons.add(new Hackathon(title,location));
+        if (scoresMatrix != null) {
+            scoresMatrix.add(new ArrayList<>());
+        }
+    }
 }

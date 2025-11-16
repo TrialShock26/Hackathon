@@ -39,8 +39,16 @@ public class ControllerTeam {
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
     public void controllerPublishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
-        TeamDAO teamController = new TeamImplementationDAO();
-        teamController.publishProgress(teamName, hackTitle, location, docTitle, content);
+        TeamDAO teamDAO = new TeamImplementationDAO();
+        teamDAO.publishProgress(teamName, hackTitle, location, docTitle, content);
+
+        for (Team t : controller.getPlayer().getTeams()) {
+            if (t.getName().equals(teamName) &&
+                t.getHackathon().getTitle().equals(hackTitle) && t.getHackathon().getLocation().equals(location)) {
+                t.publishProgress(content, docTitle);
+                return;
+            }
+        }
     }
 
     /**
@@ -64,7 +72,7 @@ public class ControllerTeam {
             TeamDAO teamDB = new TeamImplementationDAO();
             teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
             teams = new ArrayList<>();
-            Team t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location));
+            Team t = new Team(teamName, null, new Hackathon(title, location));
             for (int i = 0; i < documentTitles.size(); i++) {
                 Document d = new Document(documentTitles.get(i), documentContents.get(i), t);
                 d.setComment(documentComments.get(i));
@@ -82,7 +90,7 @@ public class ControllerTeam {
             } else {
                 TeamDAO teamDB = new TeamImplementationDAO();
                 teamDB.getDocuments(teamName, title, location, documentTitles, documentContents, documentComments);
-                t = new Team(teamName, controller.getPlayer(), new Hackathon(title, location));
+                t = new Team(teamName, null, new Hackathon(title, location));
                 for (int i = 0; i < documentTitles.size(); i++) {
                     Document d = new Document(documentTitles.get(i), documentContents.get(i), t);
                     d.setComment(documentComments.get(i));

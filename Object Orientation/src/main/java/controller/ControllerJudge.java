@@ -106,7 +106,7 @@ public class ControllerJudge {
     }
 
     /**
-     * Trova un hackathon nelle selezioni del giudice in base al titolo e alla sede.
+     * Metodo di supporto che trova un hackathon nelle selezioni del giudice in base al titolo e alla sede.
      *
      * @param title    il titolo dell'hackathon da cercare
      * @param location la sede dell'hackathon da cercare

@@ -113,6 +113,7 @@ public class ControllerPlanner {
                                         String planUsername , String judgesUsernames) throws SQLException{
         PlannerDAO planner = new PlannerImplementationDAO();
         planner.openHackathon(title,location,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim,planUsername,judgesUsernames);
+        controller.getPlanner().openHackathon(title, location,  startDate, endDate, startSubDate, endSubDate, maxPlayers, maxTeamDim);
     }
 
     /**
@@ -136,7 +137,7 @@ public class ControllerPlanner {
      * @param location la sede dell'hackathon da terminare
      * @throws SQLException se si verifica un errore durante l'accesso al database
      */
-    public void controllerEndHackathon(String title, String location) throws  SQLException{
+    public void controllerEndHackathon(String title, String location) throws SQLException {
         PlannerDAO planner = new PlannerImplementationDAO();
         planner.endHackathon(title,location);
     }
