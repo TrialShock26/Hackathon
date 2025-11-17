@@ -3,6 +3,7 @@ package model;
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -54,7 +55,8 @@ public class Planner extends User {
      * Crea e apre un nuovo hackathon con i parametri forniti.
      * <p>
      * Il metodo calcola automaticamente la durata dell'hackathon in giorni
-     * e aggiunge l'evento alla lista degli hackathon gestiti dall'organizzatore.
+     * e aggiunge l'evento alla lista degli hackathon gestiti dall'organizzatore,
+     * invitando i relativi giudici selezionati.
      *
      * @param title                 il titolo dell'hackathon
      * @param location              la sede in cui si svolge l'evento
@@ -67,9 +69,14 @@ public class Planner extends User {
      */
     public void openHackathon (String title, String location, Date startDate, Date endDate,
                                Date startSubscriptionDate, Date endSubscriptionDate,
-                               int maxPlayers, int maxTeamDim) {
+                               int maxPlayers, int maxTeamDim, String judgesUsernames) {
         Hackathon h = new Hackathon(title, location, ChronoUnit.DAYS.between(startDate.toLocalDate(), endDate.toLocalDate())+1,
                 startDate, endDate, startSubscriptionDate, endSubscriptionDate, maxPlayers, maxTeamDim, this);
+        judgesUsernames = judgesUsernames.substring(0, judgesUsernames.length()-1);
+        ArrayList<String> judgesFormatted = new ArrayList<>(Arrays.asList(judgesUsernames.split(",")));
+        for (String username : judgesFormatted) {
+            inviteJudge(h, new Judge(username, null, null, null));
+        }
         myHackathons.add(h);
     }
 

@@ -110,10 +110,11 @@ public class ControllerPlanner {
      */
     public void controllerOpenHackathon(String title, String location, Date startDate, Date endDate,
                                         Date startSubDate, Date endSubDate, int maxPlayers, int maxTeamDim,
-                                        String planUsername , String judgesUsernames) throws SQLException{
+                                        String planUsername, String judgesUsernames) throws SQLException{
         PlannerDAO planner = new PlannerImplementationDAO();
         planner.openHackathon(title,location,startDate,endDate,startSubDate,endSubDate,maxPlayers,maxTeamDim,planUsername,judgesUsernames);
-        controller.getPlanner().openHackathon(title, location,  startDate, endDate, startSubDate, endSubDate, maxPlayers, maxTeamDim);
+        controller.getPlanner().openHackathon(title, location,  startDate, endDate, startSubDate, endSubDate,
+                maxPlayers, maxTeamDim, judgesUsernames);
     }
 
     /**

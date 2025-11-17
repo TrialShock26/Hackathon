@@ -15,7 +15,6 @@ import controller.*;
 public class ResumeGUI {
     private JFrame frame;
     private JPanel mainPanel;
-    private Controller controller;
 
     /**
      * Inizializza la finestra del riepilogo di un hackathon, mostrando le informazioni
@@ -28,7 +27,6 @@ public class ResumeGUI {
      */
 
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonInfo) {
-        this.controller = controller;
         frame = new JFrame("Riepilogo");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(700, 500);
