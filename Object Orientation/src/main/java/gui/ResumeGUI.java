@@ -25,7 +25,6 @@ public class ResumeGUI {
      * @param hackathonInfo tutti i dati dell’hackathon di cui visualizzare il riepilogo,
      *                      formattati tramite un carattere separatore
      */
-
     public ResumeGUI(Controller controller, JFrame callerFrame, String hackathonInfo) {
         frame = new JFrame("Riepilogo");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

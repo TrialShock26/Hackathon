@@ -30,6 +30,12 @@ public class TeamMatesGUI {
      * Crea e visualizza una finestra contenente la lista dei membri di un team,
      * mostrando ogni partecipante all’interno di una card grafica.
      * Include un pulsante per tornare alla schermata precedente.
+     *
+     * @param controller        il controller principale
+     * @param callerFrame       il frame chiamante a cui ritornare dopo l'uscita
+     * @param teamName          il nome del team di riferimento
+     * @param hackTitle         il titolo dell'hackathon di riferimento
+     * @param location          la sede dell'hackathon di riferimento
      */
     public TeamMatesGUI(Controller controller, JFrame callerFrame, String teamName, String hackTitle, String location) {
         this.controller = controller;
@@ -128,7 +134,8 @@ public class TeamMatesGUI {
     }
 
     /**
-     * Aggiorna la lista dei compagni di squadra.
+     * Aggiorna la lista dei compagni di squadra,
+     * ricostruendo le card.
      */
     private void refreshTeammates() {
         names.clear();
@@ -166,7 +173,11 @@ public class TeamMatesGUI {
     }
 
     /**
-     * Carica i nomi e cognomi dei membri del team dal database.
+     * Carica i nomi e cognomi dei membri del team per mostrarli
+     * all'utente.
+     *
+     * @param refreshing true se si vuole forzare l'aggiornamento da database
+     * @return true se sono stati caricati con successo dei dati, false altrimenti
      */
     private boolean loadTeammates(boolean refreshing) {
         boolean isCorrect = true;
@@ -199,6 +210,9 @@ public class TeamMatesGUI {
 
     /**
      * Crea una card grafica per un partecipante.
+     *
+     * @param participantName il nome del partecipante da inserire nella card
+     * @return un {@link JPanel} che rappresenta la card creata
      */
     private JPanel createParticipantCard(String participantName) {
         JPanel card = new JPanel(new BorderLayout());
