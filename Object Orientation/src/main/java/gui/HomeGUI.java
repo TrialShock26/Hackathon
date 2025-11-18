@@ -25,8 +25,6 @@ public class HomeGUI {
      * con conferma per terminare l'applicazione.
      */
     public HomeGUI() {
-        Controller controller = new Controller();
-
         frame = new JFrame("Benvenut3 in HackathON!");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(900, 600);

@@ -21,14 +21,14 @@ public class PlannerGUI {
 
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<String> locations = new ArrayList<>();
-    private ArrayList<Long> periodOfTime = new ArrayList<>();
+    private ArrayList<Long> periodsOfTime = new ArrayList<>();
     private ArrayList<String> problemDescriptions = new ArrayList<>();
-    private ArrayList<Date> startDate = new ArrayList<>();
-    private ArrayList<Date> endDate = new ArrayList<>();
-    private ArrayList<Date> startSubDate = new ArrayList<>();
-    private ArrayList<Date> endSubDate = new ArrayList<>();
+    private ArrayList<Date> startDates = new ArrayList<>();
+    private ArrayList<Date> endDates = new ArrayList<>();
+    private ArrayList<Date> startSubDates = new ArrayList<>();
+    private ArrayList<Date> endSubDates = new ArrayList<>();
     private ArrayList<Integer> maxPlayers = new ArrayList<>();
-    private ArrayList<Integer> maxTeamDim = new ArrayList<>();
+    private ArrayList<Integer> maxTeamDims = new ArrayList<>();
 
     private Controller controller;
 
@@ -159,9 +159,9 @@ public class PlannerGUI {
 
         try {
             controller.getControllerPlanner().controllerGetHackathons(
-                    controller.getUser().getUsername(), titles, locations, periodOfTime,
-                    problemDescriptions, startDate, endDate, startSubDate, endSubDate,
-                    maxPlayers, maxTeamDim, refreshing);
+                    controller.getUser().getUsername(), titles, locations, periodsOfTime,
+                    problemDescriptions, startDates, endDates, startSubDates, endSubDates,
+                    maxPlayers, maxTeamDims, refreshing);
 
             if (titles.isEmpty()) {
                 isCorrect = false;
@@ -187,14 +187,14 @@ public class PlannerGUI {
     private void refreshHackathons() {
         titles.clear();
         locations.clear();
-        periodOfTime.clear();
+        periodsOfTime.clear();
         problemDescriptions.clear();
-        startDate.clear();
-        endDate.clear();
-        startSubDate.clear();
-        endSubDate.clear();
+        startDates.clear();
+        endDates.clear();
+        startSubDates.clear();
+        endSubDates.clear();
         maxPlayers.clear();
-        maxTeamDim.clear();
+        maxTeamDims.clear();
 
         loadHackathons(true);
 
@@ -253,14 +253,14 @@ public class PlannerGUI {
         String data = String.join("$",
                 titles.get(index),
                 locations.get(index),
-                String.valueOf(periodOfTime.get(index)),
+                String.valueOf(periodsOfTime.get(index)),
                 problemDescriptions.get(index),
-                String.valueOf(startDate.get(index)),
-                String.valueOf(endDate.get(index)),
-                String.valueOf(startSubDate.get(index)),
-                String.valueOf(endSubDate.get(index)),
+                String.valueOf(startDates.get(index)),
+                String.valueOf(endDates.get(index)),
+                String.valueOf(startSubDates.get(index)),
+                String.valueOf(endSubDates.get(index)),
                 String.valueOf(maxPlayers.get(index)),
-                String.valueOf(maxTeamDim.get(index))
+                String.valueOf(maxTeamDims.get(index))
         );
 
         // L'action command contiene TUTTE le info

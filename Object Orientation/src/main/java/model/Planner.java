@@ -66,6 +66,8 @@ public class Planner extends User {
      * @param endSubscriptionDate   la data di chiusura delle iscrizioni
      * @param maxPlayers            il numero massimo di partecipanti ammessi
      * @param maxTeamDim            la dimensione massima consentita per ogni team
+     * @param judgesUsernames       la stringa contenente gli username degli utenti selezionati per
+     *                              essere giudici, separati da {@code ","} e terminante con {@code ","}
      */
     public void openHackathon (String title, String location, Date startDate, Date endDate,
                                Date startSubscriptionDate, Date endSubscriptionDate,
