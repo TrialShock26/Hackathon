@@ -104,10 +104,15 @@ public class ProblemGUI {
             if (problemDescription.equals("Descrizione assente.")) {
                 try {
                     controller.getControllerJudge().controllerPublishProblem(hackathonName, location, newDescription);
+                    JOptionPane.showMessageDialog(frame,
+                            "Problema pubblicato correttamente!",
+                            "Successo", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException | IllegalAccessException ex) {
                     String error = ex.getMessage();
                     int idx = error.indexOf("\n");
-                    error = error.substring(0, idx);
+                    if (idx > 0) {
+                        error = error.substring(0, idx);
+                    }
                     JOptionPane.showMessageDialog(frame,
                             "C'è stato un errore!\n" + error,
                             "Errore", JOptionPane.ERROR_MESSAGE);

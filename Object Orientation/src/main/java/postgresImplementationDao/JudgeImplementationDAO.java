@@ -71,6 +71,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
     @Override
     public void examineDocument(String username, String docTitle, String content,
                                 String teamName, String hackTitle, String location, String text) throws SQLException {
+        teamName = teamName.replace("'", "''");
         PreparedStatement ps;
         String query = "DO $$ " +
                 "DECLARE " +
@@ -109,6 +110,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
      */
     @Override
     public void gradeTeam(String username, String teamName, String title, String location, int value) throws SQLException {
+        teamName = teamName.replace("'", "''");
         CallableStatement cs;
         String query = "DO $$ " +
                 "DECLARE " +
@@ -134,9 +136,7 @@ public class JudgeImplementationDAO implements JudgeDAO {
                         "FROM Hackathon NATURAL JOIN Selezione " +
                         "WHERE id_giudice = (SELECT id_giudice " +
                                             "FROM Giudice " +
-                                            "WHERE username = ?) "/* +
-                            "AND data_inizio <= CURRENT_DATE " +
-                            "AND data_fine >= CURRENT_DATE;"*/;
+                                            "WHERE username = ?) ";
         ps = connection.prepareStatement(query);
         ps.setString(1, username);
         ResultSet rs = ps.executeQuery();

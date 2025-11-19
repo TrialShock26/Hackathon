@@ -40,6 +40,7 @@ public class TeamImplementationDAO implements TeamDAO {
      */
     @Override
     public void publishProgress(String teamName, String hackTitle, String location, String docTitle, String content) throws SQLException {
+        teamName = teamName.replace("'", "''");
         CallableStatement cs;
         String query = "DO $$ " +
                 "DECLARE teamId Team.id_team%TYPE;" +

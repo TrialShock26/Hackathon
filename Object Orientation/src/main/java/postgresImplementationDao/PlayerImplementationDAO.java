@@ -67,6 +67,7 @@ public class PlayerImplementationDAO implements PlayerDAO {
      */
     @Override
     public void joinTeam(String username, String teamName, String title, String location) throws SQLException {
+        teamName = teamName.replace("'", "''");
         CallableStatement cs;
         String query = "DO $$ " +
                 "DECLARE " +

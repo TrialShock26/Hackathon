@@ -59,7 +59,7 @@ public class UserImplementationDAO implements UserDAO {
                             "data_apertura_iscrizioni, data_chiusura_iscrizioni, " +
                             "max_iscritti, max_dim_team " +
                         "FROM Hackathon " +
-                        "WHERE data_chiusura_iscrizioni > CURRENT_DATE; ";
+                        "WHERE data_chiusura_iscrizioni >= CURRENT_DATE; ";
         ps = connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
 
