@@ -3,7 +3,6 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import controller.*;
 
 /**
  * Interfaccia grafica della schermata iniziale dell'applicazione.

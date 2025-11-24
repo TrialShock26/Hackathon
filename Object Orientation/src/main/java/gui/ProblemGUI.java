@@ -99,9 +99,10 @@ public class ProblemGUI {
         publishBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         publishBtn.addActionListener(e -> {
             newDescription = problemDescriptionArea.getText().trim();
-            if (problemDescription.equals("Descrizione assente.")) {
+            if (oldDescription.equals("Descrizione assente.")) {
                 try {
                     controller.getControllerJudge().controllerPublishProblem(hackathonName, location, newDescription);
+                    oldDescription = newDescription;
                     JOptionPane.showMessageDialog(frame,
                             "Problema pubblicato correttamente!",
                             "Successo", JOptionPane.INFORMATION_MESSAGE);
