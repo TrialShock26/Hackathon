@@ -43,13 +43,11 @@ public class MyTeamGUI {
         headerPanel.setBackground(new Color(240, 240, 245));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Titolo: mostra il nome reale del team
         JLabel titleLabel = new JLabel(teamName, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
         titleLabel.setForeground(new Color(70, 130, 180));
         headerPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // Pannello informazioni utente e team
         JPanel infoPanel = new JPanel(new GridLayout(2, 1, 10, 5));
         infoPanel.setBackground(new Color(240, 240, 245));
 
@@ -70,7 +68,6 @@ public class MyTeamGUI {
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
 
-        // Campo titolo
         JLabel titleFieldLabel = new JLabel("Titolo del documento:");
         titleFieldLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titleFieldLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -86,7 +83,6 @@ public class MyTeamGUI {
         centerPanel.add(titleField);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Area testo
         JLabel textLabel = new JLabel("Scrivi il contenuto del documento da pubblicare:");
         textLabel.setFont(new Font("Arial", Font.BOLD, 16));
         textLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -111,7 +107,6 @@ public class MyTeamGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -128,7 +123,6 @@ public class MyTeamGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottoni a destra
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         rightPanel.setBackground(new Color(240, 240, 245));
 
@@ -145,7 +139,7 @@ public class MyTeamGUI {
 
         JButton publishBtn = new JButton("Pubblica");
         publishBtn.setPreferredSize(new Dimension(120, 35));
-        publishBtn.setBackground(new Color(60, 179, 113)); // Verde
+        publishBtn.setBackground(new Color(60, 179, 113));
         publishBtn.setForeground(Color.WHITE);
         publishBtn.setFocusPainted(false);
         publishBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));

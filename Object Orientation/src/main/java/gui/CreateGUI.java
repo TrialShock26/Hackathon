@@ -75,7 +75,6 @@ public class CreateGUI {
         maxIscrittiField = creaCampo(formPanel, gbc, y++, "Max Iscritti:");
         maxDimTeamField = creaCampo(formPanel, gbc, y++, "Max Dimensione Team:");
 
-        // Giudici
         gbc.gridx = 0; gbc.gridy = y;
         JLabel giudiciLabel = new JLabel("Giudici:");
         giudiciLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -99,7 +98,6 @@ public class CreateGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone Indietro
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -111,7 +109,6 @@ public class CreateGUI {
         leftPanel.add(indietroButton);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone Salva
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -209,7 +206,7 @@ public class CreateGUI {
                     Integer.parseInt(maxIscrittiField.getText().trim()),
                     Integer.parseInt(maxDimTeamField.getText().trim()),
                     controller.getUser().getUsername(),
-                    //formattazione coerente la procedure add_hackathon del db
+                    // Formattazione coerente con la procedure add_hackathon del db
                     String.join(",", giudiciSelezionati) + ","
             );
 

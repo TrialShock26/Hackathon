@@ -91,7 +91,6 @@ public class PlannerGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -108,7 +107,6 @@ public class PlannerGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -243,7 +241,6 @@ public class PlannerGUI {
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Mostra solo il titolo all’utente
         JRadioButton radio = new JRadioButton(titles.get(index));
         radio.setBackground(Color.WHITE);
         radio.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -288,13 +285,14 @@ public class PlannerGUI {
     }
 
     /**
-     * Restituisce il nome dell'hackathon selezionato dall'utente.
+     * Restituisce le informazioni complessive dell'hackathon selezionato dall'utente,
+     * formattate come richiesto.
      *
-     * @return il nome dell'hackathon selezionato, oppure {@code null} se nessuno è stato selezionato
+     * @return le info dell'hackathon selezionato, oppure {@code null} se nessuno è stato selezionato
      */
     private String getSelectedHackathon() {
         ButtonModel selected = hackathonGroup.getSelection();
         if (selected == null) return null;
-        return selected.getActionCommand();  // Stringa lunga con tutte le info
+        return selected.getActionCommand();
     }
 }

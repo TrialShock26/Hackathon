@@ -31,7 +31,7 @@ public class RankingGUI {
      */
     public RankingGUI(Controller controller, JFrame callerFrame) {
 
-        // --- PRIMO CARICAMENTO DATI ---
+        // === PRIMO CARICAMENTO DATI ===
         if(!loadHackathons(controller,false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non ci sono ancora hackathon terminati!",
@@ -89,7 +89,6 @@ public class RankingGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Pulsante Indietro a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
         JButton backBtn = new JButton("Indietro");
@@ -105,7 +104,6 @@ public class RankingGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pulsante centrale "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
         JButton viewBtn = new JButton("Apri");
@@ -129,7 +127,6 @@ public class RankingGUI {
         centerPanel.add(viewBtn);
         bottomPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // PULSANTE GLOBALE a destra
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         rightPanel.setBackground(new Color(240, 240, 245));
         JButton globalBtn = new JButton("Globale");

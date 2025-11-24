@@ -75,7 +75,6 @@ public class ExAndVoteGUI {
                     "Errore", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Crea anteprime documento
         documentPreviews = new ArrayList<>();
         for (String documentContent : documentContents) {
             if (documentContent.length() >= 50) {
@@ -97,7 +96,6 @@ public class ExAndVoteGUI {
         for (int i = 0; i < documentTitles.size(); i++) {
             JPanel card = createDocumentCard(documentTitles.get(i), documentPreviews.get(i), i);
 
-            // Limita altezza della card
             card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
             card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -118,7 +116,6 @@ public class ExAndVoteGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // --- Bottone "Indietro" ---
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -134,7 +131,6 @@ public class ExAndVoteGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // --- Pulsanti centrali ---
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 5));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -161,7 +157,7 @@ public class ExAndVoteGUI {
         try {
             frame.setContentPane(mainPanel);
             frame.setVisible(true);
-            documentTitles.get(0); // controlla se ci sono documenti
+            documentTitles.get(0);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(frame,
                     "Non ci sono documenti da esaminare!",
@@ -190,7 +186,6 @@ public class ExAndVoteGUI {
                 BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
 
-        // --- RadioButton a sinistra ---
         JRadioButton radio = new JRadioButton();
         radio.setBackground(Color.WHITE);
         radio.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -202,7 +197,6 @@ public class ExAndVoteGUI {
         leftPanel.add(radio);
         card.add(leftPanel, BorderLayout.WEST);
 
-        // --- Pannello centrale con nome e anteprima ---
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(Color.WHITE);
@@ -217,7 +211,6 @@ public class ExAndVoteGUI {
 
         card.add(infoPanel, BorderLayout.CENTER);
 
-        // --- Rendi cliccabile tutta la card ---
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

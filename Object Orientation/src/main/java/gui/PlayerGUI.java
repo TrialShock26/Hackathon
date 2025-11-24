@@ -82,7 +82,6 @@ public class PlayerGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -99,7 +98,6 @@ public class PlayerGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pannello centrale con pulsanti "Cambia" e "Apri"
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -198,29 +196,20 @@ public class PlayerGUI {
      * e ricostruendo i componenti grafici nella finestra.
      */
     private void refreshHackathons() {
-
-        //svuotamento di tutte le informazioni relative agli hackathon e ai team
         titles.clear();
         locations.clear();
         teamNames.clear();
 
-        // 1. Ricarica i dati dal DB
         loadHackathons(true);
-
-        // 2. Rimuovi TUTTI i componenti dalla lista
         listPanel.removeAll();
-
-        // 3. Ricrea il ButtonGroup da zero
         teamGroup = new ButtonGroup();
 
-        // 4. Ricostruisci tutte le card con i nuovi dati
         for (int i = 0; i < teamNames.size(); i++) {
             JPanel card = createTeamCard(teamNames.get(i), titles.get(i), i);
             listPanel.add(card);
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // ridisegno della GUI
         listPanel.revalidate();
         listPanel.repaint();
 

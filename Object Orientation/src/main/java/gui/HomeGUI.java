@@ -58,7 +58,6 @@ public class HomeGUI {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
 
-        // Sottotitolo
         JLabel subtitle = new JLabel("Collabora. Crea. Innova.", SwingConstants.CENTER);
         subtitle.setFont(new Font("SansSerif", Font.ITALIC, 22));
         subtitle.setForeground(new Color(70, 70, 70));
@@ -71,14 +70,12 @@ public class HomeGUI {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 25, 0));
         buttonPanel.setOpaque(false);
 
-        // Pulsante Login
         loginButton = createStyledButton("Login", new Color(65, 105, 225), new Color(40, 75, 190));
         loginButton.addActionListener(e -> {
             frame.setVisible(false);
             new LoginGUI();
         });
 
-        // Pulsante Registrati
         subscribeButton = createStyledButton("Registrati", new Color(220, 20, 60), new Color(180, 0, 50));
         subscribeButton.addActionListener(e -> {
             frame.setVisible(false);

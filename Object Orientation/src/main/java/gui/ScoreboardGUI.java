@@ -43,7 +43,7 @@ public class ScoreboardGUI {
         this.hackathonName = hackathonName;
         this.location = location;
 
-        // --- PRIMO CARICAMENTO DATI ---
+        // === PRIMO CARICAMENTO DATI ===
         if(!loadScoreboard(false)) {
             JOptionPane.showMessageDialog(null,
                     "Errore: Non è possibile generare la classifica!",
@@ -239,7 +239,6 @@ public class ScoreboardGUI {
         ));
         card.setBackground(getPodiumColor(rank));
 
-        // --- Pannello informazioni Hackathon (sinistra) ---
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBackground(getPodiumColor(rank));
@@ -247,15 +246,13 @@ public class ScoreboardGUI {
         infoPanel.add(new JLabel("Sede: " + location));
         card.add(infoPanel, BorderLayout.WEST);
 
-        // --- Nome team (centro) ---
         JLabel teamLabel = new JLabel(rank + ". " + team, SwingConstants.CENTER);
         teamLabel.setFont(new Font("Arial", Font.BOLD, 16));
         card.add(teamLabel, BorderLayout.CENTER);
 
-        // --- Punteggio (destra) ---
         JLabel scoreLabel = new JLabel(scoreFormat.format(score), SwingConstants.RIGHT);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        scoreLabel.setPreferredSize(new Dimension(100, 30)); // evita che si schiacci
+        scoreLabel.setPreferredSize(new Dimension(100, 30));
         card.add(scoreLabel, BorderLayout.EAST);
 
         return card;
@@ -269,9 +266,9 @@ public class ScoreboardGUI {
      */
     private Color getPodiumColor(int rank) {
         return switch (rank) {
-            case 1 -> new Color(255, 215, 0);   // oro
-            case 2 -> new Color(192, 192, 192); // argento
-            case 3 -> new Color(205, 127, 50);  // bronzo
+            case 1 -> new Color(255, 215, 0);
+            case 2 -> new Color(192, 192, 192);
+            case 3 -> new Color(205, 127, 50);
             default -> Color.WHITE;
         };
     }

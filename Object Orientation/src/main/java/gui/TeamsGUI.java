@@ -69,8 +69,8 @@ public class TeamsGUI {
             listPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // --- Forzo il preferred size del listPanel in base al numero di elementi così la scrollbar compare ---
-        int cardHeight = 50; // altezza di ciascuna "card" (coerente con createTeamCard)
+        // Forzo il preferred size del listPanel in base al numero di elementi
+        int cardHeight = 50;
         int gap = 10;
         int totalHeight = teamNames.size() * (cardHeight + gap) + 20;
         listPanel.setPreferredSize(new Dimension(600, Math.max(totalHeight, 300)));
@@ -88,7 +88,6 @@ public class TeamsGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -100,12 +99,11 @@ public class TeamsGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true); // torna alla GUI chiamante
+            callerFrame.setVisible(true);
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Apri" al centro
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -143,7 +141,6 @@ public class TeamsGUI {
      */
     private JPanel createTeamCard(String teamName) {
         JPanel card = new JPanel(new BorderLayout());
-        // non forzare un preferred size troppo rigido: usa maximum size per farle adattare al viewport
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(

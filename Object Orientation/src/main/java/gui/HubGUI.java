@@ -42,13 +42,12 @@ public class HubGUI {
         hubPanel = new JPanel(new BorderLayout());
         hubPanel.setBackground(new Color(240, 240, 245));
 
-        // --- CENTRO ---
+        // === CENTRO ===
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(new Color(240, 240, 245));
         centerPanel.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
-        // Titolo principale
         title = new JLabel("Benvenut3 in HackathON!");
         title.setFont(new Font("Arial", Font.BOLD, 32));
         title.setForeground(new Color(50, 50, 50));
@@ -57,7 +56,6 @@ public class HubGUI {
 
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Sottotitolo
         subtitle = new JLabel("Che cosa vuoi fare?");
         subtitle.setFont(new Font("Arial", Font.PLAIN, 18));
         subtitle.setForeground(new Color(100, 100, 100));
@@ -66,12 +64,10 @@ public class HubGUI {
 
         centerPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Pannello dei bottoni (3 righe x 2 colonne)
         JPanel gridButtonsPanel = new JPanel(new GridLayout(3, 2, 20, 20));
         gridButtonsPanel.setBackground(new Color(240, 240, 245));
         gridButtonsPanel.setMaximumSize(new Dimension(400, 220));
 
-        // Crea bottoni più piccoli
         gioButton = createStyledButton("Gioca", new Color(70, 130, 180));
         creaButton = createStyledButton("Crea", new Color(34, 139, 34));
         nuovaPartitaButton = createStyledButton("Nuova Partita", new Color(255, 140, 0));
@@ -79,7 +75,7 @@ public class HubGUI {
         gestisciButton = createStyledButton("Gestisci", new Color(220, 20, 60));
         classificaButton = createStyledButton("Classifica", new Color(100, 149, 237));
 
-        // --- Azioni bottoni ---
+        // === Azioni bottoni ===
         creaButton.addActionListener(e -> {
             frame.setVisible(false);
             new CreateGUI(controller, frame);
@@ -120,7 +116,6 @@ public class HubGUI {
         centerPanel.add(gridButtonsPanel);
         hubPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // --- BASSO (Indietro + Nome utente) ---
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottomPanel.setBackground(new Color(240, 240, 245));
 
@@ -146,15 +141,14 @@ public class HubGUI {
         });
         bottomPanel.add(indietroButton);
 
-        // --- Etichetta con nome utente (più evidente) ---
+        // === Etichetta con nome utente ===
         JLabel userLabel = new JLabel("Ciao, "
                 + controller.getUser().getName() + " "
                 + controller.getUser().getSurname());
         userLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        userLabel.setForeground(new Color(40, 80, 160)); // blu-grigio visibile
+        userLabel.setForeground(new Color(40, 80, 160));
         userLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
 
-        // Pannello contenitore per posizionamento
         JPanel bottomContainer = new JPanel(new BorderLayout());
         bottomContainer.setBackground(new Color(240, 240, 245));
         bottomContainer.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));

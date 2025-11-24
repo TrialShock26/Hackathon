@@ -80,7 +80,6 @@ public class TeamMatesGUI {
         listPanel.setBackground(new Color(240, 240, 245));
         listPanel.setBorder(BorderFactory.createEmptyBorder(15, 40, 15, 40));
 
-        // Popola inizialmente la lista
         populateTeammates();
 
         scrollPane = new JScrollPane(listPanel);
@@ -95,7 +94,6 @@ public class TeamMatesGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        // Bottone "Indietro"
         JButton backBtn = new JButton("Indietro");
         backBtn.setPreferredSize(new Dimension(120, 35));
         backBtn.setBackground(new Color(150, 150, 150));
@@ -107,7 +105,6 @@ public class TeamMatesGUI {
             callerFrame.setVisible(true);
         });
 
-        // Bottone "Aggiorna"
         JButton refreshBtn = new JButton("Aggiorna");
         refreshBtn.setPreferredSize(new Dimension(120, 35));
         refreshBtn.setBackground(new Color(70, 130, 180));
@@ -144,7 +141,6 @@ public class TeamMatesGUI {
         loadTeammates(true);
         populateTeammates();
 
-        // Aggiorna il contatore
         countLabel.setText("Membri totali: " + names.size());
     }
 
@@ -154,7 +150,6 @@ public class TeamMatesGUI {
     private void populateTeammates() {
         listPanel.removeAll();
 
-        // Aggiungi i teammates
         for (int i = 0; i < names.size(); i++) {
             if(names.get(i).equals(controller.getPlayer().getName())) {
                 JPanel card = createParticipantCard(names.get(i) + " " + surnames.get(i) + " " + "(Tu)");

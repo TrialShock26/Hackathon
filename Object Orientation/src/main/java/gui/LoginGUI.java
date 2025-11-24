@@ -50,7 +50,6 @@ public class LoginGUI {
         gbc.anchor = GridBagConstraints.CENTER;
         centerPanel.add(titleLabel, gbc);
 
-        // Username
         JLabel userLabel = new JLabel("Username:");
         userLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gbc.gridy = 1;
@@ -64,7 +63,6 @@ public class LoginGUI {
         gbc.anchor = GridBagConstraints.WEST;
         centerPanel.add(userField, gbc);
 
-        // Password
         JLabel passLabel = new JLabel("Password:");
         passLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gbc.gridy = 2;
@@ -77,7 +75,6 @@ public class LoginGUI {
         gbc.anchor = GridBagConstraints.WEST;
         centerPanel.add(passField, gbc);
 
-        // Bottone Conferma (centrato)
         JButton loginBtn = new JButton("Conferma");
         loginBtn.setPreferredSize(new Dimension(120, 35));
         loginBtn.setBackground(new Color(70, 130, 180));
@@ -105,7 +102,6 @@ public class LoginGUI {
                     return;
                 }
 
-                //  Controller per verificare login
                 boolean success = controller.login(username, password);
                 if (success) {
                     JOptionPane.showMessageDialog(frame, "Benvenut3 " +
@@ -127,7 +123,6 @@ public class LoginGUI {
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // Pannello per il bottone Indietro in basso a sinistra
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 15));
         bottomPanel.setBackground(new Color(240, 240, 245));
 

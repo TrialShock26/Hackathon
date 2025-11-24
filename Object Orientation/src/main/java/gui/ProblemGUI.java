@@ -49,13 +49,11 @@ public class ProblemGUI {
                 BorderFactory.createEmptyBorder(30, 40, 30, 40)
         ));
 
-        // Titolo del problema
         JLabel problemTitle = new JLabel("Problema: " + hackathonName);
         problemTitle.setFont(new Font("Arial", Font.BOLD, 22));
         problemTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         problemPanel.add(problemTitle, BorderLayout.NORTH);
 
-        // Area di testo per la descrizione del problema
         JTextArea problemDescriptionArea = new JTextArea();
         problemDescriptionArea.setFont(new Font("Arial", Font.PLAIN, 16));
         problemDescriptionArea.setLineWrap(true);

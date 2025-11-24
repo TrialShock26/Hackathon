@@ -87,7 +87,6 @@ public class RegistrationGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -104,13 +103,12 @@ public class RegistrationGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Registrati" al centro
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
         JButton registerBtn = new JButton("Registrati");
         registerBtn.setPreferredSize(new Dimension(120, 35));
-        registerBtn.setBackground(new Color(60, 179, 113)); // Verde
+        registerBtn.setBackground(new Color(60, 179, 113));
         registerBtn.setForeground(Color.WHITE);
         registerBtn.setFocusPainted(false);
         registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));

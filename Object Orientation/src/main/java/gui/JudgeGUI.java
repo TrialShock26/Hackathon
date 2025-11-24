@@ -90,7 +90,6 @@ public class JudgeGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -107,13 +106,12 @@ public class JudgeGUI {
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Problema" al centro sinistra
         JPanel centerLeftPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerLeftPanel.setBackground(new Color(240, 240, 245));
 
         JButton problemBtn = new JButton("Problema");
         problemBtn.setPreferredSize(new Dimension(120, 35));
-        problemBtn.setBackground(new Color(220, 120, 60)); // Colore arancione per distinguerlo
+        problemBtn.setBackground(new Color(220, 120, 60));
         problemBtn.setForeground(Color.WHITE);
         problemBtn.setFocusPainted(false);
         problemBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -122,7 +120,7 @@ public class JudgeGUI {
             if (selectedHackathon == null) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un hackathon!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                frame.setVisible(false); // nascondi JudgeGUI
+                frame.setVisible(false);
                 new ProblemGUI(controller, frame, selectedHackathon, locations.get(titles.indexOf(selectedHackathon)),
                         problemDescriptions.get(titles.indexOf(selectedHackathon)));
             }
@@ -130,7 +128,6 @@ public class JudgeGUI {
         centerLeftPanel.add(problemBtn);
         bottomPanel.add(centerLeftPanel, BorderLayout.CENTER);
 
-        // Bottone "Apri" a destra
         JPanel centerRightPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerRightPanel.setBackground(new Color(240, 240, 245));
 

@@ -48,7 +48,6 @@ public class ResumeGUI {
 
         ArrayList<String> hackathonInfoFormatted = new ArrayList<>(Arrays.asList(hackathonInfo.split("\\$")));
 
-        // Titolo hackathon
         JLabel hackTitle = new JLabel(hackathonInfoFormatted.getFirst());
         hackTitle.setFont(new Font("Arial", Font.BOLD, 20));
         hackTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -70,7 +69,6 @@ public class ResumeGUI {
         //  7 → Data chiusura iscrizioni
         //  8 → Numero massimo di partecipanti
         //  9 → Dimensione massima dei team
-        //
 
         contentPanel.add(createInfoRow("Sede:", String.valueOf(hackathonInfoFormatted.get(1))));
         contentPanel.add(createInfoRow("Durata:", hackathonInfoFormatted.get(2) + " giorni"));
@@ -109,7 +107,6 @@ public class ResumeGUI {
 
         contentPanel.add(problemScroll);
 
-        // Scroll principale
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -121,7 +118,6 @@ public class ResumeGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro"
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -139,7 +135,6 @@ public class ResumeGUI {
 
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Pulsanti centrali
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         centerPanel.setBackground(new Color(240, 240, 245));
 
@@ -152,7 +147,7 @@ public class ResumeGUI {
         startBtn.addActionListener(e -> {
             try{
                 controller.getControllerPlanner().controllerStartHackathon(hackathonInfoFormatted.getFirst(),
-                        hackathonInfoFormatted.get(1)); //title e location
+                        hackathonInfoFormatted.get(1));
                 JOptionPane.showMessageDialog(
                         frame,
                         "Hackathon \"" + hackathonInfoFormatted.getFirst() + "\" avviato!",

@@ -93,7 +93,6 @@ public class JoinGUI {
         bottomPanel.setBackground(new Color(240, 240, 245));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
 
-        // Bottone "Indietro" a sinistra
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         leftPanel.setBackground(new Color(240, 240, 245));
 
@@ -105,18 +104,17 @@ public class JoinGUI {
         backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         backBtn.addActionListener(e -> {
             frame.dispose();
-            callerFrame.setVisible(true); // torna alla GUI chiamante
+            callerFrame.setVisible(true);
         });
         leftPanel.add(backBtn);
         bottomPanel.add(leftPanel, BorderLayout.WEST);
 
-        // Bottone "Cambia Team" al centro
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setBackground(new Color(240, 240, 245));
 
         JButton changeBtn = new JButton("Cambia Team");
         changeBtn.setPreferredSize(new Dimension(140, 35));
-        changeBtn.setBackground(new Color(220, 120, 60)); // Colore arancione
+        changeBtn.setBackground(new Color(220, 120, 60));
         changeBtn.setForeground(Color.WHITE);
         changeBtn.setFocusPainted(false);
         changeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -125,7 +123,6 @@ public class JoinGUI {
             if (selectedTeam == null) {
                 JOptionPane.showMessageDialog(frame, "Seleziona un team!", "Errore", JOptionPane.ERROR_MESSAGE);
             } else {
-                // Popup di conferma
                 int response = JOptionPane.showConfirmDialog(
                         frame,
                         "Sei sicuro di voler cambiare team?\nDa: " + currentTeam + "\nA: " + selectedTeam,
@@ -143,7 +140,6 @@ public class JoinGUI {
                                 "Successo",
                                 JOptionPane.INFORMATION_MESSAGE);
 
-                        // Torna alla schermata precedente
                         frame.dispose();
                         callerFrame.setVisible(true);
                     } catch (SQLException ex) {
