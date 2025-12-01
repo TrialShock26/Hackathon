@@ -215,7 +215,16 @@ public class CreateGUI {
             callerFrame.setVisible(true);
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+            String error = ex.getMessage();
+            int idx = error.indexOf("\n");
+            if (idx > 0) {
+                error = error.substring(0, idx);
+            }
+            JOptionPane.showMessageDialog(frame,
+                    "C'è stato un errore!\n" + error,
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(frame, "Inserisci un numero valido.", "Errore", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(frame, "Formato data non valido. Usa YYYY-MM-DD.", "Errore", JOptionPane.ERROR_MESSAGE);
         }
